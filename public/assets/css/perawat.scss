@@ -1,0 +1,217 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+@mixin font-judul-web {
+    font-size: 18px;
+    font-weight: 700;
+}
+@mixin font-judul {
+    font-size: 14px;
+    font-weight: 500;
+}
+@mixin font-text {
+    font-size: 9px;
+}
+
+$hijauTua: #265925;
+
+
+.logo{
+    @include font-judul-web;
+}
+.judul{
+    @include font-judul-web;
+}
+.text{
+    @include font-text;
+}
+
+.navbar{
+    height: 35px;
+    border: 1px solid;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    display: flex;
+    .left{
+        border-bottom-left-radius: 5px;
+        margin-top: -10px;
+        border: 1px solid blue;
+        width: 85%;
+        height: 35px;
+    }
+    .right{
+        margin-top: -10px;
+        border: 1px solid red;
+        border-bottom-right-radius: 5px;
+        width: 15%;
+        height: 35px;
+    }
+
+}
+
+.filter {
+    height: 40px;
+    // border: 1px solid;
+    position: fixed; 
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    z-index: 100;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: $hijauTua;
+}
+
+
+@media screen and (max-width: 470px) {
+    .logo{
+        @include font-judul-web;
+        margin-top: 1%;
+        margin-left: 2%;
+    }
+    .judul{
+        @include font-judul;
+        margin-top: 1%;
+        margin-left: 2%;
+        margin-right: 2%;
+        // border: 1px solid;
+        text-align: center;
+    }
+    .breadcrumb{
+        font-size: 10px; 
+        margin-top: 2%; 
+        margin-left: 2%; 
+        margin-bottom: 3%;
+    }
+    .navbar{
+        height: 35px;
+        border: 1px solid;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        display: flex;
+        .left{
+            border-bottom-left-radius: 5px;
+            margin-top: -10px;
+            border: 1px solid blue;
+            width: 85%;
+            height: 35px;
+        }
+        .right{
+            display: flex;
+            margin-top: -10px;
+            border: 1px solid red;
+            border-bottom-right-radius: 5px;
+            width: 15%;
+            height: 35px;
+            justify-content: center;
+            align-items: center;
+        }
+    
+    }
+
+    .wrapper{
+        border: 1px solid #e7e7e7;
+        margin-left: 2%;
+        margin-right: 2%;
+        padding: 1%;
+        border-radius: 2px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20%;
+        .table{
+            @include font-text;
+            .btn-custom-blue{
+                @include font-text;
+                padding: 7%;
+                border-radius: 2px;
+                border: none;
+                color: white;
+                background-color: #164cc2;
+            }
+            .btn-custom-yellow{
+                @include font-text;
+                padding: 7%;
+                border-radius: 2px;
+                border: none;
+                color: white;
+                background-color: #dda900;
+            }
+        }
+    }
+
+    .filter {
+        height: 40px;
+        // border: 1px solid;
+        position: fixed; 
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        z-index: 100;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        background-color: $hijauTua;
+    }
+
+    .swal-title-small {
+        font-size: 18px; /* Atur ukuran teks judul */
+    }
+    .swal-text-small {
+        font-size: 14px; /* Atur ukuran teks konten */
+    }
+
+    .filter-box {
+        position: fixed;
+        width: 150px;
+        height: 40px;
+        background-color: #007bff;
+        color: white;
+        text-align: center;
+        line-height: 40px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .modal-body{
+        @include font-text;
+        
+    }
+    .modal-footer{
+        .btn-custom{
+            @include font-text;
+            padding: 2%;
+            border-radius: 2px;
+            border: none;
+            color: white;
+        }
+        .blue{
+            background-color: #164cc2;
+        }
+        .red{
+            background-color: #a51300;
+        }
+    }
+
+    
+    // .filter {
+    //     display: none; /* Sembunyikan box filter secara default */
+    //     margin-top: 10px;
+    //     padding: 10px;
+    //     border: 1px solid #ccc;
+    //     border-radius: 5px;
+    //     background-color: #f9f9f9;
+    // }
+
+    // .filter input {
+    //     margin-bottom: 10px;
+    // }
+
+    // .filter button {
+    //     background-color: #28a745;
+    //     color: white;
+    //     border: none;
+    //     padding: 5px 10px;
+    //     cursor: pointer;
+    // }
+}

@@ -1,0 +1,173 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.judul {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.text {
+  font-size: 9px;
+}
+
+.navbar {
+  height: 35px;
+  border: 1px solid;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  display: flex;
+}
+.navbar .left {
+  border-bottom-left-radius: 5px;
+  margin-top: -10px;
+  border: 1px solid blue;
+  width: 85%;
+  height: 35px;
+}
+.navbar .right {
+  margin-top: -10px;
+  border: 1px solid red;
+  border-bottom-right-radius: 5px;
+  width: 15%;
+  height: 35px;
+}
+
+.filter {
+  height: 40px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  z-index: 100;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #265925;
+}
+
+@media screen and (max-width: 470px) {
+  .logo {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 1%;
+    margin-left: 2%;
+  }
+  .judul {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 1%;
+    margin-left: 2%;
+    margin-right: 2%;
+    text-align: center;
+  }
+  .breadcrumb {
+    font-size: 10px;
+    margin-top: 2%;
+    margin-left: 2%;
+    margin-bottom: 3%;
+  }
+  .navbar {
+    height: 35px;
+    border: 1px solid;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    display: flex;
+  }
+  .navbar .left {
+    border-bottom-left-radius: 5px;
+    margin-top: -10px;
+    border: 1px solid blue;
+    width: 85%;
+    height: 35px;
+  }
+  .navbar .right {
+    display: flex;
+    margin-top: -10px;
+    border: 1px solid red;
+    border-bottom-right-radius: 5px;
+    width: 15%;
+    height: 35px;
+    justify-content: center;
+    align-items: center;
+  }
+  .wrapper {
+    border: 1px solid #e7e7e7;
+    margin-left: 2%;
+    margin-right: 2%;
+    padding: 1%;
+    border-radius: 2px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20%;
+  }
+  .wrapper .table {
+    font-size: 9px;
+  }
+  .wrapper .table .btn-custom-blue {
+    font-size: 9px;
+    padding: 7%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+    background-color: #164cc2;
+  }
+  .wrapper .table .btn-custom-yellow {
+    font-size: 9px;
+    padding: 7%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+    background-color: #dda900;
+  }
+  .filter {
+    height: 40px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    z-index: 100;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #265925;
+  }
+  .swal-title-small {
+    font-size: 18px; /* Atur ukuran teks judul */
+  }
+  .swal-text-small {
+    font-size: 14px; /* Atur ukuran teks konten */
+  }
+  .filter-box {
+    position: fixed;
+    width: 150px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .modal-body {
+    font-size: 9px;
+  }
+  .modal-footer .btn-custom {
+    font-size: 9px;
+    padding: 2%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+  }
+  .modal-footer .blue {
+    background-color: #164cc2;
+  }
+  .modal-footer .red {
+    background-color: #a51300;
+  }
+}/*# sourceMappingURL=perawat.css.map */
