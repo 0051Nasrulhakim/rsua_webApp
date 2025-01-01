@@ -58,7 +58,7 @@
                                 <td>${item.nm_pasien}</td>
                                 <td>${item.nm_dokter}</td>
                                 <td>
-                                    <button class="btn-custom-blue btn-sm" onclick="showModal('Riwayat', '${item.no_rkm_medis}')">Riwayat</button>
+                                    <button class="btn-custom-blue btn-sm" onclick="showModal('Riwayat', '${item.no_rkm_medis}', '${item.no_rawat}')">Riwayat</button>
                                     <button class="btn-custom-yellow btn-sm mt-1">Catatan</button>
                                 </td>
                             </tr>
@@ -86,8 +86,10 @@
     });
 
 
-    function showModal(title, no_rkm_medis) {
+    function showModal(title, no_rkm_medis, no_rawat) {
         $('#staticBackdropLabel').text(title);
+        $('#noRm').val(no_rkm_medis)
+        // $('#noRawat').val(no_rawat)
         // $('.modal-body').html(`Nomor Rekam Medis: ${no_rkm_medis}`);
         $('#staticBackdrop').modal('show');
     }

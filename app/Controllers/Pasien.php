@@ -10,7 +10,8 @@ class Pasien extends BaseController
     public function __construct()
     {
         $this->pasien = new \App\Models\Pasien();
-        $this->kamarInap = new \App\Models\KamarInap;
+        $this->kamarInap = new \App\Models\KamarInap();
+        $this->pemeriksaan_ranap = new \App\Models\PemeriksaanRanap;
     }
     public function index()
     {
@@ -62,6 +63,57 @@ class Pasien extends BaseController
             ->ORDERBY('kamar_inap.no_rawat', 'DESC')
             ->limit($perPage, $offset)
             ->findAll();
+
+        return $this->response->setJSON($data);
+    }
+
+
+    public function riwayatRanap()
+    {
+        $noRawat = $this->request->getGet('noRawat');
+        $ttv = $this->pemeriksaan_ranap
+            ->select("
+                TRIM(CONCAT(
+                    IF(pemeriksaan_ranap.nadi IS NOT NULL AND pemeriksaan_ranap.nadi != '', CONCAT('Nadi: ', pemeriksaan_ranap.nadi, ', '), ''),
+                    IF(pemeriksaan_ranap.tensi IS NOT NULL AND pemeriksaan_ranap.tensi != '', CONCAT('Tensi: ', pemeriksaan_ranap.tensi, ', '), ''),
+                    IF(pemeriksaan_ranap.respirasi IS NOT NULL AND pemeriksaan_ranap.respirasi != '', CONCAT('Respirasi: ', pemeriksaan_ranap.respirasi, ''), '')
+                )) AS data_pemeriksaan
+            ")
+            ->where('no_rawat', $noRawat)
+            ->orderBy('tgl_perawatan', 'DESC')
+            ->orderBy('jam_rawat', 'DESC')
+            ->limit(1)
+            ->findAll();
+
+        $data = [
+            'ttv' => $ttv
+        ];
+
+        return $this->response->setJSON($data);
+    }
+
+    public function riWayatRalan()
+    {
+        $noRawat = $this->request->getGet('noRawat');
+        $ttv = $this->pemeriksaan_ralan
+            ->select("
+                TRIM(CONCAT(
+                    IF(pemeriksaan_ralan.nadi IS NOT NULL AND pemeriksaan_ralan.nadi != '', CONCAT('Nadi: ', pemeriksaan_ralan.nadi, ', '), ''),
+                    IF(pemeriksaan_ralan.tensi IS NOT NULL AND pemeriksaan_ralan.tensi != '', CONCAT('Tensi: ', pemeriksaan_ralan.tensi, ', '), ''),
+                    IF(pemeriksaan_ralan.respirasi IS NOT NULL AND pemeriksaan_ralan.respirasi != '', CONCAT('Respirasi: ', pemeriksaan_ralan.respirasi, ''), '')
+                )) AS data_pemeriksaan
+            ")
+            ->where('no_rawat', $noRawat)
+            ->orderBy('tgl_perawatan', 'DESC')
+            ->orderBy('jam_rawat', 'DESC')
+            ->limit(1)
+            ->findAll();
+        
+        
+        
+        $data = [
+            'ttv' => $ttv
+        ];
 
         return $this->response->setJSON($data);
     }

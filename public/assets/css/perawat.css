@@ -138,10 +138,12 @@
     background-color: #265925;
   }
   .swal-title-small {
-    font-size: 18px; /* Atur ukuran teks judul */
+    font-size: 18px;
+    /* Atur ukuran teks judul */
   }
   .swal-text-small {
-    font-size: 14px; /* Atur ukuran teks konten */
+    font-size: 14px;
+    /* Atur ukuran teks konten */
   }
   .filter-box {
     position: fixed;
@@ -157,6 +159,14 @@
   .modal-body {
     font-size: 9px;
   }
+  .modal-body .section {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+  }
   .modal-footer .btn-custom {
     font-size: 9px;
     padding: 2%;
@@ -169,5 +179,50 @@
   }
   .modal-footer .red {
     background-color: #a51300;
+  }
+  .type {
+    position: sticky;
+    margin-top: -3.4%;
+    /* Tetap di posisi saat menggulir */
+    top: -3%;
+    background-color: #ffffff;
+    z-index: 1050;
+    text-align: center;
+    border-bottom: 1px solid;
+  }
+  .type .section-menu {
+    padding-right: 2%;
+    padding-top: 3%;
+    width: 50%;
+  }
+  .type .section-menu .left {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    color: white;
+    padding: 3%;
+    background-color: #164cc2;
+  }
+  .type .section-menu .right {
+    color: white;
+    padding: 3%;
+    background-color: #dda900;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-top-right-radius: 6px;
+  }
+  .type .btn-custom {
+    font-size: 9px;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+  }
+  .type .blue {
+    background-color: #16b7c2;
+  }
+  .type .yellow {
+    background-color: #d3c11e;
   }
 }/*# sourceMappingURL=perawat.css.map */
