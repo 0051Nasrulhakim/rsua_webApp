@@ -11,7 +11,11 @@ class Pasien extends BaseController
     {
         $this->pasien = new \App\Models\Pasien();
         $this->kamarInap = new \App\Models\KamarInap();
-        $this->pemeriksaan_ranap = new \App\Models\PemeriksaanRanap;
+        $this->pemeriksaan_ranap = new \App\Models\PemeriksaanRanap();
+        $this->pemeriksaan_ralan = new \App\Models\PemeriksaanRalan;
+        $this->reg_periksa = new \App\Models\RegPeriksa();
+        $this->radiologi = new \App\Models\HasilRadiologi();
+        $this->catatanPerawatan = new \App\Models\CatatanPerawatan();
     }
     public function index()
     {
@@ -20,9 +24,14 @@ class Pasien extends BaseController
 
     public function getPasien()
     {
-        $page = 1; // Halaman pertama (bisa disesuaikan)
-        $perPage = 20; // Jumlah data per halaman
+
+        $page = $this->request->getVar('page') ?? 1; 
+        $perPage = 20;  
         $offset = ($page - 1) * $perPage;
+
+        $totalRecords = $this->kamarInap
+        ->join("reg_periksa", "kamar_inap.no_rawat=reg_periksa.no_rawat")
+        ->countAllResults(false);
 
         $data = $this->kamarInap
             ->select("
@@ -50,7 +59,7 @@ class Pasien extends BaseController
                     pasien.agama, 
                     aro_catatan_naik_titip_kelas.tanda
                 ")
-            ->join("reg_periksa", "kamar_inap.no_rawat=reg_periksa.no_rawat")
+            // ->join("reg_per  iksa", "kamar_inap.no_rawat=reg_periksa.no_rawat")
             ->join("pasien", "reg_periksa.no_rkm_medis=pasien.no_rkm_medis")
             ->join("kamar", "kamar_inap.kd_kamar=kamar.kd_kamar")
             ->join("bangsal", "kamar.kd_bangsal=bangsal.kd_bangsal")
@@ -64,57 +73,151 @@ class Pasien extends BaseController
             ->limit($perPage, $offset)
             ->findAll();
 
-        return $this->response->setJSON($data);
+        // return $this->response->setJSON($data);
+        return $this->response->setJSON([
+            'data' => $data,
+            'totalRecords' => $totalRecords,
+            'perPage' => $perPage,
+            'currentPage' => (int)$page,
+            'totalPages' => ceil($totalRecords / $perPage)
+        ]);
     }
 
 
-    public function riwayatRanap()
+    public function riwayatRanap($noRawat)
     {
-        $noRawat = $this->request->getGet('noRawat');
         $ttv = $this->pemeriksaan_ranap
             ->select("
+                pemeriksaan_ranap.keluhan, 
+                pemeriksaan_ranap.pemeriksaan, 
+                pemeriksaan_ranap.penilaian, 
+                pemeriksaan_ranap.rtl, 
+                pemeriksaan_ranap.instruksi, 
+                pemeriksaan_ranap.evaluasi,
                 TRIM(CONCAT(
                     IF(pemeriksaan_ranap.nadi IS NOT NULL AND pemeriksaan_ranap.nadi != '', CONCAT('Nadi: ', pemeriksaan_ranap.nadi, ', '), ''),
                     IF(pemeriksaan_ranap.tensi IS NOT NULL AND pemeriksaan_ranap.tensi != '', CONCAT('Tensi: ', pemeriksaan_ranap.tensi, ', '), ''),
-                    IF(pemeriksaan_ranap.respirasi IS NOT NULL AND pemeriksaan_ranap.respirasi != '', CONCAT('Respirasi: ', pemeriksaan_ranap.respirasi, ''), '')
+                    IF(pemeriksaan_ranap.respirasi IS NOT NULL AND pemeriksaan_ranap.respirasi != '', CONCAT('Respirasi: ', pemeriksaan_ranap.respirasi, ', '), ''),
+                    IF(pemeriksaan_ranap.suhu_tubuh IS NOT NULL AND pemeriksaan_ranap.suhu_tubuh != '', CONCAT('Suhu : ', pemeriksaan_ranap.suhu_tubuh, ', '), ''),
+                    IF(pemeriksaan_ranap.spo2 IS NOT NULL AND pemeriksaan_ranap.spo2 != '', CONCAT('Spo2: ', pemeriksaan_ranap.spo2, ', '), ''),
+                    IF(pemeriksaan_ranap.gcs IS NOT NULL AND pemeriksaan_ranap.gcs != '', CONCAT('GCS: ', pemeriksaan_ranap.gcs, ', '), ''),
+                    IF(pemeriksaan_ranap.kesadaran IS NOT NULL AND pemeriksaan_ranap.kesadaran != '', CONCAT('Kesadaran: ', pemeriksaan_ranap.kesadaran, ', '), '')
                 )) AS data_pemeriksaan
             ")
             ->where('no_rawat', $noRawat)
             ->orderBy('tgl_perawatan', 'DESC')
             ->orderBy('jam_rawat', 'DESC')
             ->limit(1)
-            ->findAll();
-
-        $data = [
-            'ttv' => $ttv
-        ];
-
-        return $this->response->setJSON($data);
+            // ->findAll();
+            ->first();
+        // dd($ttv);
+        return $ttv;
     }
 
-    public function riWayatRalan()
+    public function riWayatRalan($noRawat)
     {
-        $noRawat = $this->request->getGet('noRawat');
+        // $noRawat = $this->request->getGet('noRawat');
         $ttv = $this->pemeriksaan_ralan
             ->select("
+            pemeriksaan_ralan.keluhan, 
+            pemeriksaan_ralan.pemeriksaan, 
+            pemeriksaan_ralan.penilaian, 
+            pemeriksaan_ralan.rtl, 
+            pemeriksaan_ralan.instruksi, 
+            pemeriksaan_ralan.evaluasi,
                 TRIM(CONCAT(
                     IF(pemeriksaan_ralan.nadi IS NOT NULL AND pemeriksaan_ralan.nadi != '', CONCAT('Nadi: ', pemeriksaan_ralan.nadi, ', '), ''),
                     IF(pemeriksaan_ralan.tensi IS NOT NULL AND pemeriksaan_ralan.tensi != '', CONCAT('Tensi: ', pemeriksaan_ralan.tensi, ', '), ''),
-                    IF(pemeriksaan_ralan.respirasi IS NOT NULL AND pemeriksaan_ralan.respirasi != '', CONCAT('Respirasi: ', pemeriksaan_ralan.respirasi, ''), '')
+                    IF(pemeriksaan_ralan.respirasi IS NOT NULL AND pemeriksaan_ralan.respirasi != '', CONCAT('Respirasi: ', pemeriksaan_ralan.respirasi, ', '), ''),
+                    IF(pemeriksaan_ralan.suhu_tubuh IS NOT NULL AND pemeriksaan_ralan.suhu_tubuh != '', CONCAT('Suhu: ', pemeriksaan_ralan.suhu_tubuh, ', '), ''),
+                    IF(pemeriksaan_ralan.spo2 IS NOT NULL AND pemeriksaan_ralan.spo2 != '', CONCAT('Spo2: ', pemeriksaan_ralan.spo2, ', '), ''),
+                    IF(pemeriksaan_ralan.gcs IS NOT NULL AND pemeriksaan_ralan.gcs != '', CONCAT('GCS: ', pemeriksaan_ralan.gcs, ', '), ''),
+                    IF(pemeriksaan_ralan.kesadaran IS NOT NULL AND pemeriksaan_ralan.kesadaran != '', CONCAT('Kesadaran : ', pemeriksaan_ralan.kesadaran, ''), '')
                 )) AS data_pemeriksaan
             ")
             ->where('no_rawat', $noRawat)
             ->orderBy('tgl_perawatan', 'DESC')
             ->orderBy('jam_rawat', 'DESC')
             ->limit(1)
-            ->findAll();
-        
-        
-        
+            ->first();
+
+        return $ttv;
+    }
+
+    public function getRadiologi($noRawat)
+    {
+        $radiologi = $this->radiologi
+                    ->where('no_rawat', $noRawat)
+                    ->orderBy('tgl_periksa', 'DESC')
+                    ->orderBy('jam', 'DESC')
+                    ->limit(1)
+                    ->first();
+
+        return $radiologi;
+    }
+
+    public function saveCatatan_perawatan()
+    {
         $data = [
-            'ttv' => $ttv
+            'tanggal' => date('Ymd'),
+            'jam'     => date('His'),
+            'no_rawat' => $this->request->getVar('noRawat'),
+            'kd_dokter' => 'D0000007',
+            'catatan' => $this->request->getPost('catatan'),
         ];
+
+        $this->catatanPerawatan->insert($data);
+    }
+
+
+    public function riwayatSOAPIE()
+    {
+        $noRekam_medis = $this->request->getGet('norm');
+        $data = [];
+
+        $status = $this->reg_periksa
+            ->select('reg_periksa.no_reg, reg_periksa.no_rawat, reg_periksa.tgl_registrasi, reg_periksa.status_lanjut')
+            ->where('reg_periksa.stts !=', 'Batal')
+            ->where('reg_periksa.no_rkm_medis', $noRekam_medis)
+            ->orderBy('reg_periksa.tgl_registrasi', 'DESC')
+            ->limit(1)
+            // ->findAll();
+            ->first();
+
+
+        if ($status) {
+            if ($status['status_lanjut'] == 'Ralan') {
+                $ttv = $this->riWayatRalan($status['no_rawat']);
+                $message = 'Data Ralan ditemukan';
+            } else {
+                $ttv = $this->riwayatRanap($status['no_rawat']);
+                $message = 'Data Ranap ditemukan';
+            }
+
+            $radiologi = $this->getRadiologi($status['no_rawat']);
+
+            if(!$radiologi) {
+                $radiologi = '-';
+            }
+
+            // Data respons sukses
+            $data = [
+                'status_code'   => 200,
+                'message'       => $message,
+                'ttv'           => $ttv,
+                'radiologi'     => $radiologi
+            ];
+        } else {
+            // Data tidak ditemukan
+            $data = [
+                'status_code' => 404,
+                'message' => 'Data tidak ditemukan.',
+            ];
+        }
+
+        // dd($data);
 
         return $this->response->setJSON($data);
     }
+    
 }

@@ -19,7 +19,6 @@
 
 .navbar {
   height: 35px;
-  border: 1px solid;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
   display: flex;
@@ -27,13 +26,11 @@
 .navbar .left {
   border-bottom-left-radius: 5px;
   margin-top: -10px;
-  border: 1px solid blue;
   width: 85%;
   height: 35px;
 }
 .navbar .right {
   margin-top: -10px;
-  border: 1px solid red;
   border-bottom-right-radius: 5px;
   width: 15%;
   height: 35px;
@@ -75,23 +72,20 @@
   }
   .navbar {
     height: 35px;
-    border: 1px solid;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
     display: flex;
+    background-color: #265925;
+    color: white;
   }
   .navbar .left {
-    border-bottom-left-radius: 5px;
     margin-top: -10px;
-    border: 1px solid blue;
     width: 85%;
     height: 35px;
   }
   .navbar .right {
     display: flex;
     margin-top: -10px;
-    border: 1px solid red;
-    border-bottom-right-radius: 5px;
     width: 15%;
     height: 35px;
     justify-content: center;
@@ -166,6 +160,16 @@
     border-left: 1px solid;
     border-right: 1px solid;
     border-bottom: 1px solid;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .modal-body .section-catatan {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
   .modal-footer .btn-custom {
     font-size: 9px;
@@ -191,9 +195,10 @@
     border-bottom: 1px solid;
   }
   .type .section-menu {
-    padding-right: 2%;
+    display: flex;
     padding-top: 3%;
-    width: 50%;
+    width: 100%;
+    justify-content: flex-end;
   }
   .type .section-menu .left {
     border-top: 1px solid black;
@@ -203,12 +208,22 @@
     padding: 3%;
     background-color: #164cc2;
   }
-  .type .section-menu .right {
+  .type .section-menu .menu-1 {
     color: white;
     padding: 3%;
     background-color: #dda900;
     border-top: 1px solid black;
     border-right: 1px solid black;
+    border-left: 1px solid black;
+    border-top-right-radius: 6px;
+  }
+  .type .section-menu .menu-2 {
+    color: white;
+    padding: 3%;
+    background-color: #dd0000;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
     border-top-right-radius: 6px;
   }
   .type .btn-custom {
@@ -224,5 +239,13 @@
   }
   .type .yellow {
     background-color: #d3c11e;
+  }
+  .btn-custom {
+    font-size: 9px;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 2px;
+    border: none;
+    color: white;
   }
 }/*# sourceMappingURL=perawat.css.map */

@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class RegPeriksa extends Model
 {
-    protected $table            = 'regperiksa';
+    protected $table            = 'reg_periksa';
     protected $primaryKey       = 'no_rawat';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';

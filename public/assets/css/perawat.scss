@@ -34,7 +34,6 @@ $hijauTua: #265925;
 
 .navbar {
     height: 35px;
-    border: 1px solid;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
     display: flex;
@@ -42,14 +41,12 @@ $hijauTua: #265925;
     .left {
         border-bottom-left-radius: 5px;
         margin-top: -10px;
-        border: 1px solid blue;
         width: 85%;
         height: 35px;
     }
 
     .right {
         margin-top: -10px;
-        border: 1px solid red;
         border-bottom-right-radius: 5px;
         width: 15%;
         height: 35px;
@@ -97,15 +94,15 @@ $hijauTua: #265925;
 
     .navbar {
         height: 35px;
-        border: 1px solid;
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;
         display: flex;
+        background-color: $hijauTua;
+        color: white;
 
         .left {
-            border-bottom-left-radius: 5px;
             margin-top: -10px;
-            border: 1px solid blue;
+            // border: 1px solid $hijauTua;
             width: 85%;
             height: 35px;
         }
@@ -113,8 +110,6 @@ $hijauTua: #265925;
         .right {
             display: flex;
             margin-top: -10px;
-            border: 1px solid red;
-            border-bottom-right-radius: 5px;
             width: 15%;
             height: 35px;
             justify-content: center;
@@ -201,6 +196,16 @@ $hijauTua: #265925;
             border-left: 1px solid;
             border-right: 1px solid;
             border-bottom: 1px solid;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .section-catatan {
+            padding-left: 2%;
+            padding-right: 2%;
+            padding-bottom: 2%;
+            border-left: 1px solid;
+            border-right: 1px solid;
+            border-bottom: 1px solid;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
     }
 
@@ -231,13 +236,13 @@ $hijauTua: #265925;
         background-color: #ffffff;
         z-index: 1050;
         text-align: center;
-        
         border-bottom: 1px solid;
 
         .section-menu {
-            padding-right: 2%;
+            display: flex;
             padding-top: 3%;
-            width: 50%;
+            width: 100%;
+            justify-content: flex-end;
             .left{
                 border-top: 1px solid black;
                 border-left: 1px solid black;
@@ -246,12 +251,23 @@ $hijauTua: #265925;
                 padding: 3%;
                 background-color: #164cc2;
             }
-            .right{
+            .menu-1{
                 color: white;
                 padding: 3%;
                 background-color: #dda900;
                 border-top: 1px solid black;
                 border-right: 1px solid black;
+                border-left: 1px solid black;
+                border-top-right-radius: 6px;
+                // clip-path: polygon(0 0, 100% 0,0 100%);
+            }
+            .menu-2{
+                color: white;
+                padding: 3%;
+                background-color: #dd0000;
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                border-left: 1px solid black;
                 border-top-right-radius: 6px;
                 // clip-path: polygon(0 0, 100% 0,0 100%);
             }
@@ -272,8 +288,16 @@ $hijauTua: #265925;
 
         .yellow {
             background-color: #d3c11e;
+            
         }
     }
 
-
+    .btn-custom {
+        @include font-text;
+        padding-left: 2%;
+        padding-right: 2%;
+        border-radius: 2px;
+        border: none;
+        color: white;
+    }
 }
