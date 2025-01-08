@@ -51,7 +51,6 @@
 </div>
 
 <script>
-
     document.getElementById('staticBackdrop').addEventListener('hidden.bs.modal', function() {
         $('#catatan_noRm').val("");
         $('#catatan_noRawat').val("");
@@ -65,10 +64,10 @@
 
         let rows = '';
         $('#gambar-radiologi-zoom-1').html(rows);
-        
+
         var body = document.body;
         body.style.paddingRight = '';
-        
+
         document.getElementById('btn-riwayat').classList.add('active');
         document.getElementById('btn-catatan').classList.remove('active');
         document.getElementById('btn-radiologi').classList.remove('active');
@@ -135,38 +134,41 @@
                 let rows = '';
                 Swal.close();
 
-                console.log(response)
-                // if (response != null) {
-                //     rows += `
-                //                 <div class="wrapper-jam" style="margin-bottom: 3%; ">
-                //                     <div class"tgl-periksa" style="display: flex;">
-                //                         <div style="width: 10%">Tanggal</div>
-                //                         <div style="width: 2%;">:</div>
-                //                         <div>${response.tgl_periksa}</div>
-                //                     </div>
-                //                     <div class"tgl-periksa" style="display: flex;">
-                //                         <div style="width: 10%;">Jam</div>
-                //                         <div style="width: 2%;">:</div>
-                //                         <div>${response.jam}</div>
-                //                     </div>
-                //                 </div>
-                //             `;
-                //     rows += `<img src="http://192.168.2.91/webapps/radiologi/${response.lokasi_gambar}" alt="" style="width: 100%; cursor: pointer;" onclick="zoomImage(this, 'modal-zoom-radiologi-custom-1')">`;
-                //     rows += `
-                //             <div class="wrapper-titile-gambar" style="display:flex; margin-top:3%">
-                //                 <div class"title">
-                //                     Hasil
-                //                 </div>
-                //                 <div class"title" style="width: 5%; text-align:center;">
-                //                 :
-                //                 </div>
-                //                 <div class"title">
-                //                     ${response.hasil}
-                //                 </div>
-                //             </div>`;
-                // } else {
-                //     rows += 'Tidak Ada File Gambar Radiologi....'
-                // }
+
+                // console.log(response)
+                if (response.length > 0) {
+                    for (let i = 0; i < response.length; i++) {
+                        rows += `
+                            <div class="wrapper-jam" style="margin-bottom: 3%; ">
+                                <div class"tgl-periksa" style="display: flex;">
+                                    <div style="width: 10%">Tanggal</div>
+                                    <div style="width: 2%;">:</div>
+                                    <div>${response[i].tgl_periksa}</div>
+                                </div>
+                                <div class"tgl-periksa" style="display: flex;">
+                                    <div style="width: 10%;">Jam</div>
+                                    <div style="width: 2%;">:</div>
+                                    <div>${response[i].jam}</div>
+                                </div>
+                                <div class"tgl-periksa" style="display: flex;">
+                                    <div style="width: 10%;">Hasil</div>
+                                    <div style="width: 2%;">:</div>
+                                    <div>${response[i].hasil}</div>
+                                </div>
+                                <div style="display: flex;">
+                                    <div style="width: 10%;"></div>
+                                    <div style="width: 2%;"></div>
+                                    <div class="tgl-btn" 
+                                        onclick="zoomImage('http://192.168.2.91/webapps/radiologi/${response[i].lokasi_gambar}', 'modal-zoom-radiologi-custom-1')">
+                                        Tampilkan Gambar
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    rows += 'Tidak Ada File Gambar Radiologi....'
+                }
                 $('#gambar-radiologi-zoom-1').html(rows);
             },
             error: function() {
@@ -179,6 +181,4 @@
             }
         });
     }
-
-    
 </script>

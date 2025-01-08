@@ -45,14 +45,11 @@
 
 <script>
     function clearSearch() {
-        // Kosongkan nilai input pencarian
         document.getElementById('search-bar').value = "";
 
-        // Dapatkan semua baris tabel
         var table = document.getElementById("table-obat");
         var rows = table.getElementsByTagName("tr");
 
-        // Tampilkan semua baris tabel
         for (var i = 0; i < rows.length; i++) {
             rows[i].style.display = "";
         }
@@ -61,11 +58,9 @@
     document.getElementById('staticBackdrop').addEventListener('hidden.bs.modal', function() {
         document.getElementById('search-bar').value = "";
 
-        // Dapatkan semua baris tabel
         var table = document.getElementById("table-obat");
         var rows = table.getElementsByTagName("tr");
 
-        // Tampilkan semua baris tabel
         for (var i = 0; i < rows.length; i++) {
             rows[i].style.display = "";
         }

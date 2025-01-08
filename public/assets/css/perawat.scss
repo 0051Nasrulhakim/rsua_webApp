@@ -382,6 +382,15 @@ $hijauTua: #265925;
 }
 
 @media screen and (min-width: 748px) and (max-width: 1200px) {
+    .wrapper-jam{
+        .tgl-btn{
+            margin-top: 1%;
+            padding: 1%;
+            color: white;
+            border-radius: 3px;
+            background-color: $hijauTua;
+        }
+    }
     .navbar {
         height: 35px;
         border-bottom-right-radius: 5px;

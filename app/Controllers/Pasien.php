@@ -31,7 +31,7 @@ class Pasien extends BaseController
     {
 
         // $noRkmMedis = '042837';
-        $noRkmMedis = $this->request->getGet('norm');    
+        $noRkmMedis = $this->request->getGet('norm');
         // $noRkmMedis = '042831';
         $noRawatRecords = $this->reg_periksa->getNoRawat($noRkmMedis);
         $noRawatList = array_column($noRawatRecords, 'no_rawat');
@@ -91,7 +91,11 @@ class Pasien extends BaseController
             dokter_dpjp.kd_dokter AS kode_dokter_dpjp,
             penjab.png_jawab,
             IF(kamar_inap.tgl_keluar != '0000-00-00', 'Pulang', DATEDIFF(CURDATE(), kamar_inap.tgl_masuk)) AS lama_inap,
-            kamar.kelas
+            kamar.kelas,
+            GROUP_CONCAT(DISTINCT IFNULL(diagnosa_pasien.kd_penyakit, '-') SEPARATOR ', ') AS kode_dx,
+            GROUP_CONCAT(DISTINCT IFNULL(penyakit.nm_penyakit, '-') SEPARATOR ', ') AS nama_penyakit,
+            
+
         ")
             ->join("pasien", "reg_periksa.no_rkm_medis=pasien.no_rkm_medis")
             ->join("kamar", "kamar_inap.kd_kamar=kamar.kd_kamar")
@@ -99,12 +103,15 @@ class Pasien extends BaseController
             ->join("kelurahan", "pasien.kd_kel=kelurahan.kd_kel")
             ->join("kecamatan", "pasien.kd_kec=kecamatan.kd_kec")
             ->join("kabupaten", "pasien.kd_kab=kabupaten.kd_kab")
-            
+            ->join("diagnosa_pasien", "kamar_inap.no_rawat=diagnosa_pasien.no_rawat", 'LEFT')
+            ->join("penyakit", "diagnosa_pasien.kd_penyakit=penyakit.kd_penyakit", 'LEFT')
+
             ->join("penjab", "reg_periksa.kd_pj=penjab.kd_pj")
             ->join("aro_catatan_naik_titip_kelas", "reg_periksa.no_rawat=aro_catatan_naik_titip_kelas.no_rawat", 'LEFT')
-            
+
             ->join("dokter AS dokter_dpjp", "dpjp_ranap.kd_dokter=dokter_dpjp.kd_dokter", 'LEFT')
-            ->where("kamar_inap.stts_pulang", "-");
+            ->where("kamar_inap.stts_pulang", "-")
+            ->groupBy("kamar_inap.no_rawat");
 
         if (!empty($dokter)) {
             $data = $data->where("dpjp_ranap.kd_dokter", $dokter);
@@ -251,14 +258,16 @@ class Pasien extends BaseController
     public function getGambarRadiologi()
     {
         $noRawat = $this->request->getGet('norawat');
-        // $noRawat = "2024/12/06/000124";
+        // $noRawat = "2024/12/04/000058";
 
         $data = $this->gambar_radiologi
-            ->join('hasil_radiologi', 'hasil_radiologi.no_rawat = gambar_radiologi.no_rawat')
+            ->join('hasil_radiologi', 'gambar_radiologi.no_rawat = hasil_radiologi.no_rawat AND gambar_radiologi.tgl_periksa = hasil_radiologi.tgl_periksa AND gambar_radiologi.jam = hasil_radiologi.jam')
+            // ->join('hasil_radiologi', 'gambar_radiologi.no_rawat = hasil_radiologi.no_rawat')
             ->where('gambar_radiologi.no_rawat', $noRawat)
             ->orderBy('gambar_radiologi.tgl_periksa', 'DESC')
             ->orderBy('gambar_radiologi.jam', 'DESC')
-            ->first();
+            // ->first();
+            ->findAll();
 
         return $this->response->setJSON($data);
     }
