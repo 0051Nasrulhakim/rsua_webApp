@@ -3,6 +3,10 @@
   margin: 0;
 }
 
+.section-menu .active {
+  background-color: #265925 !important;
+}
+
 .logo {
   font-size: 18px;
   font-weight: 700;
@@ -11,6 +15,10 @@
 .judul {
   font-size: 18px;
   font-weight: 700;
+  margin-top: 1%;
+  margin-left: 2%;
+  margin-right: 2%;
+  text-align: center;
 }
 
 .text {
@@ -18,22 +26,56 @@
 }
 
 .navbar {
-  height: 35px;
+  height: 50px;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
   display: flex;
+  background-color: #265925;
+  color: white;
 }
 .navbar .left {
-  border-bottom-left-radius: 5px;
   margin-top: -10px;
   width: 85%;
-  height: 35px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding-left: 2%;
 }
 .navbar .right {
+  display: flex;
   margin-top: -10px;
-  border-bottom-right-radius: 5px;
   width: 15%;
-  height: 35px;
+  height: 50px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.wrapper {
+  border: 1px solid #e7e7e7;
+  margin-left: 2%;
+  margin-right: 2%;
+  padding: 1%;
+  border-radius: 2px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10%;
+}
+.wrapper .table .rowDiagnosaAkhir {
+  display: table-cell;
+  width: 10%;
+}
+.wrapper .table .btn-custom-blue {
+  padding: 7%;
+  border-radius: 2px;
+  border: none;
+  color: white;
+  background-color: #164cc2;
+}
+.wrapper .table .btn-custom-yellow {
+  padding: 7%;
+  border-radius: 2px;
+  border: none;
+  color: white;
+  background-color: #dda900;
 }
 
 .filter {
@@ -49,7 +91,43 @@
   background-color: #265925;
 }
 
-@media screen and (max-width: 470px) {
+.breadcrumb {
+  margin-top: 1%;
+  margin-left: 2%;
+  margin-bottom: 1%;
+}
+
+@media screen and (min-width: 348px) and (max-width: 747px) {
+  .swal-title-small {
+    font-size: 18px;
+    /* Atur ukuran teks judul */
+  }
+  .swal-text-small {
+    font-size: 14px;
+    /* Atur ukuran teks konten */
+  }
+  .navbar {
+    height: 35px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    display: flex;
+    background-color: #265925;
+    color: white;
+  }
+  .navbar .left {
+    margin-top: -10px;
+    border: 1px solid #265925;
+    width: 85%;
+    height: 35px;
+  }
+  .navbar .right {
+    display: flex;
+    margin-top: -10px;
+    width: 15%;
+    height: 35px;
+    justify-content: center;
+    align-items: center;
+  }
   .logo {
     font-size: 18px;
     font-weight: 700;
@@ -70,6 +148,167 @@
     margin-left: 2%;
     margin-bottom: 3%;
   }
+  .wrapper {
+    border: 1px solid #e7e7e7;
+    margin-left: 2%;
+    margin-right: 2%;
+    padding: 1%;
+    border-radius: 2px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10%;
+  }
+  .wrapper .table {
+    font-size: 9px;
+  }
+  .wrapper .table .rowDiagnosaAkhir {
+    display: none;
+  }
+  .wrapper .table .btn-custom-blue {
+    font-size: 9px;
+    padding: 7%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+    background-color: #164cc2;
+  }
+  .wrapper .table .btn-custom-yellow {
+    font-size: 9px;
+    padding: 7%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+    background-color: #dda900;
+  }
+  .wrapper .filter-section-pasien-ranap {
+    font-size: 9px;
+  }
+  .modal-body {
+    font-size: 9px;
+  }
+  .modal-body .section {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .modal-body .section-catatan {
+    font-size: 9px;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .modal-footer .btn-custom {
+    font-size: 9px;
+    padding: 2%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+  }
+  .modal-footer .blue {
+    background-color: #164cc2;
+  }
+  .modal-footer .red {
+    background-color: #a51300;
+  }
+  .section-riwayat-obat .sro-nama-obat {
+    width: 14%;
+  }
+  .section-riwayat-obat input {
+    height: 30px;
+  }
+  .section-riwayat-obat .sro-tabel .tanggal {
+    width: 19%;
+  }
+  .type {
+    position: sticky;
+    margin-top: -3.4%;
+    /* Tetap di posisi saat menggulir */
+    top: -3%;
+    background-color: #ffffff;
+    z-index: 1050;
+    text-align: center;
+    border-bottom: 1px solid;
+  }
+  .type .section-menu {
+    display: flex;
+    padding-top: 3%;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .type .section-menu .left {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    color: white;
+    padding: 3%;
+    background-color: #164cc2;
+  }
+  .type .section-menu .menu-1 {
+    color: white;
+    padding: 1%;
+    background-color: #dda900;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    border-top-right-radius: 6px;
+  }
+  .type .section-menu .menu-2 {
+    color: white;
+    padding: 1%;
+    background-color: #dd0000;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    border-top-right-radius: 6px;
+  }
+  .type .btn-custom {
+    font-size: 9px;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+  }
+  .type .blue {
+    background-color: #16b7c2;
+  }
+  .type .yellow {
+    background-color: #d3c11e;
+  }
+  .section-paginasi {
+    margin-bottom: 3%;
+  }
+  .section-paginasi .pagination .btn-prev {
+    padding: 2%;
+    margin-right: 3%;
+    border: none;
+    border-radius: 2px;
+    background-color: #005f69;
+    border-radius: 4px;
+    color: white;
+  }
+  .section-paginasi .pagination .btn-next {
+    margin-left: 3%;
+    padding: 2%;
+    border: none;
+    border-radius: 2px;
+    background-color: #005f69;
+    border-radius: 4px;
+    color: white;
+  }
+  .section-paginasi .pagination .count_page {
+    display: flex;
+    align-items: center;
+  }
+}
+@media screen and (min-width: 748px) and (max-width: 1200px) {
   .navbar {
     height: 35px;
     border-bottom-right-radius: 5px;
@@ -91,6 +330,28 @@
     justify-content: center;
     align-items: center;
   }
+  .logo {
+    font-size: 18px;
+    font-weight: 700;
+    margin-left: 2%;
+    height: 35px;
+    display: flex;
+    align-items: center;
+  }
+  .judul {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 1%;
+    margin-left: 2%;
+    margin-right: 2%;
+    text-align: center;
+  }
+  .breadcrumb {
+    font-size: 10px;
+    margin-top: 2%;
+    margin-left: 2%;
+    margin-bottom: 3%;
+  }
   .wrapper {
     border: 1px solid #e7e7e7;
     margin-left: 2%;
@@ -102,6 +363,10 @@
   }
   .wrapper .table {
     font-size: 9px;
+  }
+  .wrapper .table .rowDiagnosaAkhir {
+    display: table-cell;
+    width: 10%;
   }
   .wrapper .table .btn-custom-blue {
     font-size: 9px;
@@ -163,6 +428,7 @@
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
   .modal-body .section-catatan {
+    font-size: 9px;
     padding-left: 2%;
     padding-right: 2%;
     padding-bottom: 2%;
@@ -183,6 +449,18 @@
   }
   .modal-footer .red {
     background-color: #a51300;
+  }
+  .section-riwayat-obat .sro-nama-obat {
+    width: 14%;
+  }
+  .section-riwayat-obat input {
+    height: 30px;
+  }
+  .section-riwayat-obat .sro-tabel .tanggal {
+    width: 15% !important;
+  }
+  .section-riwayat-obat .sro-tabel .jam {
+    width: 15% !important;
   }
   .type {
     position: sticky;
@@ -210,7 +488,7 @@
   }
   .type .section-menu .menu-1 {
     color: white;
-    padding: 3%;
+    padding: 1%;
     background-color: #dda900;
     border-top: 1px solid black;
     border-right: 1px solid black;
@@ -219,7 +497,7 @@
   }
   .type .section-menu .menu-2 {
     color: white;
-    padding: 3%;
+    padding: 1%;
     background-color: #dd0000;
     border-top: 1px solid black;
     border-right: 1px solid black;
@@ -242,6 +520,198 @@
   }
   .btn-custom {
     font-size: 9px;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+  }
+  .section-paginasi {
+    margin-bottom: 3%;
+  }
+  .section-paginasi .pagination .btn-prev {
+    padding-right: 2%;
+    padding-left: 2%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    margin-right: 3%;
+    border: none;
+    border-radius: 2px;
+    background-color: #005f69;
+    border-radius: 4px;
+    color: white;
+  }
+  .section-paginasi .pagination .btn-next {
+    padding-right: 2%;
+    padding-left: 2%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    margin-left: 3%;
+    border: none;
+    border-radius: 2px;
+    background-color: #005f69;
+    border-radius: 4px;
+    color: white;
+  }
+  .section-paginasi .pagination .count_page {
+    display: flex;
+    align-items: center;
+  }
+}
+@media screen and (min-width: 1201px) {
+  .navbar {
+    height: 50px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    display: flex;
+    background-color: #265925;
+    color: white;
+  }
+  .navbar .left {
+    margin-top: -10px;
+    width: 85%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 2%;
+  }
+  .navbar .right {
+    display: flex;
+    margin-top: -10px;
+    width: 15%;
+    height: 50px;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 5%;
+  }
+  .section-paginasi .pagination .btn-prev {
+    padding: 1%;
+    margin-right: 3%;
+    border: none;
+    border-radius: 2px;
+    background-color: #005f69;
+    border-radius: 4px;
+    color: white;
+  }
+  .section-paginasi .pagination .btn-next {
+    margin-left: 3%;
+    padding-left: 2%;
+    padding-right: 2%;
+    border: none;
+    border-radius: 2px;
+    background-color: #005f69;
+    border-radius: 4px;
+    color: white;
+  }
+  .filter-box {
+    position: fixed;
+    width: 150px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .modal-body .section {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .modal-body .section-catatan {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .modal-footer .btn-custom {
+    padding: 2%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+  }
+  .modal-footer .blue {
+    background-color: #164cc2;
+  }
+  .modal-footer .red {
+    background-color: #a51300;
+  }
+  .section-riwayat-obat .sro-nama-obat {
+    width: 14%;
+  }
+  .section-riwayat-obat input {
+    height: 30px;
+  }
+  .section-riwayat-obat .sro-tabel .tanggal {
+    width: 15% !important;
+  }
+  .section-riwayat-obat .sro-tabel .jam {
+    width: 15% !important;
+  }
+  .type {
+    position: sticky;
+    margin-top: -3.4%;
+    /* Tetap di posisi saat menggulir */
+    top: -3%;
+    background-color: #ffffff;
+    z-index: 1050;
+    text-align: center;
+    border-bottom: 1px solid;
+  }
+  .type .section-menu {
+    display: flex;
+    padding-top: 3%;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .type .section-menu .left {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    color: white;
+    padding: 3%;
+    background-color: #164cc2;
+  }
+  .type .section-menu .menu-1 {
+    color: white;
+    padding: 1%;
+    background-color: #dda900;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    border-top-right-radius: 6px;
+  }
+  .type .section-menu .menu-2 {
+    color: white;
+    padding: 1%;
+    background-color: #dd0000;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    border-top-right-radius: 6px;
+  }
+  .type .btn-custom {
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 2px;
+    border: none;
+    color: white;
+  }
+  .type .blue {
+    background-color: #16b7c2;
+  }
+  .type .yellow {
+    background-color: #d3c11e;
+  }
+  .btn-custom {
     padding-left: 2%;
     padding-right: 2%;
     border-radius: 2px;
