@@ -32,7 +32,7 @@
                         <td class="tanggal">tanggal</td>
                         <td class="jam">Jam</td>
                         <td class="nama_brng">N. Obat / Alkes</td>
-                        <td class="jml">Jumlah</td>
+                        <td class="jml text-center">Jumlah</td>
                     </tr>
                 </thead>
                 <tbody id="table-obat">
@@ -75,11 +75,13 @@
         document.getElementById('section-catatan').setAttribute('hidden', 'true');
         document.getElementById('riwayat_obat').removeAttribute('hidden');
         document.getElementById('radiologi').setAttribute('hidden', 'true');
+        document.getElementById('section-lab').setAttribute('hidden', 'true');
 
         document.getElementById('btn-obat').classList.add('active');
         document.getElementById('btn-catatan').classList.remove('active');
         document.getElementById('btn-riwayat').classList.remove('active');
         document.getElementById('btn-radiologi').classList.remove('active');
+        document.getElementById('btn-lab').classList.remove('active');
 
         Swal.fire({
             title: 'Sedang Mengambil data...',

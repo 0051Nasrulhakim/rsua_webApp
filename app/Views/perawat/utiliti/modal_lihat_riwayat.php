@@ -16,6 +16,9 @@
                 <div class="type">
                     <div class="section-menu">
 
+                        <div class="menu-1" onclick="lab()" id="btn-lab">
+                            Laboratorium
+                        </div>
                         <div class="menu-1" onclick="radiologi()" id="btn-radiologi">
                             Radiologi
                         </div>
@@ -39,11 +42,14 @@
                 <form id="insertCatatan" method="post">
                     <input type="text" id="catatan_noRm" name="noRm" hidden>
                     <input type="text" id="catatan_noRawat" name="noRawat" hidden>
+                    <input type="text" id="catatan_tanggal" name="tanggal" hidden>
+                    <input type="text" id="catatan_jam" name="jam" hidden>
                     <?= $this->include('perawat/utiliti/section_r_obat') ?>
 
                     <?= $this->include('perawat/utiliti/section-catatan') ?>
                 </form>
                 <?= $this->include('perawat/utiliti/section_radiologi') ?>
+                <?= $this->include('perawat/utiliti/section-lab') ?>
 
             </div>
         </div>
@@ -56,11 +62,18 @@
         $('#catatan_noRawat').val("");
 
         $('#section-modal-riwayat').html("");
+        $('#list-catatan').html("");
         $('#insertCatatan')[0].reset();
         document.getElementById('section-modal-riwayat').removeAttribute('hidden');
         document.getElementById('section-catatan').setAttribute('hidden', 'true');
         document.getElementById('riwayat_obat').setAttribute('hidden', 'true');
         document.getElementById('radiologi').setAttribute('hidden', 'true');
+        document.getElementById('section-lab').setAttribute('hidden', 'true');
+        document.getElementById('catatan_tanggal').value = "";
+        document.getElementById('catatan_jam').value = ""
+
+        document.getElementById('tombol-2').setAttribute('hidden', 'true')
+        document.getElementById('section-change-tombol').removeAttribute('hidden');
 
         let rows = '';
         $('#gambar-radiologi-zoom-1').html(rows);
@@ -72,30 +85,203 @@
         document.getElementById('btn-catatan').classList.remove('active');
         document.getElementById('btn-radiologi').classList.remove('active');
         document.getElementById('btn-obat').classList.remove('active');
+        document.getElementById('btn-lab').classList.remove('active');
     });
 
-    function tambahCatatan() {
-        document.getElementById('section-modal-riwayat').setAttribute('hidden', 'true');
-        document.getElementById('riwayat_obat').setAttribute('hidden', 'true');
-        document.getElementById('section-catatan').removeAttribute('hidden');
-        document.getElementById('radiologi').setAttribute('hidden', 'true');
-
-        document.getElementById('btn-catatan').classList.add('active');
-        document.getElementById('btn-riwayat').classList.remove('active');
-        document.getElementById('btn-radiologi').classList.remove('active');
-        document.getElementById('btn-obat').classList.remove('active');
-    }
 
     function riwayatPasien() {
         document.getElementById('section-modal-riwayat').removeAttribute('hidden');
         document.getElementById('riwayat_obat').setAttribute('hidden', 'true')
         document.getElementById('section-catatan').setAttribute('hidden', 'true');
         document.getElementById('radiologi').setAttribute('hidden', 'true');
+        document.getElementById('section-lab').setAttribute('hidden', 'true');
 
         document.getElementById('btn-riwayat').classList.add('active');
         document.getElementById('btn-catatan').classList.remove('active');
         document.getElementById('btn-radiologi').classList.remove('active');
         document.getElementById('btn-obat').classList.remove('active');
+        document.getElementById('btn-lab').classList.remove('active');
+    }
+
+    function tambahCatatan() {
+        document.getElementById('section-modal-riwayat').setAttribute('hidden', 'true');
+        document.getElementById('riwayat_obat').setAttribute('hidden', 'true');
+        document.getElementById('section-catatan').removeAttribute('hidden');
+        document.getElementById('radiologi').setAttribute('hidden', 'true');
+        document.getElementById('section-lab').setAttribute('hidden', 'true');
+
+        document.getElementById('btn-catatan').classList.add('active');
+        document.getElementById('btn-riwayat').classList.remove('active');
+        document.getElementById('btn-radiologi').classList.remove('active');
+        document.getElementById('btn-obat').classList.remove('active');
+        document.getElementById('btn-lab').classList.remove('active');
+
+        var no_rawat = document.getElementById("catatan_noRawat").value
+
+        $.ajax({
+            url: '<?= base_url('pasien/getCatatan') ?>',
+            method: 'GET',
+            data: {
+                noRawat: no_rawat
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+                Swal.close();
+                let rows = '';
+                if (data.length > 0) {
+                    data.forEach(function(item, index) {
+                        rows += `
+                                <div class="content">
+                                    <div class="header" style="text-align: center; border: 1px solid; background-color: #fff7e0;">
+                                        ${item.tanggal +' '+item.jam}
+                                    </div>
+                                    <div class="isi" style="padding: 2%; border: 1px solid; display: flex;" id="isCatatan">
+                                        <div style="width: 90%;">
+                                            ${item.catatan}
+                                        </div>
+                                        <div style="width: 10%;">
+                                            <button 
+                                                class="btn-custom-edit"
+                                                style="padding: 10%; border-radius: 2px; border: none; color: white; background-color: rgb(119, 128, 0); margin-right: 1%;"
+                                                type="button"
+                                                data-no-rawat="${no_rawat}"
+                                                data-tanggal="${item.tanggal}"
+                                                data-jam="${item.jam}"
+                                                data-catatan="${item.catatan}"
+                                                onclick="GantiCatatan(this)">
+                                                Edit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                    });
+                } else {
+                    rows += `
+                                <div class="content">
+                                    <div class="header" style="text-align: center; border: 1px solid; background-color: #fff7e0;">
+                                        BELUM ADA CATATAN PERAWATAN
+                                    </div>
+                                </div>
+                            `;
+                }
+                $('#list-catatan').html(rows);
+
+
+            },
+
+            error: function() {
+                // Hapus swal loading
+                Swal.close();
+
+                // Tampilkan swal error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan saat mengambil data!'
+                });
+            }
+        });
+
+
+
+    }
+
+    function GantiCatatan(button) {
+        const noRawat = button.getAttribute('data-no-rawat');
+        const tanggal = button.getAttribute('data-tanggal');
+        const jam = button.getAttribute('data-jam');
+        const catatan = button.getAttribute('data-catatan');
+        document.getElementById('floatingTextarea2').value = catatan;
+        document.getElementById('catatan_tanggal').value = tanggal;
+        document.getElementById('catatan_jam').value = jam;
+
+
+
+        const allButtons = document.querySelectorAll('.btn-custom-edit');
+        allButtons.forEach(function(btn) {
+            btn.style.display = 'none';
+        });
+        button.style.display = 'block';
+
+        button.innerText = 'Batalkan';
+        button.style.backgroundColor = 'rgb(255, 0, 0)';
+
+        button.onclick = function() {
+            Batalkan(button, noRawat, tanggal, jam, catatan);
+        };
+
+        document.getElementById('section-change-tombol').setAttribute('hidden', 'true')
+        document.getElementById('tombol-2').removeAttribute('hidden');
+    }
+
+    function updateCatatan(button) {
+
+        var no_rawat = document.getElementById("catatan_noRawat").value
+        var tes = $('#insertCatatan').serialize()
+        console.log(tes)
+        $.ajax({
+            url: '<?= base_url('pasien/updateCatatan') ?>',
+            type: 'POST',
+            data: $('#insertCatatan').serialize(),
+            success: function(response) {
+                if (response.status_code === 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: response.message,
+                        timer: 1500,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                    });
+
+                    setTimeout(function() {
+                        $('#staticBackdrop').modal('hide');
+                    }, 1500);
+
+                    $('#insertCatatan')[0].reset();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: response.message
+                    });
+                }
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Terjadi kesalahan pada server.'
+                });
+            }
+        });
+    }
+
+    function Batalkan(button, noRawat, tanggal, jam, catatan) {
+        document.getElementById('floatingTextarea2').value = '';
+
+        const allButtons = document.querySelectorAll('.btn-custom-edit');
+        allButtons.forEach(function(btn) {
+            btn.style.display = 'block';
+        });
+
+        button.innerText = 'Edit';
+        button.style.backgroundColor = 'rgb(119, 128, 0)';
+
+        button.onclick = function() {
+            GantiCatatan(button);
+        };
+
+        document.getElementById('section-change-tombol').removeAttribute('hidden');
+        document.getElementById('tombol-2').setAttribute('hidden', 'true')
+        document.getElementById('floatingTextarea2').value = "";
+        document.getElementById('catatan_tanggal').value = "";
+        document.getElementById('catatan_jam').value = ""
     }
 
     function radiologi() {
@@ -103,11 +289,13 @@
         document.getElementById('section-modal-riwayat').setAttribute('hidden', 'true')
         document.getElementById('riwayat_obat').setAttribute('hidden', 'true')
         document.getElementById('section-catatan').setAttribute('hidden', 'true');
+        document.getElementById('section-lab').setAttribute('hidden', 'true');
 
         document.getElementById('btn-radiologi').classList.add('active');
         document.getElementById('btn-catatan').classList.remove('active');
         document.getElementById('btn-riwayat').classList.remove('active');
         document.getElementById('btn-obat').classList.remove('active');
+        document.getElementById('btn-lab').classList.remove('active');
 
         Swal.fire({
             title: 'Sedang Mengambil data...',

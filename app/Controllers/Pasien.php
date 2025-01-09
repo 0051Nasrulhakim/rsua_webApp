@@ -19,6 +19,9 @@ class Pasien extends BaseController
         $this->riwayatPeriksa = new \App\Models\RiwayatPeriksa;
         $this->detail_pemberian_obat = new \App\Models\DetailPemberianObat;
         $this->gambar_radiologi = new \App\Models\GambarRadiologi;
+        $this->periksa_lab = new \App\Models\PeriksaLab;
+        $this->template = new \App\Models\TemplateLaboraturium;
+        $this->detail_periksa_lab = new \App\Models\DetailPeriksaLab;
     }
 
 
@@ -45,7 +48,7 @@ class Pasien extends BaseController
     public function getPasien()
     {
         $page = $this->request->getVar('page') ?? 1;
-        $perPage = 20;
+        $perPage = 50;
         $offset = ($page - 1) * $perPage;
         $dokter = $this->request->getVar('kd_dokter');
         // $dokter = "D0000058";
@@ -167,6 +170,38 @@ class Pasien extends BaseController
             ]);
         }
     }
+    public function updateCatatan()
+    {
+        try {
+            $old_no_rawat = $this->request->getPost('noRawat');
+            $old_tanggal = $this->request->getPost('tanggal');
+            $jam = $this->request->getPost('jam');
+
+            $data = [
+                'tanggal' => date('Ymd'),
+                'jam'     => date('His'),
+                'no_rawat' => $this->request->getVar('noRawat'),
+                'kd_dokter' => 'D0000007',
+                'catatan' => $this->request->getPost('catatan'),
+            ];
+
+            $this->catatanPerawatan->where('no_rawat', $old_no_rawat)
+                ->where('tanggal', $old_tanggal)
+                ->where('jam', $jam)
+                ->update([$data]);
+
+            return $this->response->setJSON([
+                'status_code' => 200,
+                'message' => 'Catatan berhasil Diuptdate.'
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status_code' => 500,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
+    }
 
     public function getCatatan()
     {
@@ -270,5 +305,120 @@ class Pasien extends BaseController
             ->findAll();
 
         return $this->response->setJSON($data);
+    }
+
+    public function getLab()
+    {
+        $noRawat = $this->request->getGet('norawat');
+        // $noRawat = "2024/12/01/000002";
+        $row = [];
+
+        $data = $this->periksa_lab
+            ->select("
+            periksa_lab.no_rawat,
+            periksa_lab.tgl_periksa,
+            periksa_lab.jam,
+            periksa_lab.nip,
+            periksa_lab.dokter_perujuk as perujuk,
+            periksa_lab.kd_dokter as dokter_pj,
+            dokter.nm_dokter as nm_dokter_pj,
+            petugas.nama as nama_petugas,
+            periksa_lab.kd_jenis_prw,
+            jns_perawatan_lab.nm_perawatan,
+        ")
+            ->join("dokter", "dokter.kd_dokter = periksa_lab.kd_dokter")
+            ->join("petugas", "petugas.nip = periksa_lab.nip")
+            ->join('jns_perawatan_lab', 'jns_perawatan_lab.kd_jenis_prw = periksa_lab.kd_jenis_prw')
+            ->where('periksa_lab.no_rawat', $noRawat)
+            ->orderBy('tgl_periksa', 'DESC')
+            ->orderBy('jam', 'DESC')
+            ->findAll();
+        // dd($data);
+        if ($data != null) {
+            $list_jenis_perawatan = array_column($data, 'kd_jenis_prw');
+
+            $template = $this->template
+                ->select('
+                    template_laboratorium.kd_jenis_prw, 
+                    template_laboratorium.id_template, 
+                    template_laboratorium.pemeriksaan, 
+                    template_laboratorium.satuan
+                ')
+                ->whereIn('template_laboratorium.kd_jenis_prw', $list_jenis_perawatan)
+                ->get()
+                ->getResultArray();
+
+            $listId_template = array_column($template, 'id_template');
+
+            $hasilLab = $this->detail_periksa_lab
+                ->select("
+                        detail_periksa_lab.no_rawat,
+                        detail_periksa_lab.tgl_periksa,
+                        detail_periksa_lab.jam,
+                        detail_periksa_lab.id_template,
+                        detail_periksa_lab.nilai,
+                        detail_periksa_lab.nilai_rujukan,
+                        detail_periksa_lab.bagian_rs,
+                        template_laboratorium.pemeriksaan,
+                        template_laboratorium.satuan,
+                        template_laboratorium.kd_jenis_prw
+                    ")
+                ->join('template_laboratorium', 'template_laboratorium.id_template = detail_periksa_lab.id_template')
+                ->where('detail_periksa_lab.no_rawat', $noRawat)
+                ->orderBy('tgl_periksa', 'DESC')
+                ->orderBy('jam', 'DESC')
+                ->findAll();
+
+            $groupedHasilLab = [];
+            $identitasLabByJenisPrw = [];
+
+            foreach ($data as $item) {
+                $identitasLabByJenisPrw[$item['kd_jenis_prw']] = [
+                    'tanggal' => $item['tgl_periksa'],
+                    'jam' => $item['jam'],
+                    'perujuk' => $item['perujuk'],
+                    'dokter_pj' => $item['dokter_pj'],
+                    'nm_perawatan' => $item['nm_perawatan']
+                ];
+            }
+
+            foreach ($hasilLab as $item) {
+                $kdJenisPrw = $item['kd_jenis_prw'];
+
+                if (isset($identitasLabByJenisPrw[$kdJenisPrw])) {
+                    $groupedHasilLab[$kdJenisPrw][] = [
+                        'tanggal' => $identitasLabByJenisPrw[$kdJenisPrw]['tanggal'],
+                        'jam' => $identitasLabByJenisPrw[$kdJenisPrw]['jam'],
+                        'perujuk' => $identitasLabByJenisPrw[$kdJenisPrw]['perujuk'],
+                        'dokter_pj' => $identitasLabByJenisPrw[$kdJenisPrw]['dokter_pj'],
+                        'nm_perawatan' => $identitasLabByJenisPrw[$kdJenisPrw]['nm_perawatan'],
+                        'id_template' => $item['id_template'],
+                        'pemeriksaan' => $item['pemeriksaan'],
+                        'nilai' => $item['nilai'],
+                        'nilai_rujukan' => $item['nilai_rujukan'],
+                        'bagian_rs' => $item['bagian_rs'],
+                        'satuan' => $item['satuan']
+                    ];
+                }
+            }
+
+            $res = [
+                'status_code' => 200,
+                'identitasLab' => $data,
+                // 'templateLab' => $template,
+                'hasilLab' => $groupedHasilLab,
+                'message' => 'Data Lab Ditemukan'
+            ];
+        } else {
+            $res = [
+                'status_code' => 404,
+                'message' => 'Tidak Di Temukan Data Lab'
+            ];
+        }
+
+
+        // dd($res);
+
+        return $this->response->setJSON($res);
     }
 }

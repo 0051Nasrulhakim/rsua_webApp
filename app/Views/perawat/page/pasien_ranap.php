@@ -19,12 +19,12 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th style="width: 8%;">Kelas</th>
+                <th style="width: 5%;">Kelas</th>
                 <th style="width: 25%; ">NAMA PASIEN</th>
                 <th style="width: 32%; ">DPJP</th>
                 <th class="rowDiagnosaAkhir text-center">Dx.</th>
                 <th style="width: 9%; text-align: center;">Jns. Bayar</th>
-                <th style="width: 15%; text-align: center;">R. Hari Ke-</th>
+                <th style="width: 15%; text-align: center;">Hari Ke-</th>
                 <th style="width: 7%;">ACTION</th>
             </tr>
         </thead>
@@ -107,10 +107,10 @@
                         data.forEach(function(item) {
                             rows += `
                             <tr onclick="klikTabel('${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}')">
-                                <td>${item.kelas}</td>
+                                <td>${item.kd_kamar}</td>
                                 <td>${item.nm_pasien}</td>
                                 <td>${item.dokter_dpjp ? item.dokter_dpjp : ''}</td>
-                                <td class="rowDiagnosaAkhir text-center">${item.kode_dx}</td>
+                                <td class="rowDiagnosaAkhir text-center">${item.nama_penyakit}</td>
                                 <td class="text-center">${item.png_jawab}</td>
                                 <td style="text-align: center;">${item.lama_inap}</td>
                                 <td>
@@ -344,7 +344,6 @@
 
     }
 
-        // alert('halo')
 
 </script>
 
