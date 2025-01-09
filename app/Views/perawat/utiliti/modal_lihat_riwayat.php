@@ -126,7 +126,6 @@
             },
             dataType: 'json',
             success: function(data) {
-                console.log(data);
                 Swal.close();
                 let rows = '';
                 if (data.length > 0) {
@@ -231,7 +230,6 @@
 
         var no_rawat = document.getElementById("catatan_noRawat").value
         var tes = $('#insertCatatan').serialize()
-        // console.log(tes)
         $.ajax({
             url: '<?= base_url('pasien/updateCatatan') ?>',
             type: 'POST',
@@ -277,7 +275,6 @@
         var noRawat = button.getAttribute('data-no-rawat');
         var tanggal = button.getAttribute('data-tanggal');
         var jam = button.getAttribute('data-jam');
-        console.log(noRawat, tanggal, jam);
 
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -291,7 +288,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '<?= base_url('pasien/hapusCatatan') ?>',
+                    url: '<?= base_url('pasien/deleteCatatan') ?>',
                     type: 'POST',
                     data: {
                         noRawat: noRawat,
