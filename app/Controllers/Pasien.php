@@ -180,21 +180,40 @@ class Pasien extends BaseController
             $data = [
                 'tanggal' => date('Ymd'),
                 'jam'     => date('His'),
-                'no_rawat' => $this->request->getVar('noRawat'),
+                'no_rawat' => $old_no_rawat,
                 'kd_dokter' => 'D0000007',
                 'catatan' => $this->request->getPost('catatan'),
             ];
 
-            $this->catatanPerawatan->where('no_rawat', $old_no_rawat)
+            $existingData = $this->catatanPerawatan->where('no_rawat', $old_no_rawat)
                 ->where('tanggal', $old_tanggal)
                 ->where('jam', $jam)
-                ->update([$data]);
+                ->first();
 
-            return $this->response->setJSON([
-                'status_code' => 200,
-                'message' => 'Catatan berhasil Diuptdate.'
-            ]);
+            if (!$existingData) {
+                return $this->response->setJSON([
+                    'status_code' => 404,
+                    'message' => 'Data tidak ditemukan untuk diupdate.'
+                ]);
+            }
 
+            $updateResult = $this->catatanPerawatan->where('no_rawat', $old_no_rawat)
+                ->where('tanggal', $old_tanggal)
+                ->where('jam', $jam)
+                ->set($data)
+                ->update();
+
+            if ($updateResult) {
+                return $this->response->setJSON([
+                    'status_code' => 200,
+                    'message' => 'Catatan berhasil diperbarui.'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status_code' => 500,
+                    'message' => 'Terjadi kesalahan saat memperbarui catatan.'
+                ]);
+            }
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'status_code' => 500,
@@ -415,9 +434,6 @@ class Pasien extends BaseController
                 'message' => 'Tidak Di Temukan Data Lab'
             ];
         }
-
-
-        // dd($res);
 
         return $this->response->setJSON($res);
     }

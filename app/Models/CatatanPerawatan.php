@@ -10,8 +10,6 @@ class CatatanPerawatan extends Model
     protected $primaryKey       = 'no_rawat';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
     protected $allowedFields    = [
         'tanggal',
         'jam',
