@@ -222,6 +222,47 @@ class Pasien extends BaseController
         }
     }
 
+    public function deleteCatatan()
+    {
+        try {
+            $noRawat = $this->request->getPost('noRawat');
+            $tanggal = $this->request->getPost('tanggal');
+            $jam = $this->request->getPost('jam');
+
+            if (empty($noRawat) || empty($tanggal) || empty($jam)) {
+                return $this->response->setJSON([
+                    'status_code' => 400,
+                    'message' => 'Data yang dibutuhkan tidak lengkap.'
+                ]);
+            }
+
+           
+            $deleteResult = $this->catatanPerawatan->where('no_rawat', $noRawat)
+                ->where('tanggal', $tanggal)
+                ->where('jam', $jam)
+                ->delete();
+
+            if ($deleteResult) {
+                return $this->response->setJSON([
+                    'status_code' => 200,
+                    'message' => 'Catatan berhasil dihapus.'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status_code' => 404,
+                    'message' => 'Catatan tidak ditemukan atau gagal menghapus.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status_code' => 500,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+
+
     public function getCatatan()
     {
         $noRawat = $this->request->getGet('noRawat');

@@ -137,13 +137,13 @@
                                         ${item.tanggal +' '+item.jam}
                                     </div>
                                     <div class="isi" style="padding: 2%; border: 1px solid; display: flex;" id="isCatatan">
-                                        <div style="width: 90%;">
+                                        <div style="width: 95%;">
                                             ${item.catatan}
                                         </div>
-                                        <div style="width: 10%;">
+                                        <div style="width: 15%; display: flex;">
                                             <button 
                                                 class="btn-custom-edit"
-                                                style="padding: 10%; border-radius: 2px; border: none; color: white; background-color: rgb(119, 128, 0); margin-right: 1%;"
+                                                style="padding: 10%; border-radius: 2px; border: none; color: white; background-color: rgb(119, 128, 0); margin-right: 3%;"
                                                 type="button"
                                                 data-no-rawat="${no_rawat}"
                                                 data-tanggal="${item.tanggal}"
@@ -151,6 +151,17 @@
                                                 data-catatan="${item.catatan}"
                                                 onclick="GantiCatatan(this)">
                                                 Edit
+                                            </button>
+                                            <button 
+                                                class="btn-custom-edit"
+                                                style="padding: 10%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 1%;"
+                                                type="button"
+                                                data-no-rawat="${no_rawat}"
+                                                data-tanggal="${item.tanggal}"
+                                                data-jam="${item.jam}"
+                                                data-catatan="${item.catatan}"
+                                                onclick="hapus(this)">
+                                                Hapus
                                             </button>
                                         </div>
                                     </div>
@@ -220,7 +231,7 @@
 
         var no_rawat = document.getElementById("catatan_noRawat").value
         var tes = $('#insertCatatan').serialize()
-        console.log(tes)
+        // console.log(tes)
         $.ajax({
             url: '<?= base_url('pasien/updateCatatan') ?>',
             type: 'POST',
@@ -257,6 +268,70 @@
                     icon: 'error',
                     title: 'Error',
                     text: 'Terjadi kesalahan pada server.'
+                });
+            }
+        });
+    }
+
+    function hapus(button) {
+        var noRawat = button.getAttribute('data-no-rawat');
+        var tanggal = button.getAttribute('data-tanggal');
+        var jam = button.getAttribute('data-jam');
+        console.log(noRawat, tanggal, jam);
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dihapus tidak dapat dipulihkan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('pasien/hapusCatatan') ?>',
+                    type: 'POST',
+                    data: {
+                        noRawat: noRawat,
+                        tanggal: tanggal,
+                        jam: jam
+                    },
+                    success: function(response) {
+                        if (response.status_code === 200) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message,
+                                timer: 1500,
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                allowEnterKey: false,
+                            });
+
+                            setTimeout(function() {
+                                $('#staticBackdrop').modal('hide');
+                            }, 1500);
+
+                            $('#insertCatatan')[0].reset();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: response.message
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Terjadi kesalahan pada server.'
+                        });
+                    }
                 });
             }
         });
