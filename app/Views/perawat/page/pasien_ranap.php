@@ -16,23 +16,25 @@
         </select>
     </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th style="width: 5%;">Kelas</th>
-                <th style="width: 22%; ">NAMA PASIEN</th>
-                <th style="width: 25%; ">DPJP</th>
-                <th class="rowDiagnosaAkhir text-center">Dx.</th>
-                <th class="rowCatatan text-center">Catatan Terakhir</th>
-                <th style="width: 10%; text-align: center;">Jns. Bayar</th>
-                <th style="width: 9%; text-align: center;">Hari Ke-</th>
-                <th style="width: 7%;">ACTION</th>
-            </tr>
-        </thead>
-        <tbody id="table-body">
+    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">Kelas</th>
+                    <th style="width: 22%; ">NAMA PASIEN</th>
+                    <th style="width: 25%; ">DPJP</th>
+                    <th class="rowDiagnosaAkhir text-center">Dx.</th>
+                    <th class="rowCatatan text-center">Catatan Terakhir</th>
+                    <th style="width: 10%; text-align: center;">Jns. Bayar</th>
+                    <th style="width: 9%; text-align: center;">Hari Ke-</th>
+                    <th style="width: 7%;">ACTION</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 
     <div class="section-paginasi"
         style="text-align: center; font-size: 12px;" hidden>
@@ -115,7 +117,7 @@
                                 <td>${item.nm_pasien}</td>
                                 <td>${item.dokter_dpjp ? item.dokter_dpjp : ''}</td>
                                 <td class="rowDiagnosaAkhir text-center">${item.nama_penyakit}</td>
-                                <td class="text-center">${item.catatan_terakhir ? item.catatan_terakhir : ''}</td>
+                                <td class="rowCatatan text-center">${item.catatan_terakhir ? item.catatan_terakhir : ''}</td>
                                 <td class="text-center">${item.png_jawab}</td>
                                 <td style="text-align: center;">${item.lama_inap}</td>
                                 <td>

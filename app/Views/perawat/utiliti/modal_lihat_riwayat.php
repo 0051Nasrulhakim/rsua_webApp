@@ -136,7 +136,7 @@
                                         ${item.tanggal +' '+item.jam}
                                     </div>
                                     <div class="isi" style="padding: 2%; border: 1px solid; display: flex;" id="isCatatan">
-                                        <div style="width: 95%;">
+                                        <div style="width: 80%;">
                                             ${item.catatan}
                                         </div>
                                         <div style="width: 15%; display: flex;">
