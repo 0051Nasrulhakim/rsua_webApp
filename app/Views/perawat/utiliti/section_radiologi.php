@@ -18,7 +18,7 @@
 
 <script>
     function zoomImage(img, modalId) {
-        console.log(img);
+        // console.log(img);
         var modal = document.getElementById(modalId);
         var modalImg = document.getElementById("modalImg-custom-" + modalId.split("-").pop());
         modal.style.display = "block";

@@ -26,7 +26,7 @@
                             Data Pemberian Obat
                         </div>
                         <div class="menu-1" onclick="tambahCatatan()" id="btn-catatan">
-                            Catatan
+                            Catatan Perawatan
                         </div>
                         <div class="menu-1 active" onclick="riwayatPasien()" id="btn-riwayat">
                             Riwayat Pasien
