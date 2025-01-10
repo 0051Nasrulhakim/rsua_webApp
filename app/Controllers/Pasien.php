@@ -35,7 +35,6 @@ class Pasien extends BaseController
 
         // $noRkmMedis = '042837';
         $noRkmMedis = $this->request->getGet('norm');
-        // $noRkmMedis = '042831';
         $noRawatRecords = $this->reg_periksa->getNoRawat($noRkmMedis);
         $noRawatList = array_column($noRawatRecords, 'no_rawat');
 
@@ -48,7 +47,7 @@ class Pasien extends BaseController
     public function getPasien()
     {
         $page = $this->request->getVar('page') ?? 1;
-        $perPage = 50;
+        $perPage = 200;
         $offset = ($page - 1) * $perPage;
         $dokter = $this->request->getVar('kd_dokter');
         // $dokter = "D0000058";
@@ -97,7 +96,13 @@ class Pasien extends BaseController
             kamar.kelas,
             GROUP_CONCAT(DISTINCT IFNULL(diagnosa_pasien.kd_penyakit, '-') SEPARATOR ', ') AS kode_dx,
             GROUP_CONCAT(DISTINCT IFNULL(penyakit.nm_penyakit, '-') SEPARATOR ', ') AS nama_penyakit,
-            
+            (
+                SELECT COALESCE(catatan_perawatan.catatan, '')
+                FROM catatan_perawatan
+                WHERE catatan_perawatan.no_rawat = kamar_inap.no_rawat
+                ORDER BY catatan_perawatan.tanggal DESC, catatan_perawatan.jam DESC
+                LIMIT 1
+            ) AS catatan_terakhir
 
         ")
             ->join("pasien", "reg_periksa.no_rkm_medis=pasien.no_rkm_medis")
@@ -236,7 +241,7 @@ class Pasien extends BaseController
                 ]);
             }
 
-           
+
             $deleteResult = $this->catatanPerawatan->where('no_rawat', $noRawat)
                 ->where('tanggal', $tanggal)
                 ->where('jam', $jam)

@@ -20,11 +20,12 @@
         <thead>
             <tr>
                 <th style="width: 5%;">Kelas</th>
-                <th style="width: 25%; ">NAMA PASIEN</th>
-                <th style="width: 32%; ">DPJP</th>
+                <th style="width: 22%; ">NAMA PASIEN</th>
+                <th style="width: 25%; ">DPJP</th>
                 <th class="rowDiagnosaAkhir text-center">Dx.</th>
-                <th style="width: 9%; text-align: center;">Jns. Bayar</th>
-                <th style="width: 15%; text-align: center;">Hari Ke-</th>
+                <th class="rowCatatan text-center">Catatan Terakhir</th>
+                <th style="width: 10%; text-align: center;">Jns. Bayar</th>
+                <th style="width: 9%; text-align: center;">Hari Ke-</th>
                 <th style="width: 7%;">ACTION</th>
             </tr>
         </thead>
@@ -34,9 +35,9 @@
     </table>
 
     <div class="section-paginasi"
-        style="text-align: center; font-size: 12px;">
+        style="text-align: center; font-size: 12px;" hidden>
         <div class="pagination" style="width: 100%; display: flex; justify-content: center;">
-            <button class="btn-prev" id="prev-page" disabled >Previous</button>
+            <button class="btn-prev" id="prev-page" disabled>Previous</button>
             <span class="count_page" id="page-info"></span>
             <button class="btn-next" id="next-page">Next</button>
         </div>
@@ -47,7 +48,10 @@
     $(document).ready(function() {
         let currentPage = 1;
         const perPage = 20;
-        let selectedDoctor = ''; 
+        let selectedDoctor = '';
+        window.addEventListener('dataRefreshed', function() {
+            fetchData(currentPage);
+        });
 
         $.ajax({
             url: '<?= base_url('pasien/dokterList') ?>',
@@ -60,7 +64,7 @@
                     response.forEach(function(item) {
                         doctorOptions += `<option value="${item.kd_dokter}">${item.nm_dokter}</option>`;
                     });
-                    $('#filter-doctor').html(doctorOptions); 
+                    $('#filter-doctor').html(doctorOptions);
                 }
             },
             error: function() {
@@ -91,7 +95,7 @@
                 method: 'GET',
                 data: {
                     page: page,
-                    kd_dokter: selectedDoctor 
+                    kd_dokter: selectedDoctor
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -111,11 +115,12 @@
                                 <td>${item.nm_pasien}</td>
                                 <td>${item.dokter_dpjp ? item.dokter_dpjp : ''}</td>
                                 <td class="rowDiagnosaAkhir text-center">${item.nama_penyakit}</td>
+                                <td class="text-center">${item.catatan_terakhir ? item.catatan_terakhir : ''}</td>
                                 <td class="text-center">${item.png_jawab}</td>
                                 <td style="text-align: center;">${item.lama_inap}</td>
                                 <td>
                                     <button class="btn-custom-blue btn-sm" onclick="ShowRiwayat('Riwayat', '${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}')">Riwayat</button>
-                                    <button class="btn-custom-yellow btn-sm mt-1" onclick="showCatatan('Catatan', '${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}')">Catatan</button>
+                                    <button class="btn-custom-yellow btn-sm mt-1" onclick="showCatatan('Catatan', '${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}')" hidden>Catatan</button>
                                 </td>
                             </tr>
                         `;
@@ -126,7 +131,7 @@
                         $('#prev-page').prop('disabled', currentPage === 1);
                         $('#next-page').prop('disabled', currentPage === totalPages);
                     } else {
-                        $('#table-body').html('<tr><td colspan="7" class="text-center">Data tidak ditemukan</td></tr>');
+                        $('#table-body').html('<tr><td colspan="8" class="text-center">Data tidak ditemukan</td></tr>');
                     }
                 },
                 error: function() {
@@ -155,9 +160,9 @@
         });
 
         $('#filter-doctor').on('change', function() {
-            selectedDoctor = $(this).val(); 
-            currentPage = 1; 
-            fetchData(currentPage); 
+            selectedDoctor = $(this).val();
+            currentPage = 1;
+            fetchData(currentPage);
         });
     });
 
@@ -343,8 +348,6 @@
         });
 
     }
-
-
 </script>
 
 <?= $this->endSection(); ?>

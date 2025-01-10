@@ -44,15 +44,13 @@
             },
             dataType: 'json',
             success: function(response) {
-                // your code here
-                console.log(response);
                 Swal.close();
                 let rows = '';
                 if (response.status_code == 200) {
                     // Mengakses hasil laboratorium yang dikelompokkan
                     let identitasLab = response.identitasLab;
                     let hasilLab = response.hasilLab;
-                    console.log(hasilLab)
+                    // console.log(hasilLab)
 
                     rows += identitasLab.map(item => `
                         <div class="" style="width: 100%; border: 1px solid; text-align: center; background-color:rgb(243, 236, 198); padding: 0.5%;">

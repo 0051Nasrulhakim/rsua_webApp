@@ -63,6 +63,10 @@
   display: table-cell;
   width: 10%;
 }
+.wrapper .table .rowCatatan {
+  display: table-cell;
+  width: 12%;
+}
 .wrapper .table .btn-custom-blue {
   padding: 7%;
   border-radius: 2px;
@@ -97,7 +101,7 @@
   margin-bottom: 1%;
 }
 
-@media screen and (min-width: 348px) and (max-width: 747px) {
+@media screen and (min-width: 348px) and (max-width: 699px) {
   .swal-title-small {
     font-size: 18px;
     /* Atur ukuran teks judul */
@@ -161,6 +165,9 @@
     font-size: 9px;
   }
   .wrapper .table .rowDiagnosaAkhir {
+    display: none;
+  }
+  .wrapper .table .rowCatatan {
     display: none;
   }
   .wrapper .table .btn-custom-blue {
@@ -308,7 +315,7 @@
     align-items: center;
   }
 }
-@media screen and (min-width: 748px) and (max-width: 1200px) {
+@media screen and (min-width: 700px) and (max-width: 1200px) {
   .wrapper-jam .tgl-btn {
     margin-top: 1%;
     padding: 1%;
@@ -374,6 +381,10 @@
   .wrapper .table .rowDiagnosaAkhir {
     display: table-cell;
     width: 10%;
+  }
+  .wrapper .table .rowCatatan {
+    display: table-cell;
+    width: 12%;
   }
   .wrapper .table .btn-custom-blue {
     font-size: 9px;
@@ -724,5 +735,9 @@
     border-radius: 2px;
     border: none;
     color: white;
+  }
+  .rowCatatan {
+    display: table-cell;
+    width: 12%;
   }
 }/*# sourceMappingURL=perawat.css.map */

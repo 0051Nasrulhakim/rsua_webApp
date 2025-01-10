@@ -26,7 +26,7 @@
                             Data Pemberian Obat
                         </div>
                         <div class="menu-1" onclick="tambahCatatan()" id="btn-catatan">
-                            Tambahkan Catatan
+                            Catatan
                         </div>
                         <div class="menu-1 active" onclick="riwayatPasien()" id="btn-riwayat">
                             Riwayat Pasien
@@ -230,6 +230,7 @@
 
         var no_rawat = document.getElementById("catatan_noRawat").value
         var tes = $('#insertCatatan').serialize()
+
         $.ajax({
             url: '<?= base_url('pasien/updateCatatan') ?>',
             type: 'POST',
@@ -250,6 +251,8 @@
 
                     setTimeout(function() {
                         $('#staticBackdrop').modal('hide');
+                        const event = new CustomEvent("dataRefreshed");
+                        window.dispatchEvent(event)
                     }, 1500);
 
                     $('#insertCatatan')[0].reset();
@@ -311,6 +314,8 @@
 
                             setTimeout(function() {
                                 $('#staticBackdrop').modal('hide');
+                                const event = new CustomEvent("dataRefreshed");
+                                window.dispatchEvent(event);
                             }, 1500);
 
                             $('#insertCatatan')[0].reset();

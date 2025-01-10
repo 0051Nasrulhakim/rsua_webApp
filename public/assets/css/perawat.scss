@@ -87,6 +87,11 @@ $hijauTua: #265925;
             width: 10%;
         }
 
+        .rowCatatan {
+            display: table-cell;
+            width: 12%;
+        }
+
         .btn-custom-blue {
             padding: 7%;
             border-radius: 2px;
@@ -127,7 +132,7 @@ $hijauTua: #265925;
 
 
 
-@media screen and (min-width: 348px) and (max-width: 747px) {
+@media screen and (min-width: 348px) and (max-width: 699px) {
 
     .swal-title-small {
         font-size: 18px;
@@ -199,6 +204,9 @@ $hijauTua: #265925;
             @include font-text;
 
             .rowDiagnosaAkhir {
+                display: none;
+            }
+            .rowCatatan {
                 display: none;
             }
 
@@ -381,7 +389,7 @@ $hijauTua: #265925;
     }
 }
 
-@media screen and (min-width: 748px) and (max-width: 1200px) {
+@media screen and (min-width: 700px) and (max-width: 1200px) {
     .wrapper-jam{
         .tgl-btn{
             margin-top: 1%;
@@ -455,6 +463,10 @@ $hijauTua: #265925;
             .rowDiagnosaAkhir {
                 display: table-cell;
                 width: 10%;
+            }
+            .rowCatatan {
+                display: table-cell;
+                width: 12%;
             }
 
             .btn-custom-blue {
@@ -887,5 +899,9 @@ $hijauTua: #265925;
         border-radius: 2px;
         border: none;
         color: white;
+    }
+    .rowCatatan {
+        display: table-cell;
+        width: 12%;
     }
 }

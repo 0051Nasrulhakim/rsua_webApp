@@ -29,7 +29,7 @@
                             border: none;
                             color: white;
                             background-color: #dd0000;
-                            margin-right: 1%;" 
+                            margin-right: 1%;"
                     type="button">Batalkan</button>
 
                 <button
@@ -41,7 +41,7 @@
                             border-radius: 2px;
                             border: none;
                             color: white;
-                            background-color: #008d57;" 
+                            background-color: #008d57;"
                     type="submit">Simpan Catatan</button>
             </div>
         </div>
@@ -58,7 +58,7 @@
                         border-radius: 2px;
                         border: none;
                         color: white;
-                        background-color:rgb(0, 66, 141);" 
+                        background-color:rgb(0, 66, 141);"
                 type="button"
                 onclick="updateCatatan(this)">Update Catatan</button>
 
@@ -96,6 +96,8 @@
 
                     setTimeout(function() {
                         $('#staticBackdrop').modal('hide');
+                        const event = new CustomEvent("dataRefreshed");
+                        window.dispatchEvent(event)
                     }, 1500);
 
                     $('#insertCatatan')[0].reset();
@@ -116,6 +118,4 @@
             }
         });
     })
-    
-    
 </script>
