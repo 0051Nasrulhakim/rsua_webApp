@@ -21,12 +21,12 @@
             <thead>
                 <tr>
                     <th style="width: 5%;">Kelas</th>
-                    <th style="width: 22%; ">NAMA PASIEN</th>
-                    <th style="width: 25%; ">DPJP</th>
-                    <th class="rowDiagnosaAkhir text-center">Dx.</th>
+                    <th style="width: 18%; ">NAMA PASIEN</th>
+                    <th class="rowDiagnosaAkhir text-center">Dx. Awal</th>
+                    <th style="width: 20%;">DPJP</th>
                     <th class="rowCatatan text-center">Catatan Terakhir</th>
-                    <th style="width: 10%; text-align: center;">Jns. Bayar</th>
-                    <th style="width: 9%; text-align: center;">Hari Ke-</th>
+                    <th style="width: 6%; text-align: center;">Jns. Bayar</th>
+                    <th style="width: 6%; text-align: center;">Hari Ke-</th>
                     <th style="width: 7%;">ACTION</th>
                 </tr>
             </thead>
@@ -115,8 +115,8 @@
                             <tr onclick="klikTabel('${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}')">
                                 <td>${item.kd_kamar}</td>
                                 <td>${item.nm_pasien}</td>
+                                <td class="rowDiagnosaAkhir text-center">${item.diagnosa_awal}</td>
                                 <td>${item.dokter_dpjp ? item.dokter_dpjp : ''}</td>
-                                <td class="rowDiagnosaAkhir text-center">${item.nama_penyakit}</td>
                                 <td class="rowCatatan text-center">${item.catatan_terakhir ? item.catatan_terakhir : ''}</td>
                                 <td class="text-center">${item.png_jawab}</td>
                                 <td style="text-align: center;">${item.lama_inap}</td>
@@ -168,11 +168,20 @@
         });
     });
 
-
-
     function ShowRiwayat(title, no_rkm_medis, no_rawat, nama_pasien) {
         $('#catatan_noRm').val(no_rkm_medis);
         $('#catatan_noRawat').val(no_rawat);
+
+        const currentHour = new Date().getHours();
+        const shiftSelect = document.getElementById('shift_select');
+
+        if (currentHour >= 7 && currentHour <= 13) {
+            shiftSelect.value = "pagi"; 
+        } else if (currentHour >= 14 && currentHour <= 21) {
+            shiftSelect.value = "siang";
+        } else {
+            shiftSelect.value = "malam"; 
+        }
 
         Swal.fire({
             title: 'Sedang Mengambil data...',

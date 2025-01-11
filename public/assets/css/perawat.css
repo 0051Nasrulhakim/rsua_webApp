@@ -380,11 +380,11 @@
   }
   .wrapper .table .rowDiagnosaAkhir {
     display: table-cell;
-    width: 10%;
+    width: 15%;
   }
   .wrapper .table .rowCatatan {
     display: table-cell;
-    width: 12%;
+    width: 15%;
   }
   .wrapper .table .btn-custom-blue {
     font-size: 9px;

@@ -118,113 +118,55 @@
 
         var no_rawat = document.getElementById("catatan_noRawat").value
 
-        $.ajax({
-            url: '<?= base_url('pasien/getCatatan') ?>',
-            method: 'GET',
-            data: {
-                noRawat: no_rawat
+        Swal.fire({
+            title: 'Sedang Mengambil data...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
             },
-            dataType: 'json',
-            success: function(data) {
-                Swal.close();
-                let rows = '';
-                if (data.length > 0) {
-                    data.forEach(function(item, index) {
-                        rows += `
-                                <div class="content">
-                                    <div class="header" style="text-align: center; border: 1px solid; background-color: #fff7e0;">
-                                        ${item.tanggal +' '+item.jam}
-                                    </div>
-                                    <div class="isi" style="padding: 2%; border: 1px solid; display: flex;" id="isCatatan">
-                                        <div style="width: 80%;">
-                                            ${item.catatan}
-                                        </div>
-                                        <div style="width: 15%; display: flex;">
-                                            <button 
-                                                class="btn-custom-edit"
-                                                style="padding: 10%; border-radius: 2px; border: none; color: white; background-color: rgb(119, 128, 0); margin-right: 3%;"
-                                                type="button"
-                                                data-no-rawat="${no_rawat}"
-                                                data-tanggal="${item.tanggal}"
-                                                data-jam="${item.jam}"
-                                                data-catatan="${item.catatan}"
-                                                onclick="GantiCatatan(this)">
-                                                Edit
-                                            </button>
-                                            <button 
-                                                class="btn-custom-edit"
-                                                style="padding: 10%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 1%;"
-                                                type="button"
-                                                data-no-rawat="${no_rawat}"
-                                                data-tanggal="${item.tanggal}"
-                                                data-jam="${item.jam}"
-                                                data-catatan="${item.catatan}"
-                                                onclick="hapus(this)">
-                                                Hapus
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                    });
-                } else {
-                    rows += `
-                                <div class="content">
-                                    <div class="header" style="text-align: center; border: 1px solid; background-color: #fff7e0;">
-                                        BELUM ADA CATATAN PERAWATAN
-                                    </div>
-                                </div>
-                            `;
-                }
-                $('#list-catatan').html(rows);
-
-
-            },
-
-            error: function() {
-                // Hapus swal loading
-                Swal.close();
-
-                // Tampilkan swal error
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Terjadi kesalahan saat mengambil data!'
-                });
+            customClass: {
+                title: 'swal-title-small',
+                content: 'swal-text-small'
             }
         });
 
-
+        // allCatatan();
+        lastCatatan();
 
     }
 
-    function GantiCatatan(button) {
-        const noRawat = button.getAttribute('data-no-rawat');
-        const tanggal = button.getAttribute('data-tanggal');
-        const jam = button.getAttribute('data-jam');
-        const catatan = button.getAttribute('data-catatan');
-        document.getElementById('floatingTextarea2').value = catatan;
-        document.getElementById('catatan_tanggal').value = tanggal;
-        document.getElementById('catatan_jam').value = jam;
+    
 
 
 
-        const allButtons = document.querySelectorAll('.btn-custom-edit');
-        allButtons.forEach(function(btn) {
-            btn.style.display = 'none';
-        });
-        button.style.display = 'block';
+    function BatalkanEditTambah(button, noRawat, tanggal, jam, catatan, shift, isEdit) {
 
-        button.innerText = 'Batalkan';
-        button.style.backgroundColor = 'rgb(255, 0, 0)';
+        console.log(button, noRawat, tanggal, jam, catatan, shift, isEdit);
+        // button.style.display = 'block';
 
-        button.onclick = function() {
-            Batalkan(button, noRawat, tanggal, jam, catatan);
-        };
+        const actionButton = document.querySelector(`[data-no-rawat="${noRawat}"][data-tanggal="${tanggal}"][data-jam="${jam}"][data-shift="${shift}"]`);
+        if (actionButton) {
+            actionButton.style.display = 'block';
+        }
 
-        document.getElementById('section-change-tombol').setAttribute('hidden', 'true')
-        document.getElementById('tombol-2').removeAttribute('hidden');
+        if (isEdit) {
+            actionButton.innerText = 'Edit';
+            actionButton.style.backgroundColor = 'rgb(119, 128, 0)';
+            actionButton.onclick = function() {
+                GantiCatatan(actionButton);
+            };
+        } else {
+            actionButton.innerText = 'Tambahkan';
+            actionButton.style.backgroundColor = 'rgb(0, 70, 128)';
+            actionButton.onclick = function() {
+                TambahCatatan(actionButton);
+            };
+        }
+
+        document.getElementById('section-change-tombol').removeAttribute('hidden');
+        document.getElementById('tombol-2').setAttribute('hidden', 'true');
     }
+
 
     function updateCatatan(button) {
 
@@ -236,6 +178,7 @@
             type: 'POST',
             data: $('#insertCatatan').serialize(),
             success: function(response) {
+                console.log(response)
                 if (response.status_code === 200) {
                     Swal.fire({
                         icon: 'success',
@@ -359,6 +302,7 @@
         document.getElementById('floatingTextarea2').value = "";
         document.getElementById('catatan_tanggal').value = "";
         document.getElementById('catatan_jam').value = ""
+        document.getElementById('tanggal').value = ""
     }
 
     function radiologi() {
