@@ -361,22 +361,21 @@ class Pasien extends BaseController
                 ->orderBy('jam', 'DESC')
                 ->limit(1)
                 ->first();
-                
+
             if (empty($data)) {
 
                 return $this->response->setJSON([
-                    'status_code'=> 404,
-                    'message'=> 'catatan sebelumnya tidak ditemukan.'
-                    ]);
+                    'status_code' => 404,
+                    'message' => 'catatan sebelumnya tidak ditemukan.'
+                ]);
             } else {
 
                 return $this->response->setJSON([
-                    'status_code'=> 200,
-                    'message'=> 'catatan sebelumnya Ditemukan',
-                    'data'=> $data
+                    'status_code' => 200,
+                    'message' => 'catatan sebelumnya Ditemukan',
+                    'data' => $data
                 ]);
             }
-            
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'status_code' => 500,
@@ -388,87 +387,157 @@ class Pasien extends BaseController
 
     public function getCatatan()
     {
-        // $noRawat = $this->request->getGet('noRawat');
         $noRawat = $this->request->getGet('noRawat');
         $filter = $this->request->getGet('filter') ?? '';
-        $filter = 1;
-        $noRawat = '2024/12/07/000013';
+        // $filter = 1;
 
-        if ($filter == '') {
+        if ($filter != '') {
+            $shifts = ['pagi', 'siang', 'malam'];
+
             $result = $this->catatanPerawatan
                 ->select("catatan_perawatan.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_perawatan.catatan SEPARATOR ', ') AS catatan_tergabung")
                 ->join('aro_shift_catatan_perawatan', 'catatan_perawatan.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_perawatan.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_perawatan.jam = aro_shift_catatan_perawatan.jam', 'left')
                 ->where('catatan_perawatan.no_rawat', $noRawat)
                 ->groupBy('catatan_perawatan.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
                 ->orderBy('catatan_perawatan.tanggal', 'DESC')
+
                 ->orderBy("FIELD(aro_shift_catatan_perawatan.shift, 'pagi', 'siang', 'malam')")
                 ->findAll();
-        } else if ($filter != "") {
-            $result = $this->catatanPerawatan
-                ->select("catatan_perawatan.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_perawatan.catatan SEPARATOR ', ') AS catatan_tergabung")
-                ->join('aro_shift_catatan_perawatan', 'catatan_perawatan.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_perawatan.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_perawatan.jam = aro_shift_catatan_perawatan.jam', 'left')
-                ->where('catatan_perawatan.no_rawat', $noRawat)
-                ->groupBy('catatan_perawatan.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
-                ->orderBy('catatan_perawatan.tanggal', 'DESC')
-                ->orderBy("FIELD(aro_shift_catatan_perawatan.shift, 'pagi', 'siang', 'malam')")
-                // ->limit(1)
-                ->findAll();
-        }
-        $catatan = [];
-        $shifts = ['pagi', 'siang', 'malam']; // Shift tetap
 
-        if ($result) {
-            foreach ($result as $row) {
-                $tanggal = $row['tanggal'];
-                $shift = $row['shift'];
-                $jam = $row['jam'];
-                $catatan_tergabung = $row['catatan_tergabung'];
+            if ($result) {
 
-                if (!isset($catatan[$tanggal])) {
-                    $catatan[$tanggal] = [];
-                }
+                usort($result, function ($a, $b) {
+                    return strtotime($b['tanggal'] . ' ' . $b['jam']) - strtotime($a['tanggal'] . ' ' . $a['jam']);
+                });
 
-                if (!isset($catatan[$tanggal][$shift])) {
-                    $catatan[$tanggal][$shift] = [
-                        'jam' => $jam,
-                        'catatan' => ''
-                    ];
-                }
+                $lastTanggal = $result[0]['tanggal'];
+                $filteredResult = array_filter($result, function ($row) use ($lastTanggal) {
+                    return $row['tanggal'] === $lastTanggal;
+                });
 
-                $catatan[$tanggal][$shift]['catatan'] = $catatan_tergabung;
-            }
+                foreach ($filteredResult as $row) {
+                    $tanggal = isset($row['tanggal']) ? $row['tanggal'] : '';
+                    $shift = isset($row['shift']) ? $row['shift'] : '';
+                    $jam = isset($row['jam']) ? $row['jam'] : '';
+                    $catatan_tergabung = isset($row['catatan_tergabung']) ? $row['catatan_tergabung'] : '';
 
-            // Menambahkan shift yang kosong dengan catatan kosong
-            foreach ($catatan as $tanggal => &$shiftData) {
-                foreach ($shifts as $shift) {
-                    if (!isset($shiftData[$shift])) {
-                        $shiftData[$shift] = [
-                            'jam' => '',
+                    if (!isset($catatan[$tanggal])) {
+                        $catatan[$tanggal] = [];
+                    }
+
+                    if (!isset($catatan[$tanggal][$shift])) {
+                        $catatan[$tanggal][$shift] = [
+                            'jam' => $jam,
                             'catatan' => ''
                         ];
                     }
+
+                    $catatan[$tanggal][$shift]['catatan'] = $catatan_tergabung;
                 }
 
-                // Mengubah format data untuk setiap shift
-                $shiftData = array_map(function ($shift, $data) {
-                    return ['shift' => $shift, 'jam' => $data['jam'], 'catatan' => $data['catatan']];
-                }, array_keys($shiftData), $shiftData);
+                foreach ($catatan as $tanggal => &$shiftData) {
+                    foreach ($shifts as $shift) {
+                        if (!isset($shiftData[$shift])) {
+                            $shiftData[$shift] = [
+                                'jam' => '',
+                                'catatan' => ''
+                            ];
+                        }
+                    }
+
+                    $shiftData = array_map(function ($shift, $data) {
+                        return ['shift' => $shift, 'jam' => $data['jam'], 'catatan' => $data['catatan']];
+                    }, array_keys($shiftData), $shiftData);
+                }
+
+                $res = [
+                    'status_code' => 200,
+                    'message' => 'Data ditemukan',
+                    'data' => $catatan
+                ];
+            } else {
+                $res = [
+                    'status_code' => 200,
+                    'message' => 'Data tidak ditemukan',
+                    'data' => []
+                ];
             }
 
-            $res = [
-                'status_code' => 200,
-                'message' => 'Data ditemukan',
-                'data' => $catatan
-            ];
+            return $this->response->setJSON($res);
         } else {
-            $res = [
-                'status_code' => 200,
-                'message' => 'Data ditemukan',
-                'data' => $catatan
-            ];
-        }
+            $result = $this->catatanPerawatan
+                ->select("catatan_perawatan.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_perawatan.catatan SEPARATOR ', ') AS catatan_tergabung")
+                ->join('aro_shift_catatan_perawatan', 'catatan_perawatan.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_perawatan.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_perawatan.jam = aro_shift_catatan_perawatan.jam', 'left')
+                ->where('catatan_perawatan.no_rawat', $noRawat)
+                ->groupBy('catatan_perawatan.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
+                ->orderBy('catatan_perawatan.tanggal', 'DESC')
+                ->orderBy("FIELD(aro_shift_catatan_perawatan.shift, 'pagi', 'siang', 'malam')")
+                ->findAll();
 
-        return $this->response->setJSON($res);
+
+            $catatan = [];
+            $shifts = ['pagi', 'siang', 'malam']; // Shift tetap
+
+            if ($result) {
+                foreach ($result as $row) {
+                    $tanggal = $row['tanggal'];
+                    $shift = $row['shift'];
+                    $jam = $row['jam'];
+                    $catatan_tergabung = $row['catatan_tergabung'];
+
+                    if (!isset($catatan[$tanggal])) {
+                        $catatan[$tanggal] = [];
+                    }
+
+                    if (!isset($catatan[$tanggal][$shift])) {
+                        $catatan[$tanggal][$shift] = [
+                            'jam' => $jam,
+                            'catatan' => ''
+                        ];
+                    }
+
+                    $catatan[$tanggal][$shift]['catatan'] = $catatan_tergabung;
+                }
+
+                foreach ($catatan as $tanggal => &$shiftData) {
+                    foreach ($shifts as $shift) {
+                        if (!isset($shiftData[$shift])) {
+                            $shiftData[$shift] = [
+                                'jam' => '',
+                                'catatan' => ''
+                            ];
+                        }
+                    }
+
+                    
+                    $shiftData = array_map(function ($shift, $data) {
+                        return ['shift' => $shift, 'jam' => $data['jam'], 'catatan' => $data['catatan']];
+                    }, array_keys($shiftData), $shiftData);
+                }
+
+                $res = [
+                    'status_code' => 200,
+                    'message' => 'Data ditemukan',
+                    'data' => $catatan
+                ];
+            } else {
+                $res = [
+                    'status_code' => 200,
+                    'message' => 'Data ditemukan',
+                    'data' => $catatan
+                ];
+            }
+
+            return $this->response->setJSON($res);
+        }
+    }
+
+    public function dumy()
+    {
+        $noRawat = $this->request->getGet('noRawat');
+        $noRawat = "2024/12/06/000125";
+        $filter = $this->request->getGet('filter') ?? '';
+        $filter = 1;
     }
 
 

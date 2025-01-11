@@ -241,6 +241,17 @@
 
     function allCatatan() {
         var no_rawat = document.getElementById("catatan_noRawat").value
+        Swal.fire({
+            title: 'Sedang Mengambil data...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            customClass: {
+                title: 'swal-title-small',
+                content: 'swal-text-small'
+            }
+        });
         $.ajax({
             url: '<?= base_url('pasien/getCatatan') ?>',
             method: 'GET',
@@ -387,6 +398,17 @@
     }
 
     function lastCatatan() {
+        Swal.fire({
+            title: 'Sedang Mengambil data...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            customClass: {
+                title: 'swal-title-small',
+                content: 'swal-text-small'
+            }
+        });
         var no_rawat = document.getElementById("catatan_noRawat").value
         $.ajax({
             url: '<?= base_url('pasien/getCatatan') ?>',
