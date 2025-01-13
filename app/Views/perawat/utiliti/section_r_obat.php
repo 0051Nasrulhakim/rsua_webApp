@@ -105,7 +105,6 @@
             },
             dataType: 'json',
             success: function(response) {
-                // your code here
                 Swal.close();
                 if (response.length > 0) {
                     let rows = '';
@@ -121,6 +120,37 @@
                     });
                     $('#table-obat').html(rows);
                 }
+                // if (response.length > 0) {
+                //     let rows = '';
+                //     let previousDate = ''; 
+                    
+                //     response.forEach(function(item, index) {
+                //         let currentDate = item.tgl_perawatan;
+                        
+                //         if (currentDate !== previousDate) {
+                //             rows += `
+                //                 <tr>
+                //                     <td>${currentDate}</td>
+                //                     <td>${item.jam}</td>
+                //                     <td>${item.nama_brng}</td>
+                //                     <td style="text-align: center;">${item.jml}</td>
+                //                 </tr>
+                //             `;
+                //             previousDate = currentDate;
+                //         } else {
+                //             rows += `
+                //                 <tr>
+                //                     <td></td>
+                //                     <td>${item.jam}</td>
+                //                     <td>${item.nama_brng}</td>
+                //                     <td style="text-align: center;">${item.jml}</td>
+                //                 </tr>
+                //             `;
+                //         }
+                //     });
+
+                //     $('#table-obat').html(rows);
+                // }
             },
             error: function() {
                 Swal.close();

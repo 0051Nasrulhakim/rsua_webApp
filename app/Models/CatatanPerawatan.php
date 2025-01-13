@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class CatatanPerawatan extends Model
 {
-    protected $table            = 'catatan_perawatan';
+    protected $table            = 'catatan_keperawatan_ranap';
     protected $primaryKey       = 'no_rawat';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
@@ -14,8 +14,8 @@ class CatatanPerawatan extends Model
         'tanggal',
         'jam',
         'no_rawat',
-        'kd_dokter',
-        'catatan'
+        'uraian',
+        'nip'
     ];
 
 }

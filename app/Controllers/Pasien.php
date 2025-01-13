@@ -98,10 +98,10 @@ class Pasien extends BaseController
             GROUP_CONCAT(DISTINCT IFNULL(diagnosa_pasien.kd_penyakit, '-') SEPARATOR ', ') AS kode_dx,
             GROUP_CONCAT(DISTINCT IFNULL(penyakit.nm_penyakit, '-') SEPARATOR ', ') AS nama_penyakit,
             (
-                SELECT COALESCE(catatan_perawatan.catatan, '')
-                FROM catatan_perawatan
-                WHERE catatan_perawatan.no_rawat = kamar_inap.no_rawat
-                ORDER BY catatan_perawatan.tanggal DESC, catatan_perawatan.jam DESC
+                SELECT COALESCE(catatan_keperawatan_ranap.uraian, '')
+                FROM catatan_keperawatan_ranap
+                WHERE catatan_keperawatan_ranap.no_rawat = kamar_inap.no_rawat
+                ORDER BY catatan_keperawatan_ranap.tanggal DESC, catatan_keperawatan_ranap.jam DESC
                 LIMIT 1
             ) AS catatan_terakhir
 
@@ -159,42 +159,51 @@ class Pasien extends BaseController
             $jam = date('His');
             $no_rawat = $this->request->getVar('noRawat');
             $shift = $this->request->getVar('shift');
-
-            $data = [
-                'tanggal' => $tanggal,
-                'jam'     => $jam,
-                'no_rawat' => $no_rawat,
-                'kd_dokter' => 'D0000007',
-                'catatan' => $this->request->getPost('catatan'),
-            ];
-
-            $cek_data = $this->shift_perawatan->where('no_rawat', $no_rawat)
-                ->where('tanggal', $tanggal)
-                ->where('shift', $shift)
-                ->first();
-
-            if ($cek_data) {
+            $uraian = $this->request->getPost('catatan') ?? '';
+            
+            if (empty($uraian) || strtolower($uraian) == 'null') {
                 return $this->response->setJSON([
                     'status_code' => 404,
-                    'message' => 'Data Pada shift ' . $shift . ' ' . 'sudah ada. silahkan pilih shift lain / edit data yang sudah ada'
+                    'message' => 'Uraian Catatan Tidak Boleh Kosong'
+                ]);
+            } else {
+
+                $data = [
+                    'tanggal'   => $tanggal,
+                    'jam'       => $jam,
+                    'no_rawat'  => $no_rawat,
+                    'nip'       => '2410010098',
+                    'uraian'    => $uraian,
+                ];
+
+                $cek_data = $this->shift_perawatan->where('no_rawat', $no_rawat)
+                    ->where('tanggal', $tanggal)
+                    ->where('shift', $shift)
+                    ->first();
+
+                if ($cek_data) {
+                    return $this->response->setJSON([
+                        'status_code' => 404,
+                        'message' => 'Data Pada shift ' . $shift . ' ' . 'sudah ada. silahkan pilih shift lain / edit data yang sudah ada'
+                    ]);
+                }
+
+                $this->catatanPerawatan->insert($data);
+
+                $logCatatan = [
+                    'no_rawat'  => $no_rawat,
+                    'tanggal'   => $tanggal,
+                    'jam'       => $jam,
+                    'shift'     => $shift,
+                ];
+
+                $this->shift_perawatan->insert($logCatatan);
+
+                return $this->response->setJSON([
+                    'status_code' => 200,
+                    'message' => 'Catatan berhasil disimpan.'
                 ]);
             }
-
-            $this->catatanPerawatan->insert($data);
-
-            $logCatatan = [
-                'no_rawat'  => $no_rawat,
-                'tanggal'   => $tanggal,
-                'jam'       => $jam,
-                'shift'     => $shift,
-            ];
-
-            $this->shift_perawatan->insert($logCatatan);
-
-            return $this->response->setJSON([
-                'status_code' => 200,
-                'message' => 'Catatan berhasil disimpan.'
-            ]);
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'status_code' => 500,
@@ -202,6 +211,7 @@ class Pasien extends BaseController
             ]);
         }
     }
+
     public function updateCatatan()
     {
         try {
@@ -209,13 +219,13 @@ class Pasien extends BaseController
             $old_tanggal = $this->request->getPost('tanggal');
             $jam = $this->request->getPost('jam');
             $shift = $this->request->getVar('shift');
-
+            
             $data = [
                 'tanggal' => $old_tanggal,
                 'jam'     => $jam,
                 'no_rawat' => $old_no_rawat,
-                'kd_dokter' => 'D0000007',
-                'catatan' => $this->request->getPost('catatan'),
+                'nip' => '2410010098',
+                'uraian' => $this->request->getPost('catatan'),
             ];
 
             $existingData = $this->catatanPerawatan->where('no_rawat', $old_no_rawat)
@@ -388,6 +398,7 @@ class Pasien extends BaseController
     public function getCatatan()
     {
         $noRawat = $this->request->getGet('noRawat');
+        // $noRawat = "2024/12/07/000013";
         $filter = $this->request->getGet('filter') ?? '';
         // $filter = 1;
 
@@ -395,11 +406,11 @@ class Pasien extends BaseController
             $shifts = ['pagi', 'siang', 'malam'];
 
             $result = $this->catatanPerawatan
-                ->select("catatan_perawatan.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_perawatan.catatan SEPARATOR ', ') AS catatan_tergabung")
-                ->join('aro_shift_catatan_perawatan', 'catatan_perawatan.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_perawatan.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_perawatan.jam = aro_shift_catatan_perawatan.jam', 'left')
-                ->where('catatan_perawatan.no_rawat', $noRawat)
-                ->groupBy('catatan_perawatan.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
-                ->orderBy('catatan_perawatan.tanggal', 'DESC')
+                ->select("catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_keperawatan_ranap.uraian SEPARATOR ', ') AS catatan_tergabung")
+                ->join('aro_shift_catatan_perawatan', 'catatan_keperawatan_ranap.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_keperawatan_ranap.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_keperawatan_ranap.jam = aro_shift_catatan_perawatan.jam', 'left')
+                ->where('catatan_keperawatan_ranap.no_rawat', $noRawat)
+                ->groupBy('catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
+                ->orderBy('catatan_keperawatan_ranap.tanggal', 'DESC')
 
                 ->orderBy("FIELD(aro_shift_catatan_perawatan.shift, 'pagi', 'siang', 'malam')")
                 ->findAll();
@@ -466,11 +477,11 @@ class Pasien extends BaseController
             return $this->response->setJSON($res);
         } else {
             $result = $this->catatanPerawatan
-                ->select("catatan_perawatan.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_perawatan.catatan SEPARATOR ', ') AS catatan_tergabung")
-                ->join('aro_shift_catatan_perawatan', 'catatan_perawatan.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_perawatan.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_perawatan.jam = aro_shift_catatan_perawatan.jam', 'left')
-                ->where('catatan_perawatan.no_rawat', $noRawat)
-                ->groupBy('catatan_perawatan.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
-                ->orderBy('catatan_perawatan.tanggal', 'DESC')
+                ->select("catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_keperawatan_ranap.uraian SEPARATOR ', ') AS catatan_tergabung")
+                ->join('aro_shift_catatan_perawatan', 'catatan_keperawatan_ranap.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_keperawatan_ranap.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_keperawatan_ranap.jam = aro_shift_catatan_perawatan.jam', 'left')
+                ->where('catatan_keperawatan_ranap.no_rawat', $noRawat)
+                ->groupBy('catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
+                ->orderBy('catatan_keperawatan_ranap.tanggal', 'DESC')
                 ->orderBy("FIELD(aro_shift_catatan_perawatan.shift, 'pagi', 'siang', 'malam')")
                 ->findAll();
 
@@ -509,7 +520,7 @@ class Pasien extends BaseController
                         }
                     }
 
-                    
+
                     $shiftData = array_map(function ($shift, $data) {
                         return ['shift' => $shift, 'jam' => $data['jam'], 'catatan' => $data['catatan']];
                     }, array_keys($shiftData), $shiftData);
@@ -531,16 +542,6 @@ class Pasien extends BaseController
             return $this->response->setJSON($res);
         }
     }
-
-    public function dumy()
-    {
-        $noRawat = $this->request->getGet('noRawat');
-        $noRawat = "2024/12/06/000125";
-        $filter = $this->request->getGet('filter') ?? '';
-        $filter = 1;
-    }
-
-
 
 
     public function riwayatSOAPIE()

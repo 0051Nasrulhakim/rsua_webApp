@@ -1,4 +1,4 @@
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,6 +11,30 @@
                     <div class="norm" id="contentNorm" style=""></div>
                     <div class="" style="width: 3%; text-align: center;">-</div>
                     <div class="nama" id="contentNamaPasien"></div>
+                </div>
+
+                <div class="diagnosa" style="margin-bottom: 3%;">
+                    <div class="diagnosaAwal" style="display: flex;">
+                        <div class="title" style="width: 10%;">
+                            Diagnosa Awal
+                        </div>
+                        <div class="semicolon" style="width:  2%; text-align: center;">
+                            :
+                        </div>
+                        <div class="contentDiagnosaAkhir" id="contentDiagnosaAwal">
+                        </div>
+                    </div>
+                    <div class="diagnosaAkhir" style="display: flex;">
+                        <div class="title" style="width: 10%;">
+                            Diagnosa Akhir
+                        </div>
+                        <div class="semicolon" style="width:  2%; text-align: center;">
+                            :
+                        </div>
+                        <div class="contentDiagnosaAkhir" id="contentDiagnosaAkhir">
+
+                        </div>
+                    </div>
                 </div>
 
                 <div class="type">
@@ -58,8 +82,11 @@
 
 <script>
     document.getElementById('staticBackdrop').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('search-bar').value = "";
         $('#catatan_noRm').val("");
         $('#catatan_noRawat').val("");
+        $('#diagnosa_awal').text("");
+        $('#diagnosa_akhir').text("");
 
         $('#section-modal-riwayat').html("");
         $('#list-catatan').html("");
@@ -90,6 +117,7 @@
 
 
     function riwayatPasien() {
+        document.getElementById('search-bar').value = "";
         document.getElementById('section-modal-riwayat').removeAttribute('hidden');
         document.getElementById('riwayat_obat').setAttribute('hidden', 'true')
         document.getElementById('section-catatan').setAttribute('hidden', 'true');
@@ -104,6 +132,7 @@
     }
 
     function tambahCatatan() {
+        document.getElementById('search-bar').value = "";
         document.getElementById('section-modal-riwayat').setAttribute('hidden', 'true');
         document.getElementById('riwayat_obat').setAttribute('hidden', 'true');
         document.getElementById('section-catatan').removeAttribute('hidden');
@@ -135,14 +164,10 @@
 
     }
 
-    
-
 
 
     function BatalkanEditTambah(button, noRawat, tanggal, jam, catatan, shift, isEdit) {
 
-        console.log(button, noRawat, tanggal, jam, catatan, shift, isEdit);
-        // button.style.display = 'block';
 
         const actionButton = document.querySelector(`[data-no-rawat="${noRawat}"][data-tanggal="${tanggal}"][data-jam="${jam}"][data-shift="${shift}"]`);
         if (actionButton) {
@@ -179,7 +204,7 @@
             data: $('#insertCatatan').serialize(),
             success: function(response) {
                 console.log(response)
-                if (response.status_code === 200) {
+                if (response.status_code == 200) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Berhasil',
@@ -193,12 +218,18 @@
                     });
 
                     setTimeout(function() {
-                        $('#staticBackdrop').modal('hide');
+                        // $('#staticBackdrop').modal('hide');
                         const event = new CustomEvent("dataRefreshed");
+                        document.getElementById('tombol-2').setAttribute('hidden', 'true');
+                        document.getElementById('section-change-tombol').removeAttribute('hidden');
+                        document.getElementById('floatingTextarea2').value = '';
+                        document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
                         window.dispatchEvent(event)
+                        lastCatatan();
                     }, 1500);
 
-                    $('#insertCatatan')[0].reset();
+                    // $('#insertCatatan')[0].reset();
+
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -215,6 +246,7 @@
                 });
             }
         });
+
     }
 
     function hapus(button) {
@@ -256,12 +288,16 @@
                             });
 
                             setTimeout(function() {
-                                $('#staticBackdrop').modal('hide');
                                 const event = new CustomEvent("dataRefreshed");
-                                window.dispatchEvent(event);
+                                document.getElementById('tombol-2').setAttribute('hidden', 'true');
+                                document.getElementById('section-change-tombol').removeAttribute('hidden');
+                                document.getElementById('floatingTextarea2').value = '';
+                                document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
+                                window.dispatchEvent(event)
+                                lastCatatan();
                             }, 1500);
 
-                            $('#insertCatatan')[0].reset();
+                            // $('#insertCatatan')[0].reset();
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -306,6 +342,7 @@
     }
 
     function radiologi() {
+        document.getElementById('search-bar').value = "";
         document.getElementById('radiologi').removeAttribute('hidden');
         document.getElementById('section-modal-riwayat').setAttribute('hidden', 'true')
         document.getElementById('riwayat_obat').setAttribute('hidden', 'true')

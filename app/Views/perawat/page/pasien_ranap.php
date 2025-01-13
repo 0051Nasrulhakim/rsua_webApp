@@ -112,20 +112,20 @@
                         let rows = '';
                         data.forEach(function(item) {
                             rows += `
-                            <tr onclick="klikTabel('${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}')">
-                                <td>${item.kd_kamar}</td>
-                                <td>${item.nm_pasien}</td>
-                                <td class="rowDiagnosaAkhir text-center">${item.diagnosa_awal}</td>
-                                <td>${item.dokter_dpjp ? item.dokter_dpjp : ''}</td>
-                                <td class="rowCatatan text-center">${item.catatan_terakhir ? item.catatan_terakhir : ''}</td>
-                                <td class="text-center">${item.png_jawab}</td>
-                                <td style="text-align: center;">${item.lama_inap}</td>
-                                <td>
-                                    <button class="btn-custom-blue btn-sm" onclick="ShowRiwayat('Riwayat', '${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}')">Riwayat</button>
-                                    <button class="btn-custom-yellow btn-sm mt-1" onclick="showCatatan('Catatan', '${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}')" hidden>Catatan</button>
-                                </td>
-                            </tr>
-                        `;
+                                <tr onclick="klikTabel('${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}')">
+                                    <td>${item.kd_kamar}</td>
+                                    <td>${item.nm_pasien}</td>
+                                    <td class="rowDiagnosaAkhir text-center">${item.diagnosa_awal}</td>
+                                    <td>${item.dokter_dpjp ? item.dokter_dpjp : ''}</td>
+                                    <td class="rowCatatan text-center">${item.catatan_terakhir ? item.catatan_terakhir : ''}</td>
+                                    <td class="text-center">${item.png_jawab}</td>
+                                    <td style="text-align: center;">${item.lama_inap}</td>
+                                    <td>
+                                        <button class="btn-custom-blue btn-sm" onclick="ShowRiwayat('Riwayat','${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}','${item.diagnosa_awal}','${item.diagnosa_akhir}')">Riwayat</button>
+                                        <button class="btn-custom-yellow btn-sm mt-1" onclick="showCatatan('Catatan', '${item.no_rkm_medis}', '${item.no_rawat}','${item.nm_pasien}')" hidden>Catatan</button>
+                                    </td>
+                                </tr>
+                            `;
                         });
 
                         $('#table-body').html(rows);
@@ -168,9 +168,13 @@
         });
     });
 
-    function ShowRiwayat(title, no_rkm_medis, no_rawat, nama_pasien) {
+    function ShowRiwayat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir) {
         $('#catatan_noRm').val(no_rkm_medis);
         $('#catatan_noRawat').val(no_rawat);
+        $('#contentDiagnosaAwal').text(diagnosa_awal);
+        $('#contentDiagnosaAkhir').text(diagnosa_akhir);
+
+        // console.log(diagnosa_awal);
 
         const currentHour = new Date().getHours();
         const shiftSelect = document.getElementById('shift_select');
@@ -203,6 +207,7 @@
             },
             dataType: 'json',
             success: function(data) {
+                // console.log(data);
                 Swal.close();
 
                 let rows = '';
@@ -210,7 +215,6 @@
 
                 if (data && data.pemeriksaan) {
                     const pemeriksaanKeys = Object.keys(data.pemeriksaan);
-
                     const kategoriMap = {
                         'source': 'Status',
                         'nama': 'Petugas',
@@ -225,7 +229,6 @@
 
                     $('#contentNorm').text(no_rkm_medis);
                     $('#contentNamaPasien').text(nama_pasien);
-
 
 
                     pemeriksaanKeys.forEach(key => {

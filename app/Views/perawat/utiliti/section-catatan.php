@@ -73,7 +73,7 @@
                             color: white;
                             background-color: #dd0000;
                             margin-right: 1%;"
-                    type="button">Batalkan</button>
+                    type="button">Clear</button>
 
                 <button
                     class="btn-custom"
@@ -135,6 +135,7 @@
 
         button.onclick = function() {
             Batalkan(button, noRawat, tanggal, jam, catatan, shift, true);
+            document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
         };
 
         document.getElementById('section-change-tombol').setAttribute('hidden', 'true');
@@ -179,12 +180,17 @@
                     });
 
                     setTimeout(function() {
-                        $('#staticBackdrop').modal('hide');
+                        // $('#staticBackdrop').modal('hide');
                         const event = new CustomEvent("dataRefreshed");
+                        document.getElementById('tombol-2').setAttribute('hidden', 'true');
+                        document.getElementById('section-change-tombol').removeAttribute('hidden');
+                        document.getElementById('floatingTextarea2').value = '';
+                        document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
                         window.dispatchEvent(event)
+                        lastCatatan();
                     }, 1500);
 
-                    $('#insertCatatan')[0].reset();
+                    // $('#insertCatatan')[0].reset();
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -207,7 +213,7 @@
         const noRawat = button.getAttribute('data-no-rawat');
         const tanggal = button.getAttribute('data-tanggal');
         const shift = button.getAttribute('data-shift');
-        console.log(noRawat, tanggal)
+        // console.log(noRawat, tanggal)
 
         $.ajax({
             url: '<?= base_url('pasien/findCatatan') ?>',
@@ -217,10 +223,10 @@
                 tgl: tanggal
             },
             success: function(response) {
-                console.log(response)
+                // console.log(response)
                 if (response.status_code === 200) {
                     document.getElementById('shift_select').value = shift;
-                    document.getElementById('floatingTextarea2').value = response.data.catatan;
+                    document.getElementById('floatingTextarea2').value = response.data.uraian;
                 } else {
                     Swal.fire({
                         icon: 'error',

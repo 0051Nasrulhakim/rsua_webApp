@@ -10,7 +10,7 @@
 <script>
     function lab() {
         var no_rawat = document.getElementById("catatan_noRawat").value
-
+        document.getElementById('search-bar').value = "";
 
         document.getElementById('section-lab').removeAttribute('hidden');
         document.getElementById('section-modal-riwayat').setAttribute('hidden', 'true')

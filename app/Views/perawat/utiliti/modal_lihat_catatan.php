@@ -1,4 +1,4 @@
-<div class="modal fade" id="catatanModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="catatanModalLabel" aria-hidden="true">
+<div class="modal fade" id="catatanModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="catatanModalLabel" >
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
