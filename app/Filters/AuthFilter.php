@@ -13,44 +13,36 @@ class AuthFilter implements FilterInterface
     {
         $session = session();
 
-        // user is logged in
         if (!$session->has('logged_in')) {
-            return redirect()->to(
-                base_url('login')
-            );
+            return redirect()->to(base_url('login'));
         }
 
         $method = $request->getMethod();
 
-        // if ($session->get('role') !== 'petugas') {
-        //     return redirect()->to('/unauthorized')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
-        // }
-
-        // Check CSRF Token
-        // $security = Services::security();
-        // if (!$security->check()) {
-        //     return redirect()->to('/login')->with('error', 'CSRF validation failed.');
-        // }
-
-        // Rate Limiting
-        $ip = $request->getIPAddress();
-        $throttle = Services::throttler();
-        if ($throttle->check($ip, 60, MINUTE) === false) {
-            return Services::response()
-                ->setStatusCode(429)
-                ->setBody('Too many requests. Please wait a while.');
+        if ($session->get('akses') !== 'petugas') {
+            return redirect()->to('/unauthorized')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
         }
 
+        // Rate Limiting
+        // $ip = $request->getIPAddress();
+        // $throttle = Services::throttler();
+        // if ($throttle->check($ip, 400, MINUTE) === false) {
+        //     return Services::response()
+        //         ->setStatusCode(429)
+        //         ->setBody('Terlalu Banyak Melakukan Refresh Tunggu Beberapa Saat');
+        // }
+        // dd($request);
+
         // Hijacking Protection
-        if ($session->get('user_agent') !== $request->getUserAgent() ||
-            $session->get('ip_address') !== $request->getIPAddress()) {
+        if ($session->get('user_agent') != $request->getUserAgent() ||
+            $session->get('ip_address') != $request->getIPAddress()) {
             $session->destroy();
-            return redirect()->to('/login')->with('error', 'Session hijacking attempt detected.');
+            return redirect()->to(base_url('login'));
         }
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        // No post-processing needed
+    
     }
 }

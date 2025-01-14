@@ -15,7 +15,7 @@
 
                 <div class="diagnosa" style="margin-bottom: 3%;">
                     <div class="diagnosaAwal" style="display: flex;">
-                        <div class="title" style="width: 10%;">
+                        <div class="title" style="width: 15%;">
                             Diagnosa Awal
                         </div>
                         <div class="semicolon" style="width:  2%; text-align: center;">
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="diagnosaAkhir" style="display: flex;">
-                        <div class="title" style="width: 10%;">
+                        <div class="title" style="width: 15%;">
                             Diagnosa Akhir
                         </div>
                         <div class="semicolon" style="width:  2%; text-align: center;">

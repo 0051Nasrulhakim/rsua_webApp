@@ -9,24 +9,31 @@ use CodeIgniter\Router\RouteCollection;
 // $routes->get('getTtvRanap/(:any)', 'Pasien::getTtvRanap/$1');
 
 $routes->group('pasien', ['filter' => 'auth'], function($routes) {
-    $routes->get('/', 'Pasien::index'); 
-    $routes->match(['get', 'post'], 'getAllRiwayat', 'Pasien::handleAllRiwayat');
-    $routes->match(['get', 'post'], 'getPasien', 'Pasien::handleAllgetPasien');
-    $routes->match(['get', 'post'], 'dokterList', 'Pasien::handleAlldokterList');
-    $routes->match(['get', 'post'], 'saveCatatan_perawatan', 'Pasien::handleAllsaveCatatan_perawatan');
-    $routes->match(['get', 'post'], 'updateCatatan', 'Pasien::handleAllupdateCatatan');
-    $routes->match(['get', 'post'], 'deleteCatatan', 'Pasien::handleAlldeleteCatatan');
-    $routes->match(['get', 'post'], 'findCatatan', 'Pasien::handleAllfindCatatan');
-    $routes->match(['get', 'post'], 'getCatatan', 'Pasien::handleAllgetCatatan');
-    $routes->match(['get', 'post'], 'riwayatSOAPIE', 'Pasien::handleAllriwayatSOAPIE');
-    $routes->match(['get', 'post'], 'getRiwayatObat', 'Pasien::handleAllgetRiwayatObat');
-    $routes->match(['get', 'post'], 'getGambarRadiologi', 'Pasien::handleAllgetGambarRadiologi');
-    $routes->match(['get', 'post'], 'getLab', 'Pasien::handleAllgetLab');
+    $routes->get('/', 'Pasien::index');
+    $routes->get('getPasien', 'Pasien::getPasien');
+    $routes->get('getAllRiwayat', 'Pasien::getAllRiwayat');
+    $routes->get('dokterList', 'Pasien::dokterList');
+
+    $routes->match(['get', 'post'], 'saveCatatan_perawatan', 'Pasien::saveCatatan_perawatan');
+    $routes->match(['get', 'post'], 'updateCatatan', 'Pasien::updateCatatan');
+    $routes->match(['get', 'post'], 'deleteCatatan', 'Pasien::deleteCatatan');
+    $routes->match(['get', 'post'], 'findCatatan', 'Pasien::findCatatan');
+    $routes->match(['get', 'post'], 'getCatatan', 'Pasien::getCatatan');
+    $routes->match(['get', 'post'], 'riwayatSOAPIE', 'Pasien::riwayatSOAPIE');
+    $routes->match(['get', 'post'], 'getRiwayatObat', 'Pasien::getRiwayatObat');
+    $routes->match(['get', 'post'], 'getGambarRadiologi', 'Pasien::getGambarRadiologi');
+    $routes->match(['get', 'post'], 'getLab', 'Pasien::getLab');
 });
+// $routes->get('/', 'Pasien::index');
+$routes->get('login', 'Login::index');
+$routes->get('/', 'Login::index');
+$routes->get('login/logout', 'Login::logout');
 
-
-$routes->get('/', 'Login::index');  
-$routes->get('login', 'Login::index');  
-$routes->get('logout', 'Login::logout');  
-
+$routes->get('AuthController/checklogin', 'AuthController::checklogin');
 $routes->post('AuthController/checklogin', 'AuthController::checklogin');
+
+$routes->get('AuthController/getDataLogin', 'AuthController::getDataLogin');
+$routes->post('AuthController/getDataLogin', 'AuthController::getDataLogin');
+
+$routes->get('AuthController/getDataLogin/(:any)', 'AuthController::getDataLogin/$1');
+$routes->post('AuthController/getDataLogin/(:any)', 'AuthController::getDataLogin/$1');

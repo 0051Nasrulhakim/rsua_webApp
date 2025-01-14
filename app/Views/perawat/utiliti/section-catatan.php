@@ -309,7 +309,7 @@
                                             ${catatan}
                                         </div>
 
-                                        <div style="width: 100%; display: flex; justify-content: center; margin-top: 3%; margin-bottom: 2%; flex-shrink: 0;">
+                                        <div style="width: 100%; display: flex; justify-content: center; margin-top: 3%; margin-bottom: 2%;">
                                             ${
                                                 catatan == "tidak ada catatan" ?
                                                 `<button 
@@ -326,7 +326,7 @@
                                                 </button>
                                                 <button 
                                                     class="btn-custom-edit"
-                                                    style="padding: 3%; border-radius: 2px; border: none; color: white; background-color: rgb(0, 70, 128); margin-right: 5%;"
+                                                    style="padding: 3%; border-radius: 2px; border: none; color: white; background-color: rgb(0, 70, 128);"
                                                     type="button"
                                                     data-no-rawat="${no_rawat}"
                                                     data-tanggal="${tanggal}"
@@ -468,7 +468,7 @@
                                             ${catatan}
                                         </div>
 
-                                        <div style="width: 100%; display: flex; justify-content: center; margin-top: 3%; margin-bottom: 2%; flex-shrink: 0;">
+                                        <div style="width: 100%; display: flex; justify-content: center; margin-top: 3%; margin-bottom: 2%;">
                                             ${
                                                 catatan == "tidak ada catatan" ?
                                                 `<button 
@@ -485,7 +485,7 @@
                                                 </button>
                                                 <button 
                                                     class="btn-custom-edit"
-                                                    style="padding: 3%; border-radius: 2px; border: none; color: white; background-color: rgb(0, 70, 128); margin-right: 5%;"
+                                                    style="padding: 3%; border-radius: 2px; border: none; color: white; background-color: rgb(0, 70, 128);"
                                                     type="button"
                                                     data-no-rawat="${no_rawat}"
                                                     data-tanggal="${tanggal}"

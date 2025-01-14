@@ -61,8 +61,8 @@ class AuthController extends BaseController
 			$hakAkses = 'petugas';
 			$cekDokter = $this->dokter->where('kd_dokter', $username)->first();
 
-			if($cekDokter){
-				$hakAkses = "dokter";		
+			if ($cekDokter) {
+				$hakAkses = "dokter";
 			}
 
 			$sessionData = [
@@ -72,8 +72,10 @@ class AuthController extends BaseController
 				'kd_jabatan' => $getDataPetugas['kd_jbtn'],
 				'akses' => $hakAkses,
 				'logged_in' => TRUE,
+				'user_agent' => $this->request->getUserAgent(),
+				'ip_address' => $this->request->getIPAddress(),
 			];
-
+			// dd($sessionData);
 			$this->session->set($sessionData);
 
 			$data = [
@@ -82,7 +84,6 @@ class AuthController extends BaseController
 			];
 
 			return $this->response->setJSON($data);
-
 		} else {
 
 			$data = [
