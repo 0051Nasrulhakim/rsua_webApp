@@ -192,8 +192,11 @@ class Pasien extends BaseController
                 }
 
                 $this->catatanPerawatan->insert($data);
+                $db = \Config\Database::connect();
+                $lastQuery = $db->getLastQuery();
 
-                $logsql = $this->session->get('ip_address').'| insert into catatan_keperawatan_ranap value ' .json_encode($data);
+                $logsql = $this->session->get('ip_address').'| '. $lastQuery;
+                
                 $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
                 // dd($logsql);
 

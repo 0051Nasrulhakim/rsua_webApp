@@ -18,4 +18,8 @@ class CatatanPerawatan extends Model
         'nip'
     ];
 
+    function tes($data)
+    {
+        $this->insert($data);
+    }
 }
