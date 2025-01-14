@@ -156,6 +156,7 @@ class Pasien extends BaseController
 
     public function saveCatatan_perawatan()
     {
+        $db = \Config\Database::connect();
         try {
             $tanggal = $this->request->getVar('tanggal');
             $jam = date('His');
@@ -192,7 +193,7 @@ class Pasien extends BaseController
                 }
 
                 $this->catatanPerawatan->insert($data);
-                $db = \Config\Database::connect();
+                
                 $lastQuery = $db->getLastQuery();
 
                 $logsql = $this->session->get('ip_address').'| '. $lastQuery;
@@ -208,8 +209,9 @@ class Pasien extends BaseController
                 ];
 
                 $this->shift_perawatan->insert($logCatatan);
+                $lastQuery = $db->getLastQuery();
 
-                $logsql = $this->session->get('ip_address').'| insert into aro_shift_catatan_perawatan value ' .json_encode($logCatatan);
+                $logsql = $this->session->get('ip_address').'| '. $lastQuery;
                 $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
 
                 return $this->response->setJSON([
