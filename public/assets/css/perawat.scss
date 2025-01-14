@@ -26,6 +26,21 @@ $hijauTua: #265925;
     
 }
 
+.swal-popup-top-right {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 400px; /* Lebar pop-up */
+    height: auto;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.swal-content-custom {
+    padding: 0; /* Hapus padding default SweetAlert */
+}
+
 .logo {
     @include font-judul-web;
 }
@@ -236,6 +251,16 @@ $hijauTua: #265925;
 
     .modal-body {
         @include font-text;
+        .diagnosaAwal{
+            .title{
+                width: 20%;
+            }
+        }
+        .diagnosaAkhir{
+            .title{
+                width: 20%;
+            }
+        }
 
         .section {
             padding-left: 2%;
@@ -527,6 +552,16 @@ $hijauTua: #265925;
 
     .modal-body {
         @include font-text;
+        .diagnosaAwal{
+            .title{
+                width: 16%;
+            }
+        }
+        .diagnosaAkhir{
+            .title{
+                width: 16%;
+            }
+        }
 
         .section {
             padding-left: 2%;
@@ -768,7 +803,16 @@ $hijauTua: #265925;
     }
 
     .modal-body {
-
+        .diagnosaAwal{
+            .title{
+                width: 14%;
+            }
+        }
+        .diagnosaAkhir{
+            .title{
+                width: 14%;
+            }
+        }
         .section {
             padding-left: 2%;
             padding-right: 2%;
@@ -905,3 +949,4 @@ $hijauTua: #265925;
         width: 12%;
     }
 }
+

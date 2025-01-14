@@ -7,6 +7,21 @@
   background-color: #265925 !important;
 }
 
+.swal-popup-top-right {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 400px; /* Lebar pop-up */
+  height: auto;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.swal-content-custom {
+  padding: 0; /* Hapus padding default SweetAlert */
+}
+
 .logo {
   font-size: 18px;
   font-weight: 700;
@@ -191,6 +206,12 @@
   }
   .modal-body {
     font-size: 9px;
+  }
+  .modal-body .diagnosaAwal .title {
+    width: 20%;
+  }
+  .modal-body .diagnosaAkhir .title {
+    width: 20%;
   }
   .modal-body .section {
     padding-left: 2%;
@@ -436,6 +457,12 @@
   .modal-body {
     font-size: 9px;
   }
+  .modal-body .diagnosaAwal .title {
+    width: 16%;
+  }
+  .modal-body .diagnosaAkhir .title {
+    width: 16%;
+  }
   .modal-body .section {
     padding-left: 2%;
     padding-right: 2%;
@@ -631,6 +658,12 @@
     line-height: 40px;
     cursor: pointer;
     border-radius: 5px;
+  }
+  .modal-body .diagnosaAwal .title {
+    width: 14%;
+  }
+  .modal-body .diagnosaAkhir .title {
+    width: 14%;
   }
   .modal-body .section {
     padding-left: 2%;

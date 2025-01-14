@@ -171,24 +171,31 @@
                         icon: 'success',
                         title: 'Berhasil',
                         text: response.message,
-                        timer: 1500,
-                        showConfirmButton: false,
+                        timer: 800,
+                        showConfirmButton: true,
                         timerProgressBar: true,
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        allowEnterKey: false,
+                        willClose: () => {
+                            // Tindakan yang akan dilakukan sebelum SweetAlert mulai menutup
+                            const event = new CustomEvent("dataRefreshed");
+                            document.getElementById('tombol-2').setAttribute('hidden', 'true');
+                            document.getElementById('section-change-tombol').removeAttribute('hidden');
+                            document.getElementById('floatingTextarea2').value = '';
+                            document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
+                            window.dispatchEvent(event);
+                            lastCatatan();
+                        }
                     });
 
-                    setTimeout(function() {
-                        // $('#staticBackdrop').modal('hide');
-                        const event = new CustomEvent("dataRefreshed");
-                        document.getElementById('tombol-2').setAttribute('hidden', 'true');
-                        document.getElementById('section-change-tombol').removeAttribute('hidden');
-                        document.getElementById('floatingTextarea2').value = '';
-                        document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
-                        window.dispatchEvent(event)
-                        lastCatatan();
-                    }, 1500);
+                    // setTimeout(function() {
+                    //     // $('#staticBackdrop').modal('hide');
+                    //     const event = new CustomEvent("dataRefreshed");
+                    //     document.getElementById('tombol-2').setAttribute('hidden', 'true');
+                    //     document.getElementById('section-change-tombol').removeAttribute('hidden');
+                    //     document.getElementById('floatingTextarea2').value = '';
+                    //     document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
+                    //     window.dispatchEvent(event)
+                    //     lastCatatan();
+                    // }, 1500);
 
                     // $('#insertCatatan')[0].reset();
                 } else {
