@@ -20,7 +20,7 @@ class AuthFilter implements FilterInterface
         $method = $request->getMethod();
 
         if ($session->get('akses') !== 'petugas') {
-            return redirect()->to('/unauthorized')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
+            return redirect()->to('login');
         }
 
         // Rate Limiting
