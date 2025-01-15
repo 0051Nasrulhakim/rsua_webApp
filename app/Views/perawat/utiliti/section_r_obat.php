@@ -3,6 +3,11 @@
         font-size: 9px;
         padding: 3px;
     }
+
+    .stock-out {
+        background-color: black !important;
+        color: white !important;
+    }
 </style>
 <div class="section-riwayat-obat" id="riwayat_obat"
     style=" padding-left: 2%;
@@ -96,14 +101,21 @@
                     responseData = response;
                     response.forEach(function(item, index) {
                         let kodeBrngNoRawatId = (item.kode_brng + '-' + item.no_rawat).replace(/\//g, '_').replace(/%/g, '_');
+                        let rowStyle = '';
+                        let isHidden = ''
+                        if (item.sisa_stok == 0) {
+                            rowStyle = 'class="stock-out"';
+                            isHidden = 'hidden'
+                        }
                         rows += `
-                                <tr>
-                                    <td>${item.nama_brng}</td>
-                                    <td>${item.jumlah}</td>
-                                    <td>${item.sisa_stok}</td>
-                                    <td>${item.aturan_pakai}</td>
-                                    <td>
+                                <tr id="row-${kodeBrngNoRawatId}">
+                                    <td ${rowStyle}>${item.nama_brng}</td>
+                                    <td ${rowStyle}>${item.jumlah}</td>
+                                    <td ${rowStyle}>${item.sisa_stok}</td>
+                                    <td ${rowStyle}>${item.aturan_pakai}</td>
+                                    <td ${rowStyle}>
                                         <button 
+                                            ${isHidden}
                                             type="button"
                                             class="btn-custom-edit"
                                             style="padding: 3%; border-radius: 2px; border: none; color: white; background-color: rgb(2, 61, 0); margin-right: 3%;"
@@ -234,10 +246,10 @@
             $.ajax({
                 url: '<?= base_url('obat/simpanPemberianObat') ?>',
                 type: 'post',
-                data:  JSON.stringify(dataToSave),
+                data: JSON.stringify(dataToSave),
                 contentType: 'application/json',
                 success: function(response) {
-                    console.log(response)
+                    stokObat();
                     alert('Data berhasil disimpan!');
                 },
                 error: function(error) {

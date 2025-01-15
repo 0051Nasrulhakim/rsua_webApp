@@ -14,7 +14,7 @@
         <thead>
             <tr>
                 <td>Nama Barang</td>
-                <td>Stok</td>
+                <td>Jml</td>
                 <td>Sisa</td>
                 <td>Aturan Pakai</td>
 
