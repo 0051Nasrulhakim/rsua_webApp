@@ -10,6 +10,21 @@ class DetailPemberianObat extends Model
     protected $primaryKey       = 'no_rawat';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'tgl_perawatan',
+        'jam',
+        'no_rawat',
+        'kode_brng',
+        'h_beli',
+        'biaya_obat',
+        'jml',
+        'embalse',
+        'tuslah',
+        'total',
+        'status',
+        'kd_bangsal',
+        'no_batch',
+        'no_faktur'
+    ];
     
 }

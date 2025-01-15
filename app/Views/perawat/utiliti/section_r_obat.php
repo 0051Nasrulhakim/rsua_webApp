@@ -14,36 +14,43 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             " hidden>
     <div class="content" style="padding-top: 3%;">
-        <div class="table">
-            <div class="search" style="width: 100%; margin-bottom: 2%; display:flex; align-items:center">
-                <div class="sro-nama-obat">
-                    Nama Obat
-                </div>
-                <div class="input" style="width: 35%; margin-right: 1%;">
-                    <input class="form-control small-input" type="text" id="search-bar" placeholder="Cari Obat..." onkeyup="filterObat()">
-                </div>
-                <div class="tombol" style="text-align: center; width: 30px;border: 1px solid; border-radius: 4px; background-color: #eb4034; padding: 7px; color: white;" onclick="clearSearch()">
-                    X
-                </div>
-            </div>
-            <table class="table table-striped sro-tabel">
-                <thead>
-                    <tr>
-                        <td class="tanggal">tanggal</td>
-                        <td class="jam">Jam</td>
-                        <td class="nama_brng">N. Obat / Alkes</td>
-                        <td class="jml text-center">Jumlah</td>
-                    </tr>
-                </thead>
-                <tbody id="table-obat">
+        <div class="submenu" style="display: flex; margin-bottom: 2%;">
+            <button
+                class="btn-custom-edit"
+                style="padding: 1%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 1%;"
+                type="button" onclick="tampilstok()">
+                Stok Obat Pasien
+            </button>
+            <button
+                class="btn-custom-edit"
+                style="padding: 1%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 3%;"
+                type="button" onclick="tampilRiwayat()">
+                Daftar Obat Masuk
+            </button>
+        </div>
 
-                </tbody>
-            </table>
+        <div class="table">
+            <?= $this->include('perawat/utiliti/obat/daftar-obat-masuk') ?>
+            <?= $this->include('perawat/utiliti/obat/stok-obat-pasien') ?>
+
         </div>
     </div>
 </div>
 
 <script>
+    function tampilstok() {
+        document.getElementById('daftar-obat-masuk').setAttribute('hidden', 'true');
+        document.getElementById('stok-obat-pasien').removeAttribute('hidden');
+        stokObat();
+
+    }
+
+    function tampilRiwayat() {
+        document.getElementById('stok-obat-pasien').setAttribute('hidden', 'true');
+        document.getElementById('daftar-obat-masuk').removeAttribute('hidden');
+        riwayatObat();
+    }
+
     function clearSearch() {
         document.getElementById('search-bar').value = "";
 
@@ -69,6 +76,179 @@
         $('#table-obat').html(clear);
 
     });
+
+    let responseData = []
+
+    function stokObat() {
+        var no_rawat = document.getElementById("catatan_noRawat").value
+        $.ajax({
+            url: '<?= base_url('obat/getStokObatPasien') ?>',
+            method: 'GET',
+            data: {
+                norawat: no_rawat
+            },
+            dataType: 'json',
+            success: function(response) {
+                // console.log(response)
+                Swal.close();
+                if (response.length > 0) {
+                    let rows = '';
+                    responseData = response;
+                    response.forEach(function(item, index) {
+                        let kodeBrngNoRawatId = (item.kode_brng + '-' + item.no_rawat).replace(/\//g, '_').replace(/%/g, '_');
+                        rows += `
+                                <tr>
+                                    <td>${item.nama_brng}</td>
+                                    <td>${item.jumlah}</td>
+                                    <td>${item.sisa_stok}</td>
+                                    <td>${item.aturan_pakai}</td>
+                                    <td>
+                                        <button 
+                                            type="button"
+                                            class="btn-custom-edit"
+                                            style="padding: 3%; border-radius: 2px; border: none; color: white; background-color: rgb(2, 61, 0); margin-right: 3%;"
+                                            onclick="showJam('${item.kode_brng}', '${item.no_rawat}', '${kodeBrngNoRawatId}', this)"
+                                        >
+                                            Masukkan obat
+                                        </button>
+                                    </td>   
+                                </tr>
+                                <tr id="jam-row-${kodeBrngNoRawatId}" style="display:none">
+                                    <td colspan="5">
+                                        <div id="jam-display-${kodeBrngNoRawatId}"></div>
+                                    </td>
+                                </tr>
+                            `;
+                    });
+                    $('#table-stok-obat').html(rows);
+                }
+            },
+            error: function() {
+                Swal.close();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan saat mengambil data!'
+                });
+            }
+        });
+    }
+
+    function showJam(kodeBrng, noRawat, kodeBrngNoRawatId) {
+        $('#table-stok-obat tr[id^="jam-row-"]').hide();
+        $('#table-stok-obat div[id^="jam-display-"]').empty();
+
+        let jamRow = $('#jam-row-' + kodeBrngNoRawatId);
+        let jamDisplay = $('#jam-display-' + kodeBrngNoRawatId);
+
+        if (jamRow.is(':hidden')) {
+            let item = responseData.find(function(item) {
+                return item.kode_brng === kodeBrng && item.no_rawat === noRawat;
+            });
+
+            let jamContent = '<table class="table">';
+            for (let i = 0; i < 24; i++) {
+                let jamKey = 'jam' + String(i).padStart(2, '0');
+                if (item[jamKey] === "true") {
+                    let timePeriod = getTimePeriod(i);
+                    jamContent += `
+                <tr>
+                    <td>Jam ${i}:00</td>
+                    <td>
+                        <input type="number" min="0" class="form-control" id="input-${jamKey}-${kodeBrngNoRawatId}" placeholder="Jumlah">
+                    </td>
+                    <td>
+                        <select class="form-control" id="select-${jamKey}-${kodeBrngNoRawatId}">
+                            <option value="Pagi" ${timePeriod === 'Pagi' ? 'selected' : ''}>Pagi</option>
+                            <option value="Siang" ${timePeriod === 'Siang' ? 'selected' : ''}>Siang</option>
+                            <option value="Sore" ${timePeriod === 'Sore' ? 'selected' : ''}>Sore</option>
+                            <option value="Malam" ${timePeriod === 'Malam' ? 'selected' : ''}>Malam</option>
+                        </select>
+                    </td>
+                </tr>
+                `;
+                }
+            }
+            jamContent += `
+        </table>
+        <button class="btn btn-success" type="button" onclick="saveJam('${kodeBrng}', '${noRawat}', '${kodeBrngNoRawatId}')">Simpan</button>
+        `;
+
+            jamDisplay.html(jamContent);
+            jamRow.show();
+        } else {
+            jamRow.hide();
+        }
+    }
+
+    function getTimePeriod(hour) {
+        if (hour >= 0 && hour <= 11) {
+            return 'Pagi';
+        } else if (hour >= 12 && hour <= 15) {
+            return 'Siang';
+        } else if (hour >= 16 && hour <= 19) {
+            return 'Sore';
+        } else {
+            return 'Malam';
+        }
+    }
+
+
+    function saveJam(kodeBrng, noRawat, kodeBrngNoRawatId) {
+        let dataToSave = [];
+
+        for (let i = 0; i < 24; i++) {
+            let jamKey = 'jam' + String(i).padStart(2, '0');
+            let jumlahInput = $(`#input-${jamKey}-${kodeBrngNoRawatId}`).val();
+            let periodeSelect = $(`#select-${jamKey}-${kodeBrngNoRawatId}`).val();
+
+            if (jumlahInput > 0) {
+                let jamValue = '';
+                switch (periodeSelect) {
+                    case 'Pagi':
+                        jamValue = '07:00:00';
+                        break;
+                    case 'Siang':
+                        jamValue = '12:00:00';
+                        break;
+                    case 'Sore':
+                        jamValue = '16:00:00';
+                        break;
+                    case 'Malam':
+                        jamValue = '20:00:00';
+                        break;
+                }
+
+                dataToSave.push({
+                    kode_brng: kodeBrng,
+                    no_rawat: noRawat,
+                    jam: jamValue,
+                    jumlah: jumlahInput,
+                    periode: periodeSelect
+                });
+            }
+        }
+
+        if (dataToSave.length > 0) {
+            // console.log(dataToSave)
+            $.ajax({
+                url: '<?= base_url('obat/simpanPemberianObat') ?>',
+                type: 'post',
+                data:  JSON.stringify(dataToSave),
+                contentType: 'application/json',
+                success: function(response) {
+                    console.log(response)
+                    alert('Data berhasil disimpan!');
+                },
+                error: function(error) {
+                    alert('Terjadi kesalahan saat menyimpan data.');
+                }
+            });
+        } else {
+            alert('Tidak ada data yang disimpan karena semua nilai adalah 0.');
+        }
+    }
+
 
     function riwayatObat() {
         document.getElementById('section-modal-riwayat').setAttribute('hidden', 'true');
@@ -98,7 +278,7 @@
         var no_rawat = document.getElementById("catatan_noRawat").value
         // alert(noRawat)
         $.ajax({
-            url: '<?= base_url('pasien/getRiwayatObat') ?>',
+            url: '<?= base_url('obat/getRiwayatObat') ?>',
             method: 'GET',
             data: {
                 norawat: no_rawat
@@ -123,10 +303,10 @@
                 // if (response.length > 0) {
                 //     let rows = '';
                 //     let previousDate = ''; 
-                    
+
                 //     response.forEach(function(item, index) {
                 //         let currentDate = item.tgl_perawatan;
-                        
+
                 //         if (currentDate !== previousDate) {
                 //             rows += `
                 //                 <tr>

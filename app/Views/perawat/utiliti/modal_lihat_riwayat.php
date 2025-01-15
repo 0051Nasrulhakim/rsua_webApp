@@ -1,3 +1,9 @@
+<style>
+    .modal-dialog.modal-xl {
+        max-width: 90%; /* Mengubah lebar maksimal modal */
+    }
+</style>
+
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
@@ -82,6 +88,9 @@
 
 <script>
     document.getElementById('staticBackdrop').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('stok-obat-pasien').setAttribute('hidden', 'true');
+        document.getElementById('daftar-obat-masuk').removeAttribute('hidden');
+
         document.getElementById('search-bar').value = "";
         $('#catatan_noRm').val("");
         $('#catatan_noRawat').val("");
@@ -113,6 +122,7 @@
         document.getElementById('btn-radiologi').classList.remove('active');
         document.getElementById('btn-obat').classList.remove('active');
         document.getElementById('btn-lab').classList.remove('active');
+
     });
 
 

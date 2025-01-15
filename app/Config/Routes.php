@@ -24,6 +24,13 @@ $routes->group('pasien', ['filter' => 'auth'], function($routes) {
     $routes->match(['get', 'post'], 'getGambarRadiologi', 'Pasien::getGambarRadiologi');
     $routes->match(['get', 'post'], 'getLab', 'Pasien::getLab');
 });
+
+$routes->group('obat', ['filter' => 'auth'], function($routes) {
+
+    $routes->match(['get', 'post'], 'getRiwayatObat', 'Obat::getRiwayatObat');
+    $routes->match(['get', 'post'], 'getStokObatPasien', 'Obat::getStokObatPasien');
+    $routes->match(['get', 'post'], 'simpanPemberianObat', 'Obat::simpanPemberianObat');
+});
 // $routes->get('/', 'Pasien::index');
 $routes->get('login', 'Login::index');
 $routes->get('/', 'Login::index');

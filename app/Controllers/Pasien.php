@@ -25,6 +25,7 @@ class Pasien extends BaseController
         $this->shift_perawatan = new \App\Models\AroShiftCatatanPerawatan;
         $this->TrackerSql = new \App\Models\TrackerSql;
         $this->session = \Config\Services::session();
+        helper(['tracker']);
     }
 
 
@@ -156,15 +157,16 @@ class Pasien extends BaseController
 
     public function saveCatatan_perawatan()
     {
-        $db = \Config\Database::connect();
+
         try {
+
             $tanggal = $this->request->getVar('tanggal');
             $jam = date('His');
             $no_rawat = $this->request->getVar('noRawat');
             $shift = $this->request->getVar('shift');
             $uraian = $this->request->getPost('catatan') ?? '';
-            
-            
+
+
             if (empty($uraian) || strtolower($uraian) == 'null') {
                 return $this->response->setJSON([
                     'status_code' => 404,
@@ -193,13 +195,10 @@ class Pasien extends BaseController
                 }
 
                 $this->catatanPerawatan->insert($data);
-                
-                $lastQuery = $db->getLastQuery();
 
-                $logsql = $this->session->get('ip_address').'| '. $lastQuery;
-                
+                $lastQuery = getLastQuery();
+                $logsql = $this->session->get('ip_address') . '| ' . $lastQuery;
                 $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
-                // dd($logsql);
 
                 $logCatatan = [
                     'no_rawat'  => $no_rawat,
@@ -209,9 +208,9 @@ class Pasien extends BaseController
                 ];
 
                 $this->shift_perawatan->insert($logCatatan);
-                $lastQuery = $db->getLastQuery();
 
-                $logsql = $this->session->get('ip_address').'| '. $lastQuery;
+                $lastQuery = getLastQuery();
+                $logsql = $this->session->get('ip_address') . '| ' . $lastQuery;
                 $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
 
                 return $this->response->setJSON([
@@ -234,7 +233,7 @@ class Pasien extends BaseController
             $old_tanggal = $this->request->getPost('tanggal');
             $jam = $this->request->getPost('jam');
             $shift = $this->request->getVar('shift');
-            
+
             $data = [
                 'tanggal' => $old_tanggal,
                 'jam'     => $jam,
@@ -261,7 +260,8 @@ class Pasien extends BaseController
                 ->set($data)
                 ->update();
 
-            $logsql = $this->session->get('ip_address').'| Update catatan_keperawatan_ranap value ' . json_encode($data) . ' where no_rawat = ' . $old_no_rawat . ' and tanggal = ' . $old_tanggal . ' and jam = ' . $jam;
+            $lastQuery = getLastQuery();
+            $logsql = $this->session->get('ip_address') . '| ' . $lastQuery;
             $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
 
             // --------------------------------
@@ -283,7 +283,9 @@ class Pasien extends BaseController
             if (!$existingDataShift) {
 
                 $this->shift_perawatan->insert($logcatatan);
-                $logsql = $this->session->get('ip_address').'| insert into aro_shift_catatan_perawatan value ' .json_encode($logcatatan);
+
+                $lastQuery = getLastQuery();
+                $logsql = $this->session->get('ip_address') . '| ' . $lastQuery;
                 $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
 
                 $trace = 1;
@@ -305,7 +307,8 @@ class Pasien extends BaseController
                     ->update();
                 $trace = 2;
 
-                $logsql = $this->session->get('ip_address').'| update aro_shift_catatan_perawatan value ' .json_encode($logcatatan). ' where no_rawat = ' . $old_no_rawat . ' and tanggal = ' . $old_tanggal . ' and jam = ' . $jam;
+                $lastQuery = getLastQuery();
+                $logsql = $this->session->get('ip_address') . '| ' . $lastQuery;
                 $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
             }
 
@@ -334,7 +337,6 @@ class Pasien extends BaseController
 
     public function deleteCatatan()
     {
-        $this->db = \Config\Database::connect();
         try {
             $noRawat = $this->request->getPost('noRawat');
             $tanggal = $this->request->getPost('tanggal');
@@ -354,10 +356,18 @@ class Pasien extends BaseController
                 ->where('jam', $jam)
                 ->delete();
 
+            $lastQuery = getLastQuery();
+            $logsql = $this->session->get('ip_address') . '| ' . $lastQuery;
+            $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
+
             $this->shift_perawatan->where('no_rawat', $noRawat)
                 ->where('tanggal', $tanggal)
                 ->where('jam', $jam)
                 ->delete();
+
+            $lastQuery = getLastQuery();
+            $logsql = $this->session->get('ip_address') . '| ' . $lastQuery;
+            $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
 
             $this->db->transComplete();
 
@@ -367,11 +377,6 @@ class Pasien extends BaseController
                     'message' => 'Terjadi kesalahan saat menghapus data.'
                 ]);
             } else {
-                $logsql = $this->session->get('ip_address').'| delete from into aro_shift_catatan_perawatan where '. 'no_rawat ='. $noRawat . 'tanggal = ' . $tanggal . ' and jam = ' . $jam;
-                $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
-
-                $logsql = $this->session->get('ip_address').'| delete from into catatan_keperawatan_ranap where '. 'no_rawat ='. $noRawat .'tanggal = ' . $tanggal . ' and jam = ' . $jam;
-                $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
                 return $this->response->setJSON([
                     'status_code' => 200,
                     'message' => 'Catatan berhasil dihapus.'
@@ -620,35 +625,7 @@ class Pasien extends BaseController
     }
 
 
-    public function getRiwayatObat()
-    {
-        $noRawat = $this->request->getGet('norawat');
-
-        $data = $this->detail_pemberian_obat
-            ->select("
-                        detail_pemberian_obat.tgl_perawatan,
-                        detail_pemberian_obat.jam,
-                        detail_pemberian_obat.no_rawat,
-                        detail_pemberian_obat.kode_brng,
-                        databarang.nama_brng,
-                        detail_pemberian_obat.embalase,
-                        detail_pemberian_obat.tuslah,
-                        detail_pemberian_obat.jml,
-                        detail_pemberian_obat.biaya_obat,
-                        detail_pemberian_obat.total,
-                        detail_pemberian_obat.h_beli,
-                        detail_pemberian_obat.kd_bangsal,
-                        detail_pemberian_obat.no_batch,
-                        detail_pemberian_obat.no_faktur 
-                    ")
-            ->join('databarang', 'databarang.kode_brng = detail_pemberian_obat.kode_brng')
-            ->where('detail_pemberian_obat.no_rawat', $noRawat)
-            ->orderBy('detail_pemberian_obat.tgl_perawatan', 'DESC')
-            ->orderBy('detail_pemberian_obat.jam', 'DESC')
-            ->findAll();
-
-        return $this->response->setJSON($data);
-    }
+    
 
     public function getGambarRadiologi()
     {
@@ -693,7 +670,7 @@ class Pasien extends BaseController
             ->orderBy('tgl_periksa', 'DESC')
             ->orderBy('jam', 'DESC')
             ->findAll();
-            
+
         if ($data != null) {
             $list_jenis_perawatan = array_column($data, 'kd_jenis_prw');
 
