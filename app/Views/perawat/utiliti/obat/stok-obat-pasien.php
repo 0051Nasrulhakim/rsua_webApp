@@ -17,9 +17,9 @@
             Nama Stok Obat
         </div>
         <div class="input" style="width: 35%; margin-right: 1%;">
-            <input class="form-control small-input" type="text" id="search-bar-stok-obat-pasien" placeholder="Cari Obat..." onkeyup="alert('filter stok obat pasien')">
+            <input class="form-control small-input" type="text" id="search-bar-stok-obat-pasien" placeholder="Cari Obat..." onkeyup="filterStok()">
         </div>
-        <div class="tombol" style="text-align: center; width: 30px;border: 1px solid; border-radius: 4px; background-color: #eb4034; padding: 7px; color: white;" onclick="clearSearch()">
+        <div class="tombol" style="text-align: center; width: 30px;border: 1px solid; border-radius: 4px; background-color: #eb4034; padding: 7px; color: white;" onclick="clearSearchStok()">
             X
         </div>
     </div>
@@ -38,4 +38,5 @@
 
         </tbody>
     </table>
+    <button id="save-button" class="btn btn-success" style="display:none;" onclick="saveAllJam()">Simpan</button>
 </div>

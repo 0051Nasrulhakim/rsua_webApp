@@ -8,20 +8,6 @@
         background-color: black !important;
         color: white !important;
     }
-
-    .stock-out2 {
-        display: flex;
-        width: 100%;
-        background-color: black !important;
-        color: white !important;
-    }
-
-    .stock-in {
-        display: flex !important;
-        width: 100%;
-        background-color: rgb(143, 233, 255) !important;
-        color: black !important;
-    }
 </style>
 <div class="section-riwayat-obat" id="riwayat_obat"
     style=" padding-left: 2%;
@@ -49,15 +35,14 @@
             <button
                 class="btn-custom-edit"
                 style="padding: 1%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 3%;"
-                type="button" onclick="unitTesting()">
-                UNIT TESTING
+                type="button" onclick="tampilRiwayat()">
+                Tombol tesimpan masal
             </button>
         </div>
 
         <div class="table">
             <?= $this->include('perawat/utiliti/obat/daftar-obat-masuk') ?>
             <?= $this->include('perawat/utiliti/obat/stok-obat-pasien') ?>
-            <?= $this->include('perawat/utiliti/obat/stok-obat-pasien-v2') ?>
 
         </div>
     </div>
@@ -66,7 +51,6 @@
 <script>
     function tampilstok() {
         document.getElementById('daftar-obat-masuk').setAttribute('hidden', 'true');
-        document.getElementById('stok-obat-pasien-v2').setAttribute('hidden', 'true');
         document.getElementById('stok-obat-pasien').removeAttribute('hidden');
         var tanggalfilter = document.getElementById("tanggal-filter").value
         // console.log(tanggalfilter);
@@ -74,21 +58,8 @@
 
     }
 
-    function unitTesting() {
-        document.getElementById('daftar-obat-masuk').setAttribute('hidden', 'true');
-        document.getElementById('stok-obat-pasien').setAttribute('hidden', 'true');
-        document.getElementById('stok-obat-pasien-v2').removeAttribute('hidden');
-
-        var tanggalfilter = document.getElementById("tanggal-filter-new").value
-        console.log(tanggalfilter);
-        // stokObat(tanggalfilter);
-        stokObatNew(tanggalfilter)
-
-    }
-
     function tampilRiwayat() {
         document.getElementById('stok-obat-pasien').setAttribute('hidden', 'true');
-        document.getElementById('stok-obat-pasien-v2').setAttribute('hidden', 'true');
         document.getElementById('daftar-obat-masuk').removeAttribute('hidden');
         riwayatObat();
     }
@@ -131,219 +102,7 @@
 
     });
 
-    let responseData = [];
-    let arrayObatMasuk = []; // Menyimpan input yang valid (input > 0)
-
-    function stokObatNew(tanggalFilter) {
-        var no_rawat = document.getElementById("catatan_noRawat").value;
-
-        Swal.fire({
-            title: 'Sedang Mengambil data...',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            },
-            customClass: {
-                title: 'swal-title-small',
-                content: 'swal-text-small'
-            }
-        });
-
-        $.ajax({
-            url: '<?= base_url('obat/getStokObatPasien') ?>',
-            method: 'GET',
-            data: {
-                norawat: no_rawat,
-                tanggal: tanggalFilter
-            },
-            dataType: 'json',
-            success: function(response) {
-                Swal.close();
-                let rows = '';
-
-                const stockIn = `
-                                    display: flex !important;
-                                    width: 100% !important;
-                                    background-color: rgb(143, 233, 255) !important;
-                                    color: black !important;
-                                `;
-                const stockOut = `
-                                    display: flex !important;
-                                    width: 100% !important;
-                                    background-color: rgb(0, 0, 0) !important;
-                                    color: white !important;
-                                `;
-
-                if (response.length > 0) {
-                    responseData = response;
-                    let currentHour = new Date().getHours();
-
-                    response.forEach(function(item) {
-                        let rowStyle = stockIn
-
-                        if (item.sisa_stok == 0) {
-                            rowStyle = stockOut
-                        }
-
-                        rows += `
-                            <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
-                                <div class="namaBarang" style="width: 40%;">${item.nama_brng}</div>
-                                <div class="jml" style="width: 10%; text-align: center;">${item.jumlah}</div>
-                                <div class="sisa" style="width: 10%; text-align: center;">${item.sisa_stok}</div>
-                                <div class="aturanPakai" style="width: 20%; text-align: center;">${item.aturan_pakai}</div>
-                                <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
-                            </div>
-                        `;
-
-                        for (let i = 0; i < 24; i++) {
-                            let jamKey = 'jam' + String(i).padStart(2, '0');
-                            let timePeriod = getTimePeriod(i);
-
-                            if (item[jamKey] === "true") {
-                                let isHidden = !isTimeInRange(currentHour, i) ? 'hidden' : '';
-                                let textContent = isHidden ? 'Shift saat ini tidak tersedia untuk memasukkan obat' : '';
-
-                                rows += `
-                                    <div style="padding-left: 3%; display: flex; align-items:center; ">
-                                        <div style="width: 15%">${i}:00 (${timePeriod})</div>
-                                        <div style="width: 60%">
-                                            <input type="number" min="0" 
-                                                no-rawat="${item.no_rawat}" 
-                                                class="form-control" 
-                                                placeholder="Jumlah" 
-                                                ${isHidden} 
-                                                id="input-${item.no_rawat}-${i}"
-                                                data-item='${JSON.stringify(item)}' 
-                                                data-kdBrg='${item.kode_brng}'
-                                            >
-                                            <span class="text-danger" ${isHidden ? '' : 'hidden'}>${textContent}</span>
-                                        </div>
-                                    </div>
-                                `;
-                            }
-                        }
-                    });
-                } else {
-                    rows += `<div style="width: 100%; text-align: center;"> Tidak Ada Stok Obat Untuk Pasien </div>`;
-                }
-
-                $('#list-stok-obat').html(rows);
-
-                // Menambahkan event listener untuk setiap input
-                $('input[type="number"]').on('input', function() {
-                    let inputValue = $(this).val();
-                    let itemData = $(this).data('item');
-                    let jamKey = $(this).attr('id').split('-')[2];
-                    var currentDateTime = new Date();
-                    var jamDevice = currentDateTime.toTimeString().split(' ')[0];
-                    var kdBrg = $(this).data('kdBrg')
-                    // console.log(itemData)    
-
-                    if (inputValue > itemData.sisa_stok) {
-                        // Tampilkan alert
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Input Melebihi Sisa Stok',
-                            text: `Jumlah yang dimasukkan melebihi sisa stok obat. Sisa stok: ${itemData.sisa_stok}.`,
-                        });
-                        // Batalkan input jika melebihi stok
-                        $(this).val(itemData.sisa_stok);
-                        inputValue = itemData.sisa_stok
-                        // return;
-                    }
-                    // Jika nilai input lebih besar dari 0, simpan dalam array
-                    if (inputValue > 0) {
-                        let inputObject = {
-                            kode_brng: itemData.kode_brng,
-                            no_rawat: itemData.no_rawat,
-                            jam: jamDevice,
-                            jumlah: inputValue
-                        };
-
-                        // Menambahkan objek ke dalam array
-                        let existingIndex = arrayObatMasuk.findIndex(input => input.no_rawat === inputObject.no_rawat && input.kode_brng === inputObject.kode_brng);
-                        if (existingIndex > -1) {
-                            // Update nilai jika sudah ada
-                            arrayObatMasuk[existingIndex].jumlah = inputObject.jumlah;
-                        } else {
-                            // Tambahkan objek baru
-                            arrayObatMasuk.push(inputObject);
-                        }
-                    } else {
-                        // Jika nilai input 0 atau kosong, hapus data dari array
-                        arrayObatMasuk = arrayObatMasuk.filter(input => input.no_rawat !== itemData.no_rawat || input.kode_brng !== itemData.kode_brng);
-                    }
-
-                    console.log(arrayObatMasuk);
-                    // console.log(kdBrg);
-
-                    if (arrayObatMasuk.length > 0) {
-                        document.getElementById('tombol-tombol-simpan').removeAttribute('hidden')
-                    } else {
-                        document.getElementById('tombol-tombol-simpan').setAttribute('hidden', 'true')
-                    }
-                });
-            },
-            error: function() {
-                Swal.close();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Terjadi kesalahan saat mengambil data!'
-                });
-            }
-        });
-    }
-
-    function savePemberianObat() {
-        var tanggalfilter = document.getElementById("tanggal-filter-new").value
-        if (arrayObatMasuk.length > 0) {
-
-            // console.log(dataToSave)
-            $.ajax({
-                url: '<?= base_url('obat/simpanPemberianObat') ?>',
-                type: 'post',
-                data: JSON.stringify(arrayObatMasuk),
-                contentType: 'application/json',
-                success: function(response) {
-                    // console.log(response);
-                    if (response.status_code != 200) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Penyimpanan gagal',
-                            text: response.message,
-                            timer: 1000,
-                            showConfirmButton: true,
-                            timerProgressBar: true,
-                            willClose: () => {
-                                stokObatNew(tanggalfilter);
-                                arrayObatMasuk = []
-                            }
-                        });
-                    } else {
-                        stokObatNew(tanggalfilter);
-                        arrayObatMasuk = []
-                    }
-                },
-                error: function(error) {
-                    stokObatNew(tanggalfilter);
-                    alert('Terjadi kesalahan saat menyimpan data.');
-                    arrayObatMasuk = []
-                }
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                text: 'Tidak ada data yang disimpan karena semua nilai adalah 0.',
-                timer: 1000,
-                showConfirmButton: true,
-                timerProgressBar: true,
-            });
-            stokObatNew(tanggalfilter);
-            arrayObatMasuk = []
-        }
-    }
-
+    let responseData = []
 
     function stokObat(tanggalFilter) {
 

@@ -34,7 +34,7 @@ class Obat extends BaseController
                         detail_pemberian_obat.h_beli,
                         detail_pemberian_obat.kd_bangsal,
                         detail_pemberian_obat.no_batch,
-                        detail_pemberian_obat.no_faktur 
+                        detail_pemberian_obat.no_faktur,
                     ")
             ->join('databarang', 'databarang.kode_brng = detail_pemberian_obat.kode_brng')
             ->where('detail_pemberian_obat.no_rawat', $noRawat)
@@ -48,13 +48,15 @@ class Obat extends BaseController
     public function getStokObatPasien()
     {
         $noRawat = $this->request->getGet('norawat');
-        // $noRawat = "2024/12/06/000069";
+        $noRawat = "2024/12/07/000013";
         $tanggal = $this->request->getGet('tanggal') ?? date('Y-m-d');
         $data = $this->stok_obat_pasien
             ->select('
                     stok_obat_pasien.*, 
                     databarang.nama_brng,
-                    (stok_obat_pasien.jumlah - IFNULL(SUM(detail_pemberian_obat.jml), 0)) AS sisa_stok
+                    (stok_obat_pasien.jumlah - IFNULL(SUM(detail_pemberian_obat.jml), 0)) AS sisa_stok,
+                    IFNULL(MAX(CONCAT(detail_pemberian_obat.tgl_perawatan, " ", detail_pemberian_obat.jam)), "-") AS last_insert_time
+                    
                 ')
 
             ->join('databarang', 'databarang.kode_brng = stok_obat_pasien.kode_brng')
@@ -74,6 +76,41 @@ class Obat extends BaseController
 
         return $this->response->setJSON($data);
     }
+    // public function getStokObatPasien()
+    // {
+    //     $noRawat = $this->request->getGet('norawat');
+    //     $noRawat = "2024/12/07/000013";
+    //     $tanggal = $this->request->getGet('tanggal') ?? date('Y-m-d');
+
+    //     $data = $this->stok_obat_pasien
+    //         ->select('
+    //             stok_obat_pasien.*, 
+    //             databarang.nama_brng,
+    //             (stok_obat_pasien.jumlah - IFNULL(SUM(detail_pemberian_obat.jml), 0)) AS sisa_stok,
+    //             GROUP_CONCAT(detail_pemberian_obat.jam) AS jam_diberikan
+    //         ')
+    //         ->join('databarang', 'databarang.kode_brng = stok_obat_pasien.kode_brng')
+    //         ->join(
+    //             'detail_pemberian_obat',
+    //             '
+    //                 detail_pemberian_obat.kode_brng = stok_obat_pasien.kode_brng AND 
+    //                 detail_pemberian_obat.no_rawat = stok_obat_pasien.no_rawat AND 
+    //                 detail_pemberian_obat.tgl_perawatan = stok_obat_pasien.tanggal',
+    //             'LEFT'
+    //         )
+    //         ->where('stok_obat_pasien.no_rawat', $noRawat)
+    //         ->where('stok_obat_pasien.tanggal', $tanggal)
+    //         ->groupBy('stok_obat_pasien.kode_brng')
+    //         ->findAll();
+
+    //     foreach ($data as &$item) {
+    //         $jamDiberikan = $item['jam_diberikan'] ? explode(',', $item['jam_diberikan']) : null;
+    //         $item['jam_diberikan'] = $jamDiberikan;
+    //     }
+
+    //     return $this->response->setJSON($data);
+    // }
+
 
     public function getWaktuByJam($jam)
     {
