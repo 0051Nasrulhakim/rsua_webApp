@@ -99,7 +99,10 @@
 
         $('#section-modal-riwayat').html("");
         $('#list-catatan').html("");
+        $('#table-stok-obat').html("");
+        $('#table-obat').html("");
         $('#insertCatatan')[0].reset();
+        // document.getElementById("tanggal-filter").value = <?= date('Y-m-d')?>
         document.getElementById('section-modal-riwayat').removeAttribute('hidden');
         document.getElementById('section-catatan').setAttribute('hidden', 'true');
         document.getElementById('riwayat_obat').setAttribute('hidden', 'true');

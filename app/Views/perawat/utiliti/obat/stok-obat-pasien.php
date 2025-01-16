@@ -1,5 +1,18 @@
 <div class="daftar-stok-obat-pasien" id="stok-obat-pasien" hidden>
-    <div class="search" style="width: 100%; margin-bottom: 2%; display:flex; align-items:center">
+    <div class="tanggalSection" style="width: 100%; display:flex; align-items:center">
+        <div class="sro-nama-obat">
+            Tanggal
+        </div>
+        <div class="text">
+            <input type="date" class="form-control" id="tanggal-filter" name="tanggal-filter" value="<?= date('Y-m-d') ?>">
+        </div>
+        <div class="sectionBtn">
+            <div class="tombol" style="text-align: center; border: 1px solid; border-radius: 4px; background-color:rgb(55, 52, 235); padding: 7px; color: white;" onclick="tampilstok()">
+                Tampilkan
+            </div>
+        </div>
+    </div>
+    <div class="search" style="width: 100%; display:flex; align-items:center">
         <div class="sro-nama-obat">
             Nama Stok Obat
         </div>
@@ -10,6 +23,7 @@
             X
         </div>
     </div>
+
     <table class="table table-striped sro-tabel">
         <thead>
             <tr>

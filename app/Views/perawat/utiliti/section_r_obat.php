@@ -46,7 +46,9 @@
     function tampilstok() {
         document.getElementById('daftar-obat-masuk').setAttribute('hidden', 'true');
         document.getElementById('stok-obat-pasien').removeAttribute('hidden');
-        stokObat();
+        var tanggalfilter = document.getElementById("tanggal-filter").value
+        // console.log(tanggalfilter);
+        stokObat(tanggalfilter);
 
     }
 
@@ -84,20 +86,35 @@
 
     let responseData = []
 
-    function stokObat() {
+    function stokObat(tanggalFilter) {
+
         var no_rawat = document.getElementById("catatan_noRawat").value
+        Swal.fire({
+            title: 'Sedang Mengambil data...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            customClass: {
+                title: 'swal-title-small',
+                content: 'swal-text-small'
+            }
+        });
+
         $.ajax({
             url: '<?= base_url('obat/getStokObatPasien') ?>',
             method: 'GET',
             data: {
-                norawat: no_rawat
+                norawat: no_rawat,
+                tanggal: tanggalFilter
             },
             dataType: 'json',
             success: function(response) {
                 // console.log(response)
                 Swal.close();
+                let rows = '';
                 if (response.length > 0) {
-                    let rows = '';
+
                     responseData = response;
                     response.forEach(function(item, index) {
                         let kodeBrngNoRawatId = (item.kode_brng + '-' + item.no_rawat).replace(/\//g, '_').replace(/%/g, '_');
@@ -132,8 +149,15 @@
                                 </tr>
                             `;
                     });
-                    $('#table-stok-obat').html(rows);
+                } else {
+
+                    rows += `
+                        <tr>
+                            <td colspan="4" style="text-align:center;">Tidak ada stok obat pasien pada tanggal ${tanggalFilter}</td>
+                        </tr>
+                        `
                 }
+                $('#table-stok-obat').html(rows);
             },
             error: function() {
                 Swal.close();
@@ -207,7 +231,10 @@
 
 
     function saveJam(kodeBrng, noRawat, kodeBrngNoRawatId) {
+        var tanggalfilter = document.getElementById("tanggal-filter").value
         let dataToSave = [];
+        var currentDateTime = new Date();
+        var jam = currentDateTime.toTimeString().split(' ')[0];
 
         for (let i = 0; i < 24; i++) {
             let jamKey = 'jam' + String(i).padStart(2, '0');
@@ -234,6 +261,7 @@
                 dataToSave.push({
                     kode_brng: kodeBrng,
                     no_rawat: noRawat,
+                    // jam: jam,
                     jam: jamValue,
                     jumlah: jumlahInput,
                     periode: periodeSelect
@@ -242,6 +270,7 @@
         }
 
         if (dataToSave.length > 0) {
+
             // console.log(dataToSave)
             $.ajax({
                 url: '<?= base_url('obat/simpanPemberianObat') ?>',
@@ -249,15 +278,36 @@
                 data: JSON.stringify(dataToSave),
                 contentType: 'application/json',
                 success: function(response) {
-                    stokObat();
-                    alert('Data berhasil disimpan!');
+                    // console.log(response);
+                    if (response.status_code != 200) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Penyimpanan gagal',
+                            text: response.message,
+                            timer: 1000,
+                            showConfirmButton: true,
+                            timerProgressBar: true,
+                            willClose: () => {
+                                stokObat(tanggalfilter);
+                            }
+                        });
+                    }else{
+                        stokObat(tanggalfilter);
+                    }
                 },
                 error: function(error) {
                     alert('Terjadi kesalahan saat menyimpan data.');
                 }
             });
         } else {
-            alert('Tidak ada data yang disimpan karena semua nilai adalah 0.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Berhasil',
+                text: 'Tidak ada data yang disimpan karena semua nilai adalah 0.',
+                timer: 1000,
+                showConfirmButton: true,
+                timerProgressBar: true,
+            });
         }
     }
 
