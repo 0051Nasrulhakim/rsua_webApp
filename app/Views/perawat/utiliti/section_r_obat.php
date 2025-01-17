@@ -34,29 +34,29 @@
             " hidden>
     <div class="content" style="padding-top: 3%;">
         <div class="submenu" style="display: flex; margin-bottom: 2%;">
-            <button
+            <!-- <button
                 class="btn-custom-edit"
                 style="padding: 1%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 1%;"
                 type="button" onclick="tampilstok()">
                 Stok Obat Pasien
-            </button>
+            </button> -->
             <button
                 class="btn-custom-edit"
-                style="padding: 1%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 3%;"
+                style="padding: 1%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 1%;"
                 type="button" onclick="tampilRiwayat()">
-                Daftar Obat Masuk
+                Riwayat Pemberian Obat
             </button>
             <button
                 class="btn-custom-edit"
-                style="padding: 1%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 3%;"
+                style="padding: 1%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 1%;"
                 type="button" onclick="unitTesting()">
-                UNIT TESTING
+                Stok Obat Pasien
             </button>
+            
         </div>
 
         <div class="table">
             <?= $this->include('perawat/utiliti/obat/daftar-obat-masuk') ?>
-            <?= $this->include('perawat/utiliti/obat/stok-obat-pasien') ?>
             <?= $this->include('perawat/utiliti/obat/stok-obat-pasien-v2') ?>
 
         </div>
@@ -69,25 +69,21 @@
         document.getElementById('stok-obat-pasien-v2').setAttribute('hidden', 'true');
         document.getElementById('stok-obat-pasien').removeAttribute('hidden');
         var tanggalfilter = document.getElementById("tanggal-filter").value
-        // console.log(tanggalfilter);
         stokObat(tanggalfilter);
 
     }
 
     function unitTesting() {
         document.getElementById('daftar-obat-masuk').setAttribute('hidden', 'true');
-        document.getElementById('stok-obat-pasien').setAttribute('hidden', 'true');
         document.getElementById('stok-obat-pasien-v2').removeAttribute('hidden');
 
         var tanggalfilter = document.getElementById("tanggal-filter-new").value
         console.log(tanggalfilter);
-        // stokObat(tanggalfilter);
         stokObatNew(tanggalfilter)
 
     }
 
     function tampilRiwayat() {
-        document.getElementById('stok-obat-pasien').setAttribute('hidden', 'true');
         document.getElementById('stok-obat-pasien-v2').setAttribute('hidden', 'true');
         document.getElementById('daftar-obat-masuk').removeAttribute('hidden');
         riwayatObat();
@@ -132,7 +128,9 @@
     });
 
     let responseData = [];
-    let arrayObatMasuk = []; // Menyimpan input yang valid (input > 0)
+    let arrayObatMasuk = [];
+
+
 
     function stokObatNew(tanggalFilter) {
         var no_rawat = document.getElementById("catatan_noRawat").value;
@@ -159,16 +157,21 @@
             dataType: 'json',
             success: function(response) {
                 Swal.close();
-                let rows = '';
+                console.log(response)
 
+                let rows = '';
+                let rowsInject = '';
                 const stockIn = `
+                                    border-bottom: 1px solid;
                                     display: flex !important;
                                     width: 100% !important;
-                                    background-color: rgb(143, 233, 255) !important;
+                                    align-items:center;
                                     color: black !important;
                                 `;
                 const stockOut = `
+                                    border-bottom: 1px solid;
                                     display: flex !important;
+                                    align-items:center;
                                     width: 100% !important;
                                     background-color: rgb(0, 0, 0) !important;
                                     color: white !important;
@@ -184,122 +187,245 @@
                         if (item.sisa_stok == 0) {
                             rowStyle = stockOut
                         }
+                        // console.log(item.jadwal_pemberian)
+                        if(item.jenis != "Injeksi"){
+                            rows += `
+                                <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
+                                    <div class="namaBarang" style="width: 25%;">${item.nama_brng}</div>
+                                    <div class="jml" style="width: 5%; text-align: center;">${item.jumlah}</div>
+                                    <div class="sisa" style="width: 5%; text-align: center;">${item.sisa_stok}</div>
+                                    <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
+                                    <div class="aturanPakai" style="width: 50%; text-align: center; display:flex;">
+                                    `
 
-                        rows += `
-                            <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
-                                <div class="namaBarang" style="width: 40%;">${item.nama_brng}</div>
-                                <div class="jml" style="width: 10%; text-align: center;">${item.jumlah}</div>
-                                <div class="sisa" style="width: 10%; text-align: center;">${item.sisa_stok}</div>
-                                <div class="aturanPakai" style="width: 20%; text-align: center;">${item.aturan_pakai}</div>
-                                <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
-                            </div>
-                        `;
-
-                        for (let i = 0; i < 24; i++) {
-                            let jamKey = 'jam' + String(i).padStart(2, '0');
-                            let timePeriod = getTimePeriod(i);
-
-                            if (item[jamKey] === "true") {
-                                let isHidden = !isTimeInRange(currentHour, i) ? 'hidden' : '';
-                                let textContent = isHidden ? 'Shift saat ini tidak tersedia untuk memasukkan obat' : '';
-
-                                rows += `
-                                    <div style="padding-left: 3%; display: flex; align-items:center; ">
-                                        <div style="width: 15%">${i}:00 (${timePeriod})</div>
-                                        <div style="width: 60%">
-                                            <input type="number" min="0" 
-                                                no-rawat="${item.no_rawat}" 
-                                                class="form-control" 
-                                                placeholder="Jumlah" 
-                                                ${isHidden} 
-                                                id="input-${item.no_rawat}-${i}"
-                                                data-item='${JSON.stringify(item)}' 
-                                                data-kdBrg='${item.kode_brng}'
-                                            >
-                                            <span class="text-danger" ${isHidden ? '' : 'hidden'}>${textContent}</span>
+                                if(item.jadwal_pemberian.length > 0){
+                                    // alert('ok')
+                                    var jadwalPemberian = item.jadwal_pemberian
+                                    jadwalPemberian.forEach(function(indexPemberian) {
+                                        if(indexPemberian.status != 'diberikan'){
+                                            rows += `<div style="padding: 3%; color:white; margin-right: 3%; border-radius: 3px; background-color: rgb(13, 119, 4);">${indexPemberian.jadwal}</div>`
+                                        }
+                                    })
+                                }
+                            rows += `
                                         </div>
                                     </div>
                                 `;
-                            }
+
+                        }else{
+                            rowsInject += `
+                                <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
+                                    <div class="namaBarang" style="width: 25%;">${item.nama_brng}</div>
+                                    <div class="jml" style="width: 5%; text-align: center;">${item.jumlah}</div>
+                                    <div class="sisa" style="width: 5%; text-align: center;">${item.sisa_stok}</div>
+                                    <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
+                                    <div class="aturanPakai" style="width: 50%; text-align: center; display:flex;">
+                                    `
+
+                                if(item.jadwal_pemberian.length > 0){
+                                    // alert('ok')
+                                    var jadwalPemberian = item.jadwal_pemberian
+                                    jadwalPemberian.forEach(function(indexPemberian) {
+                                        if(indexPemberian.status != 'diberikan'){
+                                            rowsInject += `<div style="padding: 3%; color:white; margin-right: 3%; border-radius: 3px; background-color: rgb(13, 119, 4);">${indexPemberian.jadwal}</div>`
+                                        }
+                                    })
+                                }
+                                rowsInject += `
+                                        </div>
+                                    </div>
+                                `;
+
                         }
-                    });
-                } else {
+                        
+
+                    })
+                }else {
                     rows += `<div style="width: 100%; text-align: center;"> Tidak Ada Stok Obat Untuk Pasien </div>`;
                 }
-
+                
                 $('#list-stok-obat').html(rows);
-
-                // Menambahkan event listener untuk setiap input
-                $('input[type="number"]').on('input', function() {
-                    let inputValue = $(this).val();
-                    let itemData = $(this).data('item');
-                    let jamKey = $(this).attr('id').split('-')[2];
-                    var currentDateTime = new Date();
-                    var jamDevice = currentDateTime.toTimeString().split(' ')[0];
-                    var kdBrg = $(this).data('kdBrg')
-                    // console.log(itemData)    
-
-                    if (inputValue > itemData.sisa_stok) {
-                        // Tampilkan alert
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Input Melebihi Sisa Stok',
-                            text: `Jumlah yang dimasukkan melebihi sisa stok obat. Sisa stok: ${itemData.sisa_stok}.`,
-                        });
-                        // Batalkan input jika melebihi stok
-                        $(this).val(itemData.sisa_stok);
-                        inputValue = itemData.sisa_stok
-                        // return;
-                    }
-                    // Jika nilai input lebih besar dari 0, simpan dalam array
-                    if (inputValue > 0) {
-                        let inputObject = {
-                            kode_brng: itemData.kode_brng,
-                            no_rawat: itemData.no_rawat,
-                            jam: jamDevice,
-                            jumlah: inputValue
-                        };
-
-                        // Menambahkan objek ke dalam array
-                        let existingIndex = arrayObatMasuk.findIndex(input => input.no_rawat === inputObject.no_rawat && input.kode_brng === inputObject.kode_brng);
-                        if (existingIndex > -1) {
-                            // Update nilai jika sudah ada
-                            arrayObatMasuk[existingIndex].jumlah = inputObject.jumlah;
-                        } else {
-                            // Tambahkan objek baru
-                            arrayObatMasuk.push(inputObject);
-                        }
-                    } else {
-                        // Jika nilai input 0 atau kosong, hapus data dari array
-                        arrayObatMasuk = arrayObatMasuk.filter(input => input.no_rawat !== itemData.no_rawat || input.kode_brng !== itemData.kode_brng);
-                    }
-
-                    console.log(arrayObatMasuk);
-                    // console.log(kdBrg);
-
-                    if (arrayObatMasuk.length > 0) {
-                        document.getElementById('tombol-tombol-simpan').removeAttribute('hidden')
-                    } else {
-                        document.getElementById('tombol-tombol-simpan').setAttribute('hidden', 'true')
-                    }
-                });
-            },
-            error: function() {
-                Swal.close();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Terjadi kesalahan saat mengambil data!'
-                });
+                $('#list-stok-obat-injeksi').html(rowsInject);
             }
-        });
+        })
+
     }
+    // function stokObatNew(tanggalFilter) {
+    //     var no_rawat = document.getElementById("catatan_noRawat").value;
+
+    //     Swal.fire({
+    //         title: 'Sedang Mengambil data...',
+    //         allowOutsideClick: false,
+    //         didOpen: () => {
+    //             Swal.showLoading();
+    //         },
+    //         customClass: {
+    //             title: 'swal-title-small',
+    //             content: 'swal-text-small'
+    //         }
+    //     });
+
+    //     $.ajax({
+    //         url: '<?= base_url('obat/getStokObatPasien') ?>',
+    //         method: 'GET',
+    //         data: {
+    //             norawat: no_rawat,
+    //             tanggal: tanggalFilter
+    //         },
+    //         dataType: 'json',
+    //         success: function(response) {
+    //             // console.log(response)
+    //             Swal.close();
+    //             let rows = '';
+
+    //             const stockIn = `
+    //                                 display: flex !important;
+    //                                 width: 100% !important;
+    //                                 background-color: rgb(143, 233, 255) !important;
+    //                                 color: black !important;
+    //                             `;
+    //             const stockOut = `
+    //                                 display: flex !important;
+    //                                 width: 100% !important;
+    //                                 background-color: rgb(0, 0, 0) !important;
+    //                                 color: white !important;
+    //                             `;
+
+    //             if (response.length > 0) {
+    //                 responseData = response;
+    //                 let currentHour = new Date().getHours();
+
+    //                 response.forEach(function(item) {
+    //                     let rowStyle = stockIn
+
+    //                     if (item.sisa_stok == 0) {
+    //                         rowStyle = stockOut
+    //                     }
+
+    //                     rows += `
+    //                         <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
+    //                             <div class="namaBarang" style="width: 40%;">${item.nama_brng}</div>
+    //                             <div class="jml" style="width: 10%; text-align: center;">${item.jumlah}</div>
+    //                             <div class="sisa" style="width: 10%; text-align: center;">${item.sisa_stok}</div>
+    //                             <div class="aturanPakai" style="width: 20%; text-align: center;">${item.aturan_pakai}</div>
+    //                             <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
+    //                         </div>
+    //                     `;
+
+    //                     for (let i = 0; i < 24; i++) {
+    //                         let jamKey = 'jam' + String(i).padStart(2, '0');
+    //                         let timePeriod = getTimePeriod(i);
+                            
+    //                         if (item[jamKey] === "true") {
+    //                             let isHidden = !isTimeInRange(currentHour, i) ? 'hidden' : '';
+    //                             // console.log(i);
+    //                             let textContent = isHidden ? 'Shift saat ini tidak tersedia untuk memasukkan obat' : '';
+
+    //                             rows += `
+    //                                 <div style="padding-left: 3%; display: flex; align-items:center; ">
+    //                                     <div style="width: 15%">${i}:00 (${timePeriod})</div>
+    //                                     <div style="width: 60%">
+    //                                         <input type="number" min="0" 
+    //                                             no-rawat="${item.no_rawat}" 
+    //                                             class="form-control" 
+    //                                             placeholder="Jumlah" 
+    //                                             ${isHidden} 
+    //                                             id="input-${item.no_rawat}-${i}"
+    //                                             data-item='${JSON.stringify(item)}' 
+    //                                             data-kdBrg='${item.kode_brng}',
+    //                                             data-periode='${i}'
+    //                                         >
+    //                                         <span class="text-danger" ${isHidden ? '' : 'hidden'}>${textContent}</span>
+    //                                     </div>
+    //                                 </div>
+    //                             `;
+    //                         }
+    //                     }
+    //                 });
+    //             } else {
+    //                 rows += `<div style="width: 100%; text-align: center;"> Tidak Ada Stok Obat Untuk Pasien </div>`;
+    //             }
+
+    //             $('#list-stok-obat').html(rows);
+
+
+    //             $('input[type="number"]').on('input', function() {
+    //                 // let inputValue = $(this).val();
+    //                 let inputValue = parseInt($(this).val(), 10);;
+    //                 let itemData = $(this).data('item');
+    //                 let jamKey = $(this).attr('id').split('-')[2];
+    //                 var currentDateTime = new Date();
+    //                 var jamDevice = currentDateTime.toTimeString().split(' ')[0];
+    //                 var tanggalStok = itemData.tanggal
+    //                 var periode = $(this).data('periode');
+    //                 var formattedPeriode = String(periode).padStart(2, '0') + ':00';
+
+
+    //                 // console.log(itemData)
+
+    //                 if (inputValue > itemData.sisa_stok) {
+
+    //                     Swal.fire({
+    //                         icon: 'warning',
+    //                         title: 'Input Melebihi Sisa Stok',
+    //                         text: `Jumlah yang dimasukkan melebihi sisa stok obat. Sisa stok: ${itemData.sisa_stok}.`,
+    //                     });
+
+    //                     $(this).val(itemData.sisa_stok);
+    //                     inputValue = itemData.sisa_stok
+    //                     // console.log(inputValue)
+    //                     // return;
+    //                 }
+
+    //                 if (inputValue > 0) {
+    //                     let inputObject = {
+    //                         kode_brng: itemData.kode_brng,
+    //                         no_rawat: itemData.no_rawat,
+    //                         jam: jamDevice,
+    //                         jumlah: inputValue,
+    //                         tanggal: tanggalStok,
+    //                         periode: formattedPeriode
+    //                     };
+
+
+    //                     let existingIndex = arrayObatMasuk.findIndex(input => input.no_rawat === inputObject.no_rawat && input.kode_brng === inputObject.kode_brng);
+    //                     if (existingIndex > -1) {
+
+    //                         arrayObatMasuk[existingIndex].jumlah = inputObject.jumlah;
+    //                     } else {
+
+    //                         arrayObatMasuk.push(inputObject);
+    //                     }
+    //                 } else {
+
+    //                     arrayObatMasuk = arrayObatMasuk.filter(input => input.no_rawat !== itemData.no_rawat || input.kode_brng !== itemData.kode_brng);
+    //                 }
+
+    //                 console.log(arrayObatMasuk);
+
+
+    //                 if (arrayObatMasuk.length > 0) {
+    //                     document.getElementById('tombol-tombol-simpan').removeAttribute('hidden')
+    //                 } else {
+    //                     document.getElementById('tombol-tombol-simpan').setAttribute('hidden', 'true')
+    //                 }
+    //             });
+    //         },
+    //         error: function() {
+    //             Swal.close();
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Oops...',
+    //                 text: 'Terjadi kesalahan saat mengambil data!'
+    //             });
+    //         }
+    //     });
+    // }
 
     function savePemberianObat() {
         var tanggalfilter = document.getElementById("tanggal-filter-new").value
         if (arrayObatMasuk.length > 0) {
 
-            // console.log(dataToSave)
             $.ajax({
                 url: '<?= base_url('obat/simpanPemberianObat') ?>',
                 type: 'post',
@@ -345,205 +471,6 @@
     }
 
 
-    function stokObat(tanggalFilter) {
-
-        var no_rawat = document.getElementById("catatan_noRawat").value
-        Swal.fire({
-            title: 'Sedang Mengambil data...',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            },
-            customClass: {
-                title: 'swal-title-small',
-                content: 'swal-text-small'
-            }
-        });
-
-        $.ajax({
-            url: '<?= base_url('obat/getStokObatPasien') ?>',
-            method: 'GET',
-            data: {
-                norawat: no_rawat,
-                tanggal: tanggalFilter
-            },
-            dataType: 'json',
-            success: function(response) {
-                // console.log(response)
-                Swal.close();
-                let rows = '';
-                if (response.length > 0) {
-
-                    responseData = response;
-                    response.forEach(function(item, index) {
-                        let kodeBrngNoRawatId = (item.kode_brng + '-' + item.no_rawat).replace(/\//g, '_').replace(/%/g, '_');
-                        let rowStyle = '';
-                        let isHidden = ''
-                        if (item.sisa_stok == 0) {
-                            rowStyle = 'class="stock-out"';
-                            isHidden = 'hidden'
-                        }
-                        rows += `
-                                <tr id="row-${kodeBrngNoRawatId}">
-                                    <td ${rowStyle}>${item.nama_brng}</td>
-                                    <td ${rowStyle}>${item.jumlah}</td>
-                                    <td ${rowStyle}>${item.sisa_stok}</td>
-                                    <td ${rowStyle}>${item.aturan_pakai}</td>
-                                    <td ${rowStyle}>
-                                        <button 
-                                            ${isHidden}
-                                            type="button"
-                                            class="btn-custom-edit"
-                                            style="padding: 3%; border-radius: 2px; border: none; color: white; background-color: rgb(2, 61, 0); margin-right: 3%;"
-                                            onclick="showJam('${item.kode_brng}', '${item.no_rawat}', '${kodeBrngNoRawatId}', this)"
-                                        >
-                                            Masukkan obat
-                                        </button>
-                                    </td>   
-                                </tr>
-                                <tr id="jam-row-${kodeBrngNoRawatId}" style="display:none">
-                                    <td colspan="5">
-                                        <div id="jam-display-${kodeBrngNoRawatId}"></div>
-                                    </td>
-                                </tr>
-                            `;
-                    });
-                } else {
-
-                    rows += `
-                        <tr>
-                            <td colspan="4" style="text-align:center;">Tidak ada stok obat pasien pada tanggal ${tanggalFilter}</td>
-                        </tr>
-                        `
-                }
-                $('#table-stok-obat').html(rows);
-            },
-            error: function() {
-                Swal.close();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Terjadi kesalahan saat mengambil data!'
-                });
-            }
-        });
-    }
-
-    // function showJam(kodeBrng, noRawat, kodeBrngNoRawatId) {
-    //     $('#table-stok-obat tr[id^="jam-row-"]').hide();
-    //     $('#table-stok-obat div[id^="jam-display-"]').empty();
-
-    //     let jamRow = $('#jam-row-' + kodeBrngNoRawatId);
-    //     let jamDisplay = $('#jam-display-' + kodeBrngNoRawatId);
-
-    //     if (jamRow.is(':hidden')) {
-    //         let item = responseData.find(function(item) {
-    //             return item.kode_brng === kodeBrng && item.no_rawat === noRawat;
-    //         });
-
-    //         let jamContent = '<table class="table">';
-    //         for (let i = 0; i < 24; i++) {
-    //             let jamKey = 'jam' + String(i).padStart(2, '0');
-    //             if (item[jamKey] === "true") {
-    //                 let timePeriod = getTimePeriod(i);
-    //                 jamContent += `
-    //             <tr>
-    //                 <td>Jam ${i}:00</td>
-    //                 <td>
-    //                     <input type="number" min="0" class="form-control" id="input-${jamKey}-${kodeBrngNoRawatId}" placeholder="Jumlah">
-    //                 </td>
-    //                 <td>
-    //                     <select class="form-control" id="select-${jamKey}-${kodeBrngNoRawatId}">
-    //                         <option value="Pagi" ${timePeriod === 'Pagi' ? 'selected' : ''}>Pagi</option>
-    //                         <option value="Siang" ${timePeriod === 'Siang' ? 'selected' : ''}>Siang</option>
-    //                         <option value="Sore" ${timePeriod === 'Sore' ? 'selected' : ''}>Sore</option>
-    //                         <option value="Malam" ${timePeriod === 'Malam' ? 'selected' : ''}>Malam</option>
-    //                     </select>
-    //                 </td>
-    //             </tr>
-    //             `;
-    //             }
-    //         }
-    //         jamContent += `
-    //     </table>
-    //     <button class="btn btn-success" type="button" onclick="saveJam('${kodeBrng}', '${noRawat}', '${kodeBrngNoRawatId}')">Simpan</button>
-    //     `;
-
-    //         jamDisplay.html(jamContent);
-    //         jamRow.show();
-    //     } else {
-    //         jamRow.hide();
-    //     }
-    // }
-
-    // function getTimePeriod(hour) {
-    //     if (hour >= 0 && hour <= 11) {
-    //         return 'Pagi';
-    //     } else if (hour >= 12 && hour <= 15) {
-    //         return 'Siang';
-    //     } else if (hour >= 16 && hour <= 19) {
-    //         return 'Sore';
-    //     } else {
-    //         return 'Malam';
-    //     }
-    // }
-
-    function showJam(kodeBrng, noRawat, kodeBrngNoRawatId) {
-        $('#table-stok-obat tr[id^="jam-row-"]').hide();
-        $('#table-stok-obat div[id^="jam-display-"]').empty();
-
-        let jamRow = $('#jam-row-' + kodeBrngNoRawatId);
-        let jamDisplay = $('#jam-display-' + kodeBrngNoRawatId);
-
-        if (jamRow.is(':hidden')) {
-            let item = responseData.find(function(item) {
-                return item.kode_brng === kodeBrng && item.no_rawat === noRawat;
-            });
-
-            let currentHour = new Date().getHours();
-
-            let jamContent = '<table class="table">';
-            for (let i = 0; i < 24; i++) {
-                let jamKey = 'jam' + String(i).padStart(2, '0');
-
-                let timePeriod = getTimePeriod(i);
-                // console.log(timePeriod, currentHour, i);
-
-                if (item[jamKey] === "true") {
-                    let isHidden = !isTimeInRange(currentHour, i) ? 'hidden' : '';
-                    let textContent = isHidden ? 'Shift saat ini tidak tersedia untuk memasukkan obat' : '';
-
-                    jamContent += `
-                    <tr>
-                        <td>Jam ${i}:00 (${timePeriod})</td>
-                        <td>
-                            <input type="number" min="0" class="form-control" id="input-${jamKey}-${kodeBrngNoRawatId}" placeholder="Jumlah" ${isHidden}>
-                            <span class="text-danger" ${isHidden ? '' : 'hidden'}>${textContent}</span>
-                        </td>
-                        <td>
-                            <select class="form-control" id="select-${jamKey}-${kodeBrngNoRawatId}" ${isHidden}>
-                                <option value="Pagi" ${timePeriod === 'Pagi' ? 'selected' : ''}>Pagi</option>
-                                <option value="Siang" ${timePeriod === 'Siang' ? 'selected' : ''}>Siang</option>
-                                <option value="Sore" ${timePeriod === 'Sore' ? 'selected' : ''}>Sore</option>
-                                <option value="Malam" ${timePeriod === 'Malam' ? 'selected' : ''}>Malam</option>
-                            </select>
-                        </td>
-                    </tr>
-                `;
-                }
-            }
-            jamContent += `
-            </table>
-            <button class="btn btn-success" type="button" onclick="saveJam('${kodeBrng}', '${noRawat}', '${kodeBrngNoRawatId}')">Simpan</button>
-        `;
-
-            jamDisplay.html(jamContent);
-            jamRow.show();
-        } else {
-            jamRow.hide();
-        }
-    }
-
     function getTimePeriod(hour) {
         if (hour >= 7 && hour < 12) {
             return 'Pagi';
@@ -557,96 +484,20 @@
     }
 
     function isTimeInRange(currentHour, checkHour) {
-        if ((currentHour >= 7 && currentHour < 12 && checkHour >= 7 && checkHour < 12) ||
-            (currentHour >= 12 && currentHour < 16 && checkHour >= 12 && checkHour < 16) ||
-            (currentHour >= 16 && currentHour < 20 && checkHour >= 16 && checkHour < 20) ||
-            (currentHour >= 20 || currentHour < 7) && (checkHour >= 20 || checkHour < 7)) {
+        if 
+        (
+            (currentHour >= 7 && currentHour < 14 && checkHour >= 7 && checkHour < 14) ||
+            (currentHour >= 14 && currentHour < 21 && checkHour >= 14 && checkHour < 21) ||
+            (currentHour >= 21 && currentHour < 7 && checkHour >= 21 && checkHour < 7)
+            // (currentHour >= 20 || currentHour < 7) && (checkHour >= 20 || checkHour < 7)
+        ) 
+        
+        {
             return true;
         }
         return false;
     }
 
-
-    function saveJam(kodeBrng, noRawat, kodeBrngNoRawatId) {
-        var tanggalfilter = document.getElementById("tanggal-filter").value
-        let dataToSave = [];
-        var currentDateTime = new Date();
-        var jam = currentDateTime.toTimeString().split(' ')[0];
-
-        for (let i = 0; i < 24; i++) {
-            let jamKey = 'jam' + String(i).padStart(2, '0');
-            let jumlahInput = $(`#input-${jamKey}-${kodeBrngNoRawatId}`).val();
-            let periodeSelect = $(`#select-${jamKey}-${kodeBrngNoRawatId}`).val();
-
-            if (jumlahInput > 0) {
-                let jamValue = '';
-                switch (periodeSelect) {
-                    case 'Pagi':
-                        jamValue = '07:00:00';
-                        break;
-                    case 'Siang':
-                        jamValue = '12:00:00';
-                        break;
-                    case 'Sore':
-                        jamValue = '16:00:00';
-                        break;
-                    case 'Malam':
-                        jamValue = '20:00:00';
-                        break;
-                }
-
-                dataToSave.push({
-                    kode_brng: kodeBrng,
-                    no_rawat: noRawat,
-                    // jam: jam,
-                    jam: jamValue,
-                    jumlah: jumlahInput,
-                    periode: periodeSelect
-                });
-            }
-        }
-
-        if (dataToSave.length > 0) {
-
-            // console.log(dataToSave)
-            $.ajax({
-                url: '<?= base_url('obat/simpanPemberianObat') ?>',
-                type: 'post',
-                data: JSON.stringify(dataToSave),
-                contentType: 'application/json',
-                success: function(response) {
-                    // console.log(response);
-                    if (response.status_code != 200) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Penyimpanan gagal',
-                            text: response.message,
-                            timer: 1000,
-                            showConfirmButton: true,
-                            timerProgressBar: true,
-                            willClose: () => {
-                                stokObat(tanggalfilter);
-                            }
-                        });
-                    } else {
-                        stokObat(tanggalfilter);
-                    }
-                },
-                error: function(error) {
-                    alert('Terjadi kesalahan saat menyimpan data.');
-                }
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Berhasil',
-                text: 'Tidak ada data yang disimpan karena semua nilai adalah 0.',
-                timer: 1000,
-                showConfirmButton: true,
-                timerProgressBar: true,
-            });
-        }
-    }
 
 
     function riwayatObat() {

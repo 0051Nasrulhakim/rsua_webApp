@@ -173,6 +173,7 @@
         $('#catatan_noRawat').val(no_rawat);
         $('#contentDiagnosaAwal').text(diagnosa_awal);
         $('#contentDiagnosaAkhir').text(diagnosa_akhir);
+        document.getElementById('section-modal-riwayat').removeAttribute('hidden');
 
         // console.log(diagnosa_awal);
 

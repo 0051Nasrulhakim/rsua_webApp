@@ -100,14 +100,16 @@
         $('#section-modal-riwayat').html("");
         $('#list-catatan').html("");
         $('#table-stok-obat').html("");
+        $('#list-stok-obat').html("");
         $('#table-obat').html("");
         $('#insertCatatan')[0].reset();
-        // document.getElementById("tanggal-filter").value = <?= date('Y-m-d')?>
+
         document.getElementById('section-modal-riwayat').removeAttribute('hidden');
         document.getElementById('section-catatan').setAttribute('hidden', 'true');
         document.getElementById('riwayat_obat').setAttribute('hidden', 'true');
         document.getElementById('radiologi').setAttribute('hidden', 'true');
         document.getElementById('section-lab').setAttribute('hidden', 'true');
+        document.getElementById('stok-obat-pasien-v2').setAttribute('hidden', 'true');
         document.getElementById('catatan_tanggal').value = "";
         document.getElementById('catatan_jam').value = ""
 
@@ -206,73 +208,6 @@
     }
 
 
-    function updateCatatan(button) {
-
-        var no_rawat = document.getElementById("catatan_noRawat").value
-        var tes = $('#insertCatatan').serialize()
-
-        $.ajax({
-            url: '<?= base_url('pasien/updateCatatan') ?>',
-            type: 'POST',
-            data: $('#insertCatatan').serialize(),
-            success: function(response) {
-                console.log(response)
-                if (response.status_code == 200) {
-                    // Swal.fire({
-                    //     icon: 'success',
-                    //     title: 'Berhasil',
-                    //     text: response.message,
-                    //     timer: 800,
-                    //     showConfirmButton: true,
-                    //     timerProgressBar: true,
-                    //     // customClass: {
-                    //     //     popup: 'swal-popup-top-right',
-                    //     //     // content: 'swal-content-custom'
-                    //     // },
-                    //     willClose: () => {
-                    //         // Tindakan yang akan dilakukan sebelum SweetAlert mulai menutup
-                    //     }
-                    // });
-                    const event = new CustomEvent("dataRefreshed");
-                    document.getElementById('tombol-2').setAttribute('hidden', 'true');
-                    document.getElementById('section-change-tombol').removeAttribute('hidden');
-                    document.getElementById('floatingTextarea2').value = '';
-                    document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
-                    window.dispatchEvent(event);
-                    lastCatatan();
-
-                    // setTimeout(function() {
-                    //     // $('#staticBackdrop').modal('hide');
-                    //     const event = new CustomEvent("dataRefreshed");
-                    //     document.getElementById('tombol-2').setAttribute('hidden', 'true');
-                    //     document.getElementById('section-change-tombol').removeAttribute('hidden');
-                    //     document.getElementById('floatingTextarea2').value = '';
-                    //     document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
-                    //     window.dispatchEvent(event)
-                    //     lastCatatan();
-                    // }, 2000);
-
-                    // $('#insertCatatan')[0].reset();
-
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal',
-                        text: response.message
-                    });
-                }
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Terjadi kesalahan pada server.'
-                });
-            }
-        });
-
-    }
-
     function hapus(button) {
         var noRawat = button.getAttribute('data-no-rawat');
         var tanggal = button.getAttribute('data-tanggal');
@@ -317,6 +252,7 @@
                             document.getElementById('floatingTextarea2').value = '';
                             document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
                             window.dispatchEvent(event);
+                            // document.getElementById('filter').value('1');
                             lastCatatan();
                             // setTimeout(function() {
                             //     const event = new CustomEvent("dataRefreshed");

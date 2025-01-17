@@ -142,6 +142,50 @@
         document.getElementById('tombol-2').removeAttribute('hidden');
     }
 
+    function updateCatatan(button) {
+        var filterValue = document.getElementById('filter').value;
+        var no_rawat = document.getElementById("catatan_noRawat").value
+
+        $.ajax({
+            url: '<?= base_url('pasien/updateCatatan') ?>',
+            type: 'POST',
+            data: $('#insertCatatan').serialize(),
+            success: function(response) {
+                console.log(response)
+                if (response.status_code == 200) {
+
+                    const event = new CustomEvent("dataRefreshed");
+                    document.getElementById('tombol-2').setAttribute('hidden', 'true');
+                    document.getElementById('section-change-tombol').removeAttribute('hidden');
+                    document.getElementById('floatingTextarea2').value = '';
+                    document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
+                    window.dispatchEvent(event);
+                    
+                    if (filterValue == 1) {
+                        lastCatatan();
+                    } else {
+                        allCatatan();
+                    }
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: response.message
+                    });
+                }
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Terjadi kesalahan pada server.'
+                });
+            }
+        });
+
+    }
+
     function batalkan() {
         document.getElementById('floatingTextarea2').value = '';
         document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
@@ -160,6 +204,7 @@
     $('#insertCatatan').submit(function(e) {
         // var tes = $('#insertCatatan').serialize()
         // console.log(tes)
+        var filterValue = document.getElementById('filter').value;
         e.preventDefault();
         $.ajax({
             url: '<?= base_url('pasien/saveCatatan_perawatan') ?>',
@@ -167,37 +212,18 @@
             data: $('#insertCatatan').serialize(),
             success: function(response) {
                 if (response.status_code === 200) {
-                    // Swal.fire({
-                    //     icon: 'success',
-                    //     title: 'Berhasil',
-                    //     text: response.message,
-                    //     timer: 800,
-                    //     showConfirmButton: true,
-                    //     timerProgressBar: true,
-                    //     willClose: () => {
-                    //         // Tindakan yang akan dilakukan sebelum SweetAlert mulai menutup
-                    //     }
-                    // });
-                    
+
                     const event = new CustomEvent("dataRefreshed");
                     document.getElementById('tombol-2').setAttribute('hidden', 'true');
                     document.getElementById('section-change-tombol').removeAttribute('hidden');
                     document.getElementById('floatingTextarea2').value = '';
                     document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
                     window.dispatchEvent(event);
-                    lastCatatan();
-                    // setTimeout(function() {
-                    //     // $('#staticBackdrop').modal('hide');
-                    //     const event = new CustomEvent("dataRefreshed");
-                    //     document.getElementById('tombol-2').setAttribute('hidden', 'true');
-                    //     document.getElementById('section-change-tombol').removeAttribute('hidden');
-                    //     document.getElementById('floatingTextarea2').value = '';
-                    //     document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
-                    //     window.dispatchEvent(event)
-                    //     lastCatatan();
-                    // }, 1500);
-
-                    // $('#insertCatatan')[0].reset();
+                    if (filterValue == 1) {
+                        lastCatatan();
+                    } else {
+                        allCatatan();
+                    }
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -411,6 +437,7 @@
     }
 
     function lastCatatan() {
+        // 
         Swal.fire({
             title: 'Sedang Mengambil data...',
             allowOutsideClick: false,

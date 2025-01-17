@@ -29,6 +29,7 @@ $routes->group('obat', ['filter' => 'auth'], function($routes) {
 
     $routes->match(['get', 'post'], 'getRiwayatObat', 'Obat::getRiwayatObat');
     $routes->match(['get', 'post'], 'getStokObatPasien', 'Obat::getStokObatPasien');
+    $routes->match(['get', 'post'], 'getStokObatPasienOld', 'Obat::getStokObatPasienOld');
     $routes->match(['get', 'post'], 'simpanPemberianObat', 'Obat::simpanPemberianObat');
     $routes->match(['get', 'post'], 'getWaktuByJam', 'Obat::getWaktuByJam');
     $routes->match(['get', 'post'], 'getWaktuByJam/(:any)', 'Obat::getWaktuByJam/$1');

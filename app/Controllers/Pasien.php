@@ -337,6 +337,7 @@ class Pasien extends BaseController
 
     public function deleteCatatan()
     {
+        $this->db = \Config\Database::connect();
         try {
             $noRawat = $this->request->getPost('noRawat');
             $tanggal = $this->request->getPost('tanggal');
