@@ -2,6 +2,7 @@
 <?= $this->section('content') ?>
 <?= $this->include('perawat/utiliti/modal_lihat_riwayat') ?>
 <?= $this->include('perawat/utiliti/modal_lihat_catatan') ?>
+<?= $this->include('perawat/utiliti/modal_obat') ?>
 
 <div class="wrapper">
 
@@ -122,6 +123,7 @@
                                     <td style="text-align: center;">${item.lama_inap}</td>
                                     <td>
                                         <button class="btn-custom-blue btn-sm" onclick="ShowRiwayat('Riwayat','${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}','${item.diagnosa_awal}','${item.diagnosa_akhir}')">Riwayat</button>
+                                        <button class="btn-custom-yellow btn-sm mt-1" onclick="ShowModalObat('Obat','${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}','${item.diagnosa_awal}','${item.diagnosa_akhir}')">Obat</button>
                                         <button class="btn-custom-yellow btn-sm mt-1" onclick="showCatatan('Catatan', '${item.no_rkm_medis}', '${item.no_rawat}','${item.nm_pasien}')" hidden>Catatan</button>
                                     </td>
                                 </tr>
@@ -168,26 +170,41 @@
         });
     });
 
+    function ShowModalObat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir) {
+        $('#obat_noRm').val(no_rkm_medis);
+        $('#obat_noRawat').val(no_rawat);
+        $('#contentDiagnosaAwalSObat').text(diagnosa_awal);
+        $('#contentDiagnosaAkhirSObat').text(diagnosa_akhir);
+        $('#contentNormSObat').text(no_rkm_medis);
+        $('#contentNamaPasienSObat').text(nama_pasien);
+        $('#modalObat').modal('show');
+        riwayatObat()
+    }
+
     function ShowRiwayat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir) {
+
+        document.getElementById('search-bar').value = "";
+        document.getElementById('section-modal-riwayat').removeAttribute('hidden');
+        document.getElementById('riwayat_obat').setAttribute('hidden', 'true')
+        document.getElementById('section-catatan').setAttribute('hidden', 'true');
+        document.getElementById('radiologi').setAttribute('hidden', 'true');
+        document.getElementById('section-lab').setAttribute('hidden', 'true');
+
+        document.getElementById('btn-riwayat').classList.add('active');
+        document.getElementById('btn-catatan').classList.remove('active');
+        document.getElementById('btn-radiologi').classList.remove('active');
+        document.getElementById('btn-obat').classList.remove('active');
+        document.getElementById('btn-lab').classList.remove('active');
+        
         $('#catatan_noRm').val(no_rkm_medis);
         $('#catatan_noRawat').val(no_rawat);
         $('#contentDiagnosaAwal').text(diagnosa_awal);
         $('#contentDiagnosaAkhir').text(diagnosa_akhir);
-        document.getElementById('section-modal-riwayat').removeAttribute('hidden');
 
-        // console.log(diagnosa_awal);
-
-        const currentHour = new Date().getHours();
-        const shiftSelect = document.getElementById('shift_select');
-
-        if (currentHour >= 7 && currentHour <= 13) {
-            shiftSelect.value = "pagi"; 
-        } else if (currentHour >= 14 && currentHour <= 21) {
-            shiftSelect.value = "siang";
-        } else {
-            shiftSelect.value = "malam"; 
-        }
-
+        fetchDataRiwayat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir)
+    }
+    function fetchDataRiwayat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir)
+    {
         Swal.fire({
             title: 'Sedang Mengambil data...',
             allowOutsideClick: false,
@@ -208,7 +225,6 @@
             },
             dataType: 'json',
             success: function(data) {
-                // console.log(data);
                 Swal.close();
 
                 let rows = '';
@@ -283,9 +299,6 @@
                 $('#staticBackdrop').modal('show');
             },
 
-
-
-
             error: function() {
                 Swal.close();
                 Swal.fire({
@@ -296,7 +309,6 @@
             }
         });
     }
-
     function klikTabel(noRm) {
         $('#setNorm').text(noRm)
     }

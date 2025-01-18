@@ -52,9 +52,6 @@
                         <div class="menu-1" onclick="radiologi()" id="btn-radiologi">
                             Radiologi
                         </div>
-                        <div class="menu-1" onclick="riwayatObat()" id="btn-obat">
-                            Data Pemberian Obat
-                        </div>
                         <div class="menu-1" onclick="tambahCatatan()" id="btn-catatan">
                             Catatan Perawatan
                         </div>
@@ -74,7 +71,6 @@
                     <input type="text" id="catatan_noRawat" name="noRawat" hidden>
                     <input type="text" id="catatan_tanggal" name="tanggal" hidden>
                     <input type="text" id="catatan_jam" name="jam" hidden>
-                    <?= $this->include('perawat/utiliti/section_r_obat') ?>
 
                     <?= $this->include('perawat/utiliti/section-catatan') ?>
                 </form>
@@ -88,9 +84,6 @@
 
 <script>
     document.getElementById('staticBackdrop').addEventListener('hidden.bs.modal', function() {
-        document.getElementById('stok-obat-pasien').setAttribute('hidden', 'true');
-        document.getElementById('daftar-obat-masuk').removeAttribute('hidden');
-
         document.getElementById('search-bar').value = "";
         $('#catatan_noRm').val("");
         $('#catatan_noRawat').val("");
@@ -109,7 +102,6 @@
         document.getElementById('riwayat_obat').setAttribute('hidden', 'true');
         document.getElementById('radiologi').setAttribute('hidden', 'true');
         document.getElementById('section-lab').setAttribute('hidden', 'true');
-        document.getElementById('stok-obat-pasien-v2').setAttribute('hidden', 'true');
         document.getElementById('catatan_tanggal').value = "";
         document.getElementById('catatan_jam').value = ""
 
@@ -144,6 +136,7 @@
         document.getElementById('btn-radiologi').classList.remove('active');
         document.getElementById('btn-obat').classList.remove('active');
         document.getElementById('btn-lab').classList.remove('active');
+        
     }
 
     function tambahCatatan() {
@@ -234,37 +227,13 @@
                     },
                     success: function(response) {
                         if (response.status_code === 200) {
-                            // Swal.fire({
-                            //     icon: 'success',
-                            //     title: 'Berhasil',
-                            //     text: response.message,
-                            //     timer: 800,
-                            //     showConfirmButton: true,
-                            //     timerProgressBar: true,
-                            //     willClose: () => {
-                            //         // Tindakan yang akan dilakukan sebelum SweetAlert mulai menutup
-
-                            //     }
-                            // });
                             const event = new CustomEvent("dataRefreshed");
                             document.getElementById('tombol-2').setAttribute('hidden', 'true');
                             document.getElementById('section-change-tombol').removeAttribute('hidden');
                             document.getElementById('floatingTextarea2').value = '';
                             document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
                             window.dispatchEvent(event);
-                            // document.getElementById('filter').value('1');
                             lastCatatan();
-                            // setTimeout(function() {
-                            //     const event = new CustomEvent("dataRefreshed");
-                            //     document.getElementById('tombol-2').setAttribute('hidden', 'true');
-                            //     document.getElementById('section-change-tombol').removeAttribute('hidden');
-                            //     document.getElementById('floatingTextarea2').value = '';
-                            //     document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
-                            //     window.dispatchEvent(event)
-                            //     lastCatatan();
-                            // }, 1500);
-
-                            // $('#insertCatatan')[0].reset();
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -335,7 +304,6 @@
         });
 
         var no_rawat = document.getElementById("catatan_noRawat").value
-        // alert(noRawat)
         $.ajax({
             url: '<?= base_url('pasien/getGambarRadiologi') ?>',
             method: 'GET',
@@ -347,8 +315,6 @@
                 let rows = '';
                 Swal.close();
 
-
-                // console.log(response)
                 if (response.length > 0) {
                     for (let i = 0; i < response.length; i++) {
                         rows += `

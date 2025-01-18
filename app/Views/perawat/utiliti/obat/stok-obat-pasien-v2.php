@@ -51,11 +51,5 @@
         <div class="list-stok-obat-injeksi" id="list-stok-obat-injeksi">
             
         </div>
-    <!-- <div class="sectionBtn" style="width: 50%; text-align:center; margin-left: auto; margin-right: auto; margin-top: 2%;" id="tombol-tombol-simpan" hidden>
-        <div class="tombol" style="text-align: center; border: 1px solid; border-radius: 4px; background-color:rgb(2, 95, 33); padding: 7px; color: white;" onclick="savePemberianObat()">
-            Simpan
-        </div>
-    </div> -->
-
 
 </div>
