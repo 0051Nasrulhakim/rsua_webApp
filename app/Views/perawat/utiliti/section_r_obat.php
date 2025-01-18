@@ -86,6 +86,31 @@
         document.getElementById('stok-obat-pasien-v2').setAttribute('hidden', 'true');
         document.getElementById('daftar-obat-masuk').setAttribute('hidden', 'true');
         document.getElementById('cpo').removeAttribute('hidden');
+        var no_rawat = document.getElementById("obat_noRawat").value;
+
+        $.ajax({
+            url: '<?= base_url('obat/getCpo') ?>',
+            method: 'GET',
+            data: {
+                norawat: no_rawat,
+            },
+            dataType: 'json',
+            success: function(response) {
+                let rows = '';
+                let rowsInject = '';
+                console.log(response)
+
+
+                if (response.daftar_nama_obat.length > 0) {
+                    response.daftar_nama_obat.forEach(function(item) {
+                        rows +=`
+                        `
+                    })
+                }
+                $('#section-cpo').html(rows);
+            }
+        })
+
     }
 
     function clearSearch() {

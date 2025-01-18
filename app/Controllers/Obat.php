@@ -235,7 +235,7 @@ class Obat extends BaseController
     public function getCpo()
     {
         $noRawat = $this->request->getGet('norawat');
-        $noRawat = "2024/12/06/000121"; 
+        $noRawat = "2024/12/06/000121";
 
         $tanggalTerakhir = $this->detail_pemberian_obat
             ->select("detail_pemberian_obat.tgl_perawatan")
@@ -314,13 +314,25 @@ class Obat extends BaseController
             $tanggalGrouped[$tgl][] = [
                 'obat' => $item['nama_brng'],
                 'kd_obat' => $item['kode_brng'],
-                'label_jam_diberikan' => $jamByCategory 
+                'label_jam_diberikan' => $jamByCategory
             ];
         }
 
+        $tanggalArray = array_keys($tanggalGrouped);
+
+        $listObat = $this->detail_pemberian_obat
+            ->select('databarang.nama_brng, detail_pemberian_obat.kode_brng')
+            ->where('detail_pemberian_obat.no_rawat', $noRawat)
+            ->join('databarang', 'databarang.kode_brng = detail_pemberian_obat.kode_brng')
+            ->orderBy('detail_pemberian_obat.tgl_perawatan', 'DESC')
+            ->groupBy('databarang.nama_brng')
+            ->whereIn('detail_pemberian_obat.tgl_perawatan', $tanggalArray) 
+            ->findAll();
+
         $data = [
-            'list_obat' => $dataObat, 
-            'list_tanggal' => $tanggalGrouped 
+            'list_obat' => $dataObat,
+            'list_tanggal' => $tanggalGrouped,
+            'daftar_nama_obat' => $listObat
         ];
 
         return $this->response->setJSON($data);
