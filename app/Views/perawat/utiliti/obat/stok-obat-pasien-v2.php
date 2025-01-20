@@ -1,28 +1,31 @@
-<div class="stok-obat-pasien-v2" id="stok-obat-pasien-v2" hidden>
-    <div class="tanggalSection" style="width: 100%; display:flex; align-items:center">
-        <div class="sro-nama-obat">
-            Tanggal
+<div class="stok-obat-pasien-v2" id="stok-obat-pasien-v2" hidden>   
+    <div class="filter-stok-obat" style="display: flex; margin-bottom: 2%;">
+
+        <div class="tanggalSection" style="width: 60%; display:flex; align-items:center; ">
+            <div class="sro-nama-obat">
+                Tanggal
+            </div>
+            <div class="text">
+                <input type="date" class="form-control" id="tanggal-filter-new" name="tanggal-filter-new" value="<?= date('Y-m-d') ?>">
+            </div>
+            <div class="sectionBtn">
+                <div class="tombol" style="text-align: center; border: 1px solid; border-radius: 4px; background-color:rgb(55, 52, 235); padding: 7px; color: white;" onclick="unitTesting()">
+                    Tampilkan
+                </div>
+            </div>
         </div>
-        <div class="text">
-            <input type="date" class="form-control" id="tanggal-filter-new" name="tanggal-filter-new" value="<?= date('Y-m-d') ?>">
-        </div>
-        <div class="sectionBtn">
-            <div class="tombol" style="text-align: center; border: 1px solid; border-radius: 4px; background-color:rgb(55, 52, 235); padding: 7px; color: white;" onclick="unitTesting()">
-                Tampilkan
+        <div class="search" style="width: 50%; display:flex; align-items:center">
+            <div class="sro-nama-obat" style="width: 27%;">
+                Nama Stok Obat
+            </div>
+            <div class="input" style="width: 50%; margin-right: 1%;">
+                <input class="form-control small-input" type="text" id="searchInput-stok" placeholder="Cari Obat..." placeholder="Cari Obat..." onkeyup="searchObat()">
+            </div>
+            <div class="tombol" style="text-align: center; width: 30px;border: 1px solid; border-radius: 4px; background-color: #eb4034; padding: 7px; color: white;" onclick="clearSearchStok()">
+                X
             </div>
         </div>
     </div>
-    <!-- <div class="search" style="width: 100%; display:flex; align-items:center">
-        <div class="sro-nama-obat">
-            Nama Stok Obat
-        </div>
-        <div class="input" style="width: 35%; margin-right: 1%;">
-            <input class="form-control small-input" type="text" id="search-bar-stok-obat-pasien" placeholder="Cari Obat..." onkeyup="filterStok()">
-        </div>
-        <div class="tombol" style="text-align: center; width: 30px;border: 1px solid; border-radius: 4px; background-color: #eb4034; padding: 7px; color: white;" onclick="clearSearchStok()">
-            X
-        </div>
-    </div> -->
     <!-- <div class="wrap-list-obat" style="border: 1px solid;"> -->
     
 

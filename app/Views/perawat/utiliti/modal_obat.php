@@ -44,6 +44,7 @@
         $('#list-stok-obat-injeksi').html("");
         $('#totalTanggal').html("");
         $('#bodyCpo').html("");
+        document.getElementById('searchInput-stok').value = '';
         // cpo()
     })
 </script>

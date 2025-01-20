@@ -32,12 +32,6 @@
             ">
     <div class="content" style="padding-top: 3%;">
         <div class="submenu" style="display: flex; margin-bottom: 2%;">
-            <!-- <button
-                class="btn-custom-edit"
-                style="padding: 1%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 1%;"
-                type="button" onclick="tampilRiwayat()" hidden>
-                Riwayat Pemberian Obat
-            </button> -->
             <button
                 class="btn-custom-edit"
                 style="padding: 1%; border-radius: 2px; border: none; color: white; background-color: rgb(184, 9, 9); margin-right: 1%;"
@@ -63,6 +57,11 @@
 </div>
 
 <script>
+
+    function clearSearchStok() {
+        document.getElementById('searchInput-stok').value = '';
+        searchObat(); 
+    }
     function unitTesting() {
         document.getElementById('daftar-obat-masuk').setAttribute('hidden', 'true');
         document.getElementById('cpo').setAttribute('hidden', 'true');
@@ -246,30 +245,6 @@
 
     }
 
-    function clearSearch() {
-        document.getElementById('search-bar').value = "";
-
-        var table = document.getElementById("table-obat");
-        var rows = table.getElementsByTagName("tr");
-
-        for (var i = 0; i < rows.length; i++) {
-            rows[i].style.display = "";
-        }
-
-    }
-
-    function clearSearchStok() {
-        document.getElementById('search-bar-stok-obat-pasien').value = "";
-
-        var table = document.getElementById("table-stok-obat");
-        var rows = table.getElementsByTagName("tr");
-
-        for (var i = 0; i < rows.length; i++) {
-            rows[i].style.display = "";
-        }
-
-    }
-
     document.getElementById('staticBackdrop').addEventListener('hidden.bs.modal', function() {
         document.getElementById('search-bar').value = "";
 
@@ -287,8 +262,7 @@
 
     let responseData = [];
     let arrayObatMasuk = [];
-
-
+    let stokObatData = [];
 
     function stokObatNew(tanggalFilter) {
         var no_rawat = document.getElementById("obat_noRawat").value;
@@ -314,109 +288,114 @@
             dataType: 'json',
             success: function(response) {
                 Swal.close();
+                stokObatData = response;  
 
-
-                let rows = '';
-                let rowsInject = '';
-                const stockIn = `
-                                    border-bottom: 1px solid;
-                                    display: flex !important;
-                                    width: 100% !important;
-                                    align-items:center;
-                                    color: black !important;
-                                `;
-                const stockOut = `
-                                    border-bottom: 1px solid;
-                                    display: flex !important;
-                                    align-items:center;
-                                    width: 100% !important;
-                                    background-color: rgb(0, 0, 0) !important;
-                                    color: white !important;
-                                `;
-
-                if (response.length > 0) {
-                    responseData = response;
-                    let currentHour = new Date().getHours();
-
-                    response.forEach(function(item) {
-                        let rowStyle = stockIn
-
-                        if (item.sisa_stok == 0) {
-                            rowStyle = stockOut
-                        }
-                        if (item.jenis != "Injeksi") {
-                            rows += `
-                                <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
-                                    <div class="namaBarang" style="width: 25%;">${item.nama_brng}</div>
-                                    <div class="jml" style="width: 5%; text-align: center;">${item.jumlah}</div>
-                                    <div class="sisa" style="width: 5%; text-align: center;">${item.sisa_stok}</div>
-                                    <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
-                                    <div class="aturanPakai" style="width: 50%; text-align: center; display:flex;">
-                                    `
-
-                            if (item.jadwal_pemberian.length > 0) {
-                                // alert('ok')
-                                var jadwalPemberian = item.jadwal_pemberian
-                                jadwalPemberian.forEach(function(indexPemberian) {
-                                    if (indexPemberian.status != 'diberikan') {
-                                        rows += `<div style="padding: 3%; color:white; margin-right: 3%; border-radius: 3px; background-color: rgb(13, 119, 4);"
-                                                        onclick="savePemberianObat('${item.kode_brng}', '${item.no_rawat}', '${item.tanggal}', '${indexPemberian.jadwal}', 
-                                                                '${item.kd_bangsal}', '${item.no_batch}', '${item.no_faktur}', '${item.h_beli}', '${item.harga_obat}')"
-                                                        >${indexPemberian.jadwal}
-                                                    </div>`
-                                    }
-                                })
-                            }
-                            rows += `
-                                        </div>
-                                    </div>
-                                `;
-
-                        } else {
-                            rowsInject += `
-                                <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
-                                    <div class="namaBarang" style="width: 25%;">${item.nama_brng}</div>
-                                    <div class="jml" style="width: 5%; text-align: center;">${item.jumlah}</div>
-                                    <div class="sisa" style="width: 5%; text-align: center;">${item.sisa_stok}</div>
-                                    <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
-                                    <div class="aturanPakai" style="width: 50%; text-align: center; display:flex;">
-                                    `
-
-                            if (item.jadwal_pemberian.length > 0) {
-                                // alert('ok')
-                                var jadwalPemberian = item.jadwal_pemberian
-                                jadwalPemberian.forEach(function(indexPemberian) {
-                                    if (indexPemberian.status != 'diberikan') {
-                                        rowsInject += `
-                                                        <div style="padding: 3%; color: white; margin-right: 3%; border-radius: 3px; background-color: rgb(13, 119, 4);"
-                                                            onclick="savePemberianObat('${item.kode_brng}', '${item.no_rawat}', '${item.tanggal}', '${indexPemberian.jadwal}', 
-                                                                    '${item.kd_bangsal}', '${item.no_batch}', '${item.no_faktur}', '${item.h_beli}', '${item.harga_obat}')">
-                                                            ${indexPemberian.jadwal}
-                                                        </div>
-                                                        `;
-                                    }
-                                })
-                            }
-                            rowsInject += `
-                                        </div>
-                                    </div>
-                                `;
-
-                        }
-
-
-                    })
-                } else {
-                    rows += `<div style="width: 100%; text-align: center;"> Tidak Ada Stok Obat Untuk Pasien </div>`;
-                    rowsInject += `<div style="width: 100%; text-align: center;"> Tidak Ada Stok Obat Injeksi Untuk Pasien </div>`;
-                }
-
-                $('#list-stok-obat').html(rows);
-                $('#list-stok-obat-injeksi').html(rowsInject);
+                displayStokObat(stokObatData);
             }
-        })
-
+        });
     }
+
+    function displayStokObat(data) {
+        let rows = '';
+        let rowsInject = '';
+        const stockIn = `
+                            border-bottom: 1px solid;
+                            display: flex !important;
+                            width: 100% !important;
+                            align-items:center;
+                            color: black !important;
+                        `;
+        const stockOut = `
+                            border-bottom: 1px solid;
+                            display: flex !important;
+                            align-items:center;
+                            width: 100% !important;
+                            background-color: rgb(0, 0, 0) !important;
+                            color: white !important;
+                        `;
+
+        if (data.length > 0) {
+            data.forEach(function(item) {
+                let rowStyle = stockIn;
+
+                if (item.sisa_stok == 0) {
+                    rowStyle = stockOut;
+                }
+                if (item.jenis != "Injeksi") {
+                    rows += `
+                        <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
+                            <div class="namaBarang" style="width: 25%;">${item.nama_brng}</div>
+                            <div class="jml" style="width: 5%; text-align: center;">${item.jumlah}</div>
+                            <div class="sisa" style="width: 5%; text-align: center;">${item.sisa_stok}</div>
+                            <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
+                            <div class="aturanPakai" style="width: 50%; text-align: center; display:flex;">
+                        `;
+
+                    if (item.jadwal_pemberian.length > 0) {
+                        var jadwalPemberian = item.jadwal_pemberian;
+                        jadwalPemberian.forEach(function(indexPemberian) {
+                            if (indexPemberian.status != 'diberikan') {
+                                rows += `<div style="padding: 3%; color:white; margin-right: 3%; border-radius: 3px; background-color: rgb(13, 119, 4);"
+                                            onclick="savePemberianObat('${item.kode_brng}', '${item.no_rawat}', '${item.tanggal}', '${indexPemberian.jadwal}', 
+                                                    '${item.kd_bangsal}', '${item.no_batch}', '${item.no_faktur}', '${item.h_beli}', '${item.harga_obat}')"
+                                            >${indexPemberian.jadwal}
+                                        </div>`;
+                            }
+                        });
+                    }
+                    rows += `</div></div>`;
+
+                } else {
+                    rowsInject += `
+                        <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
+                            <div class="namaBarang" style="width: 25%;">${item.nama_brng}</div>
+                            <div class="jml" style="width: 5%; text-align: center;">${item.jumlah}</div>
+                            <div class="sisa" style="width: 5%; text-align: center;">${item.sisa_stok}</div>
+                            <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
+                            <div class="aturanPakai" style="width: 50%; text-align: center; display:flex;">
+                    `;
+
+                    if (item.jadwal_pemberian.length > 0) {
+                        var jadwalPemberian = item.jadwal_pemberian;
+                        jadwalPemberian.forEach(function(indexPemberian) {
+                            if (indexPemberian.status != 'diberikan') {
+                                rowsInject += `
+                                                <div style="padding: 3%; color: white; margin-right: 3%; border-radius: 3px; background-color: rgb(13, 119, 4);"
+                                                    onclick="savePemberianObat('${item.kode_brng}', '${item.no_rawat}', '${item.tanggal}', '${indexPemberian.jadwal}', 
+                                                            '${item.kd_bangsal}', '${item.no_batch}', '${item.no_faktur}', '${item.h_beli}', '${item.harga_obat}')">
+                                                    ${indexPemberian.jadwal}
+                                                </div>
+                                            `;
+                            }
+                        });
+                    }
+                    rowsInject += `</div></div>`;
+                }
+            });
+        } else {
+            rows += `<div style="width: 100%; text-align: center;"> Tidak Ada Stok Obat Untuk Pasien </div>`;
+            rowsInject += `<div style="width: 100%; text-align: center;"> Tidak Ada Stok Obat Injeksi Untuk Pasien </div>`;
+        }
+
+        $('#list-stok-obat').html(rows);
+        $('#list-stok-obat-injeksi').html(rowsInject);
+    }
+
+    function searchObat() {
+        var input = document.getElementById("searchInput-stok").value.toLowerCase();
+        var filteredData = stokObatData.filter(function(item) {
+            return item.nama_brng.toLowerCase().includes(input); 
+        });
+
+        if (filteredData.length === 0) {
+            $('#list-stok-obat').html('<div style="width: 100%; text-align: center;">Tidak ada stok obat dengan nama tersebut</div>');
+            $('#list-stok-obat-injeksi').html('<div style="width: 100%; text-align: center;">Tidak ada stok obat dengan nama tersebut</div>');
+        } else {
+            // Tampilkan hasil pencarian
+            displayStokObat(filteredData);
+        }
+    }
+
 
     function savePemberianObat(kode_brng, no_rawat, tanggal, label_jadwal, kd_bangsal, no_batch, no_faktur, h_beli, harga_obat) {
         var jml = 1;
