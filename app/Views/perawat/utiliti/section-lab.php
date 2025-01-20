@@ -22,7 +22,6 @@
         document.getElementById('btn-riwayat').classList.remove('active');
         document.getElementById('btn-catatan').classList.remove('active');
         document.getElementById('btn-radiologi').classList.remove('active');
-        document.getElementById('btn-obat').classList.remove('active');
 
         Swal.fire({
             title: 'Sedang Mengambil data...',

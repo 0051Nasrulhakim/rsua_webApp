@@ -22,7 +22,7 @@ class Obat extends BaseController
     public function getRiwayatObat()
     {
         $noRawat = $this->request->getGet('norawat');
-        $noRawat = "2024/12/06/000121";
+        // $noRawat = "2024/12/06/000123";
         $tangalSekarang = date('Y-m-d');
 
         $data = $this->detail_pemberian_obat
@@ -57,7 +57,11 @@ class Obat extends BaseController
     public function getStokObatPasien()
     {
         $noRawat = $this->request->getGet('norawat');
-        $tanggal = $this->request->getGet('tanggal') ?? date('Y-m-d');
+        // $noRawat = '2024/12/06/000124';
+
+        $tanggal = $this->request->getGet('tanggal');
+        // $tanggal = '2025-01-14';
+        // dd($tanggal, $noRawat);
 
         $data = $this->stok_obat_pasien
             ->select('
@@ -101,7 +105,6 @@ class Obat extends BaseController
             ->where('stok_obat_pasien.tanggal', $tanggal)
             ->groupBy('stok_obat_pasien.kode_brng')
             ->findAll();
-
         foreach ($data as &$item) {
             $item['jam_pemberian'] = isset($item['jam_pemberian']) ? array_map('trim', explode(',', $item['jam_pemberian'])) : [];
             $item['label_jam_diberikan'] = isset($item['label_jam_diberikan']) ? array_map('trim', explode(',', $item['label_jam_diberikan'])) : [];
@@ -166,77 +169,12 @@ class Obat extends BaseController
         return $this->response->setJSON($data);
     }
 
-    // public function getCpo()
-    // {
-    //     $noRawat = $this->request->getGet('norawat');
-    //     $noRawat = "2024/12/06/000121";
-
-    //     $tanggalTerakhir = $this->detail_pemberian_obat
-    //         ->select("detail_pemberian_obat.tgl_perawatan")
-    //         ->where('detail_pemberian_obat.no_rawat', $noRawat)
-    //         ->groupBy('detail_pemberian_obat.tgl_perawatan')
-    //         ->orderBy('detail_pemberian_obat.tgl_perawatan', 'DESC')
-    //         ->limit(3)
-    //         ->findAll();
-
-    //     $tanggalArray = array_column($tanggalTerakhir, 'tgl_perawatan');
-
-    //     $dataObat = $this->detail_pemberian_obat
-    //         ->select("
-    //                     detail_pemberian_obat.kode_brng,
-    //                     databarang.nama_brng,
-    //                     detail_pemberian_obat.tgl_perawatan,
-    //                     GROUP_CONCAT(DISTINCT aro_riwayat_pemberian_obat.label_jam_pemberian ORDER BY aro_riwayat_pemberian_obat.label_jam_pemberian SEPARATOR ',') AS label_jam_diberikan,
-    //                     GROUP_CONCAT(DISTINCT aro_riwayat_pemberian_obat.jam ORDER BY aro_riwayat_pemberian_obat.jam SEPARATOR ',') AS jam_pemberian
-    //                 ")
-    //         ->join('databarang', 'databarang.kode_brng = detail_pemberian_obat.kode_brng')
-    //         ->join(
-    //             'aro_riwayat_pemberian_obat',
-    //             'aro_riwayat_pemberian_obat.kode_barang = detail_pemberian_obat.kode_brng AND
-    //              aro_riwayat_pemberian_obat.no_rawat = detail_pemberian_obat.no_rawat AND 
-    //              aro_riwayat_pemberian_obat.tanggal = detail_pemberian_obat.tgl_perawatan',
-    //             'LEFT'
-    //         )
-    //         ->where('detail_pemberian_obat.no_rawat', $noRawat)
-    //         ->whereIn('detail_pemberian_obat.tgl_perawatan', $tanggalArray)
-    //         ->groupBy('databarang.nama_brng, detail_pemberian_obat.tgl_perawatan')
-    //         ->orderBy('detail_pemberian_obat.tgl_perawatan', 'DESC')
-    //         ->orderBy('databarang.nama_brng', 'ASC')
-    //         ->findAll();
-
-    //     $tanggalGrouped = [];
-    //     foreach ($dataObat as $item) {
-    //         $tgl = $item['tgl_perawatan'];
-
-    //         // Mengubah label_jam_diberikan dan jam_pemberian menjadi array asosiatif
-    //         $labelJamDiberikanArray = explode(', ', $item['label_jam_diberikan']);
-    //         $jamPemberianArray = explode(', ', $item['jam_pemberian']);
-
-    //         // Membuat array asosiatif antara label dan jam
-    //         $labelJamMap = array_combine($labelJamDiberikanArray, $jamPemberianArray);
-
-    //         $tanggalGrouped[$tgl][] = [
-    //             'obat' => $item['nama_brng'],
-    //             'kd_obat' => $item['kode_brng'],
-    //             'label_jam_diberikan' => $labelJamMap // Menyimpan label dan jam dalam bentuk array asosiatif
-    //         ];
-    //     }
-
-    //     // Membuat array data untuk JSON
-    //     $data = [
-    //         'list_obat' => $dataObat, // Data obat
-    //         'list_tanggal' => $tanggalGrouped // Data tanggal dengan jam pemberian
-    //     ];
-
-
-    //     return $this->response->setJSON($data);
-    // }
 
     public function getCpo()
     {
         $noRawat = $this->request->getGet('norawat');
-        $noRawat = "2024/12/06/000121";
-
+        // $noRawat = "2024/12/06/000124";
+        
         $tanggalTerakhir = $this->detail_pemberian_obat
             ->select("detail_pemberian_obat.tgl_perawatan")
             ->where('detail_pemberian_obat.no_rawat', $noRawat)
@@ -244,6 +182,14 @@ class Obat extends BaseController
             ->orderBy('detail_pemberian_obat.tgl_perawatan', 'DESC')
             ->limit(3)
             ->findAll();
+
+        if (!$tanggalTerakhir) {
+            $data = [
+                'status_code' => 400,
+                'message' => 'Data Catatan Pemberian Obat Tidak Ditemukan'
+            ];
+            return $this->response->setJSON($data);
+        }
 
         $tanggalArray = array_column($tanggalTerakhir, 'tgl_perawatan');
 
@@ -269,7 +215,7 @@ class Obat extends BaseController
             ->orderBy('detail_pemberian_obat.tgl_perawatan', 'DESC')
             ->orderBy('databarang.nama_brng', 'ASC')
             ->findAll();
-
+        // dd($dataObat);
         $tanggalGrouped = [];
         foreach ($dataObat as $item) {
             $tgl = $item['tgl_perawatan'];
@@ -287,29 +233,22 @@ class Obat extends BaseController
             ];
 
             foreach ($labelJamMap as $jam => $waktu) {
-                if (strtotime($jam) >= strtotime("06:00") && strtotime($jam) < strtotime("12:00")) {
+                // dd($jam);
+                if (strtotime($jam) >= strtotime("07:00:00") && strtotime($jam) < strtotime("12:00:00")) {
                     $jamByCategory['pagi'][] = ['jam_pemberian' => $jam, 'waktu' => $waktu];
-                } elseif (strtotime($jam) >= strtotime("12:00") && strtotime($jam) < strtotime("16:00")) {
+                } elseif (strtotime($jam) >= strtotime("12:00:00") && strtotime($jam) < strtotime("16:00:00")) {
                     $jamByCategory['siang'][] = ['jam_pemberian' => $jam, 'waktu' => $waktu];
-                } elseif (strtotime($jam) >= strtotime("16:00") && strtotime($jam) < strtotime("20:00")) {
+                } elseif (strtotime($jam) >= strtotime("16:00:00") && strtotime($jam) < strtotime("20:00:00")) {
                     $jamByCategory['sore'][] = ['jam_pemberian' => $jam, 'waktu' => $waktu];
-                } else {
+                } elseif (strtotime($jam) >= strtotime("20:00:00") || strtotime($jam) < strtotime("07:00:00")) {
                     $jamByCategory['malam'][] = ['jam_pemberian' => $jam, 'waktu' => $waktu];
+                } else {
+                    $jamByCategory['pagi'] = [];
+                    $jamByCategory['siang'] = [];
+                    $jamByCategory['sore'] = [];
+                    $jamByCategory['malam'] = [];
                 }
             }
-
-            // if (empty($jamByCategory['pagi'])) {
-            //     $jamByCategory['pagi'] = [['jam_pemberian' => '-', 'waktu' => '-']];
-            // }
-            // if (empty($jamByCategory['siang'])) {
-            //     $jamByCategory['siang'] = [['jam_pemberian' => '-', 'waktu' => '-']];
-            // }
-            // if (empty($jamByCategory['siang'])) {
-            //     $jamByCategory['siang'] = [['jam_pemberian' => '-', 'waktu' => '-']];
-            // }
-            // if (empty($jamByCategory['malam'])) {
-            //     $jamByCategory['malam'] = [['jam_pemberian' => '-', 'waktu' => '-']];
-            // }
 
             $tanggalGrouped[$tgl][] = [
                 'obat' => $item['nama_brng'],
@@ -326,10 +265,11 @@ class Obat extends BaseController
             ->join('databarang', 'databarang.kode_brng = detail_pemberian_obat.kode_brng')
             ->orderBy('detail_pemberian_obat.tgl_perawatan', 'DESC')
             ->groupBy('databarang.nama_brng')
-            ->whereIn('detail_pemberian_obat.tgl_perawatan', $tanggalArray) 
+            ->whereIn('detail_pemberian_obat.tgl_perawatan', $tanggalArray)
             ->findAll();
 
         $data = [
+            'status_code' => 200,
             'list_obat' => $dataObat,
             'list_tanggal' => $tanggalGrouped,
             'daftar_nama_obat' => $listObat

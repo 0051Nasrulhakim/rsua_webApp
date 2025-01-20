@@ -232,6 +232,28 @@
     border-bottom: 1px solid;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
+  .modal-body-cpo {
+    font-size: 9px;
+  }
+  .modal-body-cpo .diagnosaAwal .title {
+    width: 16%;
+  }
+  .modal-body-cpo .diagnosaAkhir .title {
+    width: 16%;
+  }
+  .modal-body-cpo .section {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .modal-body-cpo .section-catatan {
+    font-size: 9px;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
   .modal-footer .btn-custom {
     font-size: 9px;
     padding: 2%;
@@ -482,6 +504,28 @@
     border-bottom: 1px solid;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
+  .modal-body-cpo {
+    font-size: 9px;
+  }
+  .modal-body-cpo .diagnosaAwal .title {
+    width: 16%;
+  }
+  .modal-body-cpo .diagnosaAkhir .title {
+    width: 16%;
+  }
+  .modal-body-cpo .section {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .modal-body-cpo .section-catatan {
+    font-size: 9px;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
   .modal-footer .btn-custom {
     font-size: 9px;
     padding: 2%;
@@ -681,6 +725,28 @@
     border-left: 1px solid;
     border-right: 1px solid;
     border-bottom: 1px solid;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .modal-body-cpo {
+    font-size: 9px;
+  }
+  .modal-body-cpo .diagnosaAwal .title {
+    width: 16%;
+  }
+  .modal-body-cpo .diagnosaAkhir .title {
+    width: 16%;
+  }
+  .modal-body-cpo .section {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .modal-body-cpo .section-catatan {
+    font-size: 9px;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
   .modal-footer .btn-custom {

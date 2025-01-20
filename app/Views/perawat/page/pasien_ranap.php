@@ -171,6 +171,10 @@
     });
 
     function ShowModalObat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir) {
+        // console.log(no_rawat)
+        
+        document.getElementById('cpo').removeAttribute('hidden');
+        document.getElementById('riwayat_obat').removeAttribute('hidden');
         $('#obat_noRm').val(no_rkm_medis);
         $('#obat_noRawat').val(no_rawat);
         $('#contentDiagnosaAwalSObat').text(diagnosa_awal);
@@ -178,7 +182,7 @@
         $('#contentNormSObat').text(no_rkm_medis);
         $('#contentNamaPasienSObat').text(nama_pasien);
         $('#modalObat').modal('show');
-        riwayatObat()
+        cpo()
     }
 
     function ShowRiwayat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir) {
@@ -193,7 +197,6 @@
         document.getElementById('btn-riwayat').classList.add('active');
         document.getElementById('btn-catatan').classList.remove('active');
         document.getElementById('btn-radiologi').classList.remove('active');
-        document.getElementById('btn-obat').classList.remove('active');
         document.getElementById('btn-lab').classList.remove('active');
         
         $('#catatan_noRm').val(no_rkm_medis);
@@ -203,6 +206,7 @@
 
         fetchDataRiwayat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir)
     }
+    
     function fetchDataRiwayat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir)
     {
         Swal.fire({

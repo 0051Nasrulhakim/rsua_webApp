@@ -92,14 +92,10 @@
 
         $('#section-modal-riwayat').html("");
         $('#list-catatan').html("");
-        $('#table-stok-obat').html("");
-        $('#list-stok-obat').html("");
-        $('#table-obat').html("");
         $('#insertCatatan')[0].reset();
 
         document.getElementById('section-modal-riwayat').removeAttribute('hidden');
         document.getElementById('section-catatan').setAttribute('hidden', 'true');
-        document.getElementById('riwayat_obat').setAttribute('hidden', 'true');
         document.getElementById('radiologi').setAttribute('hidden', 'true');
         document.getElementById('section-lab').setAttribute('hidden', 'true');
         document.getElementById('catatan_tanggal').value = "";
@@ -117,7 +113,6 @@
         document.getElementById('btn-riwayat').classList.add('active');
         document.getElementById('btn-catatan').classList.remove('active');
         document.getElementById('btn-radiologi').classList.remove('active');
-        document.getElementById('btn-obat').classList.remove('active');
         document.getElementById('btn-lab').classList.remove('active');
 
     });
@@ -126,7 +121,7 @@
     function riwayatPasien() {
         document.getElementById('search-bar').value = "";
         document.getElementById('section-modal-riwayat').removeAttribute('hidden');
-        document.getElementById('riwayat_obat').setAttribute('hidden', 'true')
+        // document.getElementById('riwayat_obat').setAttribute('hidden', 'true')
         document.getElementById('section-catatan').setAttribute('hidden', 'true');
         document.getElementById('radiologi').setAttribute('hidden', 'true');
         document.getElementById('section-lab').setAttribute('hidden', 'true');
@@ -134,7 +129,6 @@
         document.getElementById('btn-riwayat').classList.add('active');
         document.getElementById('btn-catatan').classList.remove('active');
         document.getElementById('btn-radiologi').classList.remove('active');
-        document.getElementById('btn-obat').classList.remove('active');
         document.getElementById('btn-lab').classList.remove('active');
         
     }
@@ -142,7 +136,6 @@
     function tambahCatatan() {
         document.getElementById('search-bar').value = "";
         document.getElementById('section-modal-riwayat').setAttribute('hidden', 'true');
-        document.getElementById('riwayat_obat').setAttribute('hidden', 'true');
         document.getElementById('section-catatan').removeAttribute('hidden');
         document.getElementById('radiologi').setAttribute('hidden', 'true');
         document.getElementById('section-lab').setAttribute('hidden', 'true');
@@ -150,7 +143,6 @@
         document.getElementById('btn-catatan').classList.add('active');
         document.getElementById('btn-riwayat').classList.remove('active');
         document.getElementById('btn-radiologi').classList.remove('active');
-        document.getElementById('btn-obat').classList.remove('active');
         document.getElementById('btn-lab').classList.remove('active');
 
         var no_rawat = document.getElementById("catatan_noRawat").value
@@ -281,14 +273,13 @@
         document.getElementById('search-bar').value = "";
         document.getElementById('radiologi').removeAttribute('hidden');
         document.getElementById('section-modal-riwayat').setAttribute('hidden', 'true')
-        document.getElementById('riwayat_obat').setAttribute('hidden', 'true')
+        // document.getElementById('riwayat_obat').setAttribute('hidden', 'true')
         document.getElementById('section-catatan').setAttribute('hidden', 'true');
         document.getElementById('section-lab').setAttribute('hidden', 'true');
 
         document.getElementById('btn-radiologi').classList.add('active');
         document.getElementById('btn-catatan').classList.remove('active');
         document.getElementById('btn-riwayat').classList.remove('active');
-        document.getElementById('btn-obat').classList.remove('active');
         document.getElementById('btn-lab').classList.remove('active');
 
         Swal.fire({
