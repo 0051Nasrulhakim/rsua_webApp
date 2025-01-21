@@ -173,7 +173,7 @@ class Obat extends BaseController
     public function getCpo()
     {
         $noRawat = $this->request->getGet('norawat');
-        // $noRawat = "2024/12/06/000124";
+        $noRawat = "2024/12/06/000121";
         
         $tanggalTerakhir = $this->detail_pemberian_obat
             ->select("detail_pemberian_obat.tgl_perawatan")
@@ -240,7 +240,7 @@ class Obat extends BaseController
                     $jamByCategory['siang'][] = ['jam_pemberian' => $jam, 'waktu' => $waktu];
                 } elseif (strtotime($jam) >= strtotime("16:00:00") && strtotime($jam) < strtotime("20:00:00")) {
                     $jamByCategory['sore'][] = ['jam_pemberian' => $jam, 'waktu' => $waktu];
-                } elseif (strtotime($jam) >= strtotime("20:00:00") || strtotime($jam) < strtotime("07:00:00")) {
+                } elseif (strtotime($jam) >= strtotime("20:00:00") && strtotime($jam) < strtotime("24:00:00") || strtotime($jam) >= strtotime("00:00:00") && strtotime($jam) < strtotime("07:00:00")) {
                     $jamByCategory['malam'][] = ['jam_pemberian' => $jam, 'waktu' => $waktu];
                 } else {
                     $jamByCategory['pagi'] = [];

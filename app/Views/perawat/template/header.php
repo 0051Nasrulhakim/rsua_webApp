@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OPERAN - ARO RANAP</title>
+    <title>HAND OVER - ARO RANAP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="<?= base_url('assets/css/perawat.css') ?>"> -->
     <link rel="stylesheet" href="<?= base_url('public/assets/css/perawat.css') ?>">
@@ -24,7 +24,7 @@
     <div class="navbar">
         <div class="left">
             <div class="logo">
-                OPERAN ARO RANAP
+                HAND OVER ARO RANAP
             </div>
         </div>
         <div class="right">
@@ -33,20 +33,25 @@
     </div>
 
     <div class="section-breadvum" style="display: flex; justify-content: space-between; margin-left: 2%; margin-right: 5%;">
-        <nav aria-label="breadcrumb" style="width: 50%; align-items: center; padding: 0.5%;">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Pasien</a></li>
-                <!-- <li class="breadcrumb-item"><a href="#">Library</a></li> -->
-                <li class="breadcrumb-item active" aria-current="page">Daftar Pasien Ranap</li>
-            </ol>
-        </nav>
+
+        <div class="menu" style="display: flex; align-items: flex-end; width: 50%;">
+            <div class="ranap" style="padding-left: 1%; padding-right: 1%; border-top-right-radius: 8px; background-color: rgb(245, 242, 89); border: 1px solid;" >
+                <a href="<?= base_url('pasien')?>" style="text-decoration: none; color: black; font-weight: 600;">
+                    Pasien Ranap
+                </a> 
+            </div>
+            <div class="handOver" style="padding-left: 1%; padding-right: 1%; border-top-right-radius: 8px; background-color: rgb(245, 242, 89); border: 1px solid;">
+                <a href="<?= base_url('HandOver')?>" style="text-decoration: none; color: black; font-weight: 600;">
+                    Hand Over
+                </a>
+            </div>
+        </div>
+
         <div class="userLogin" style="font-weight: 700; width: 40%; display: flex; justify-content: flex-end; text-align: right; align-items: center; font-size: 12px;">
             <?= session()->get('nama') ?>
-            <!-- <a > -->
             <div onclick="logout()" class="logo" style="margin-left: 5%; padding-left: 3%; padding-right: 3%; background-color:rgb(255, 0, 0); border-radius: 5px;">
                 <i class="fa-solid fa-right-from-bracket"></i>
             </div>
-            <!-- </a> -->
         </div>
     </div>
 

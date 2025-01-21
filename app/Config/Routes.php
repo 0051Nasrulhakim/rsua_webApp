@@ -35,7 +35,10 @@ $routes->group('obat', ['filter' => 'auth'], function($routes) {
     $routes->match(['get', 'post'], 'getWaktuByJam/(:any)', 'Obat::getWaktuByJam/$1');
     $routes->match(['get', 'post'], 'getCpo', 'Obat::getCpo');
 });
-
+$routes->group('HandOver', ['filter' => 'auth'], function($routes) {
+    $routes->match(['get', 'post'], '/', 'HandOver::index');
+    
+});
 // $routes->get('/', 'Pasien::index');
 $routes->get('login', 'Login::index');
 $routes->get('/', 'Login::index');

@@ -1,5 +1,17 @@
 <div class="cpo" id="cpo">
     <!-- <div class="section-cpo" id="section-cpo" style="overflow-x: auto;"> -->
+    <!-- <input type="text" id="searchObatInput" placeholder="Cari Obat" onkeyup="searchObatRiwayat()"> -->
+     <div class="filter-riwayat" style="display: flex; align-items: center;">
+        <div class="text" style="width: 12%;">
+            Cari Nama Obat
+        </div>
+        <div class="input" style="width: 30%; display: flex;">
+            <input class="form-control" type="text" id="searchObatInput" placeholder="Cari Nama Obat" onkeyup="filterData()">
+            <div class="tombol" style="text-align: center; width: 30px;border: 1px solid; border-radius: 4px; background-color: #eb4034; padding: 7px; color: white;" onclick="clearSearchRiwayat()">
+                X
+            </div>
+        </div>
+    </div>
 
     <div class="wrapscroll" style="overflow-x: auto; ">
         <div class="headList" style="display: flex; padding: 0;">
@@ -21,3 +33,10 @@
 
 
 </div>
+
+<script>
+    function clearSearchRiwayat() {
+        document.getElementById('searchObatInput').value = '';
+        cpo()
+    }
+</script>

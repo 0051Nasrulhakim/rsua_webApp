@@ -28,6 +28,7 @@
         <div class="list-catatan" id="list-catatan">
 
         </div>
+
         <div class="section-waktu" style="display: flex; width: 100%;">
 
             <div class="row g-3 align-items-center" style="margin-top: 2%; width: 50%;">
@@ -151,7 +152,6 @@
             type: 'POST',
             data: $('#insertCatatan').serialize(),
             success: function(response) {
-                console.log(response)
                 if (response.status_code == 200) {
 
                     const event = new CustomEvent("dataRefreshed");
@@ -160,7 +160,7 @@
                     document.getElementById('floatingTextarea2').value = '';
                     document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
                     window.dispatchEvent(event);
-                    
+
                     if (filterValue == 1) {
                         lastCatatan();
                     } else {
@@ -184,6 +184,67 @@
             }
         });
 
+    }
+
+    function hapus(button) {
+        var filterValue = document.getElementById('filter').value;
+        // console.log(filterValue)
+        var noRawat = button.getAttribute('data-no-rawat');
+        var tanggal = button.getAttribute('data-tanggal');
+        var jam = button.getAttribute('data-jam');
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dihapus tidak dapat dipulihkan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('pasien/deleteCatatan') ?>',
+                    type: 'POST',
+                    data: {
+                        noRawat: noRawat,
+                        tanggal: tanggal,
+                        jam: jam
+                    },
+                    success: function(response) {
+                        if (response.status_code === 200) {
+                            const event = new CustomEvent("dataRefreshed");
+                            document.getElementById('tombol-2').setAttribute('hidden', 'true');
+                            document.getElementById('section-change-tombol').removeAttribute('hidden');
+                            document.getElementById('floatingTextarea2').value = '';
+                            document.getElementById('tanggal').value = '<?= date('Y-m-d') ?>';
+                            window.dispatchEvent(event);
+                            // lastCatatan();
+                            if (filterValue == 1) {
+                                lastCatatan();
+                            } else {
+                                allCatatan();
+                            }
+
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: response.message
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Terjadi kesalahan pada server.'
+                        });
+                    }
+                });
+            }
+        });
     }
 
     function batalkan() {
