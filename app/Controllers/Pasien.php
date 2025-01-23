@@ -54,7 +54,6 @@ class Pasien extends BaseController
         $perPage = 200;
         $offset = ($page - 1) * $perPage;
         $dokter = $this->request->getVar('kd_dokter');
-        // $dokter = "D0000058";
 
         $builder = $this->kamarInap
             ->join("dpjp_ranap", "kamar_inap.no_rawat=dpjp_ranap.no_rawat", 'LEFT')
@@ -233,10 +232,12 @@ class Pasien extends BaseController
             $old_tanggal = $this->request->getPost('tanggal');
             $jam = $this->request->getPost('jam');
             $shift = $this->request->getVar('shift');
+            $tanggal_sekarang = date('Y-m-d');
+            $jam_sekarang = date('H:i:s');
 
             $data = [
                 'tanggal' => $old_tanggal,
-                'jam'     => $jam,
+                'jam'     => $jam_sekarang,
                 'no_rawat' => $old_no_rawat,
                 'nip' => $this->session->get('nip'),
                 'uraian' => $this->request->getPost('catatan'),
@@ -269,7 +270,7 @@ class Pasien extends BaseController
             $logcatatan = [
                 'no_rawat'  => $old_no_rawat,
                 'tanggal'   => $old_tanggal,
-                'jam'       => $jam,
+                'jam'       => $jam_sekarang,
                 'shift'     => $shift,
             ];
 

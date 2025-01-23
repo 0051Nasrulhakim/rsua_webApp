@@ -34,9 +34,12 @@ $routes->group('obat', ['filter' => 'auth'], function($routes) {
     $routes->match(['get', 'post'], 'getWaktuByJam', 'Obat::getWaktuByJam');
     $routes->match(['get', 'post'], 'getWaktuByJam/(:any)', 'Obat::getWaktuByJam/$1');
     $routes->match(['get', 'post'], 'getCpo', 'Obat::getCpo');
+    $routes->match(['get', 'post'], 'viewGetCpo', 'Obat::viewGetCpo');
 });
 $routes->group('HandOver', ['filter' => 'auth'], function($routes) {
     $routes->match(['get', 'post'], '/', 'HandOver::index');
+    $routes->match(['get', 'post'], 'handOverPerTanggal', 'HandOver::handOverPerTanggal');
+    $routes->match(['get', 'post'], 'detailCatatan', 'HandOver::detailCatatan');
     
 });
 // $routes->get('/', 'Pasien::index');

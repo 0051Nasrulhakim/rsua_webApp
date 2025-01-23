@@ -169,11 +169,23 @@ class Obat extends BaseController
         return $this->response->setJSON($data);
     }
 
+    function viewGetCpo()
+    {
+
+        $noRawat = $this->request->getGet('norawat');
+        $data = [
+            'norawat' => $noRawat
+        ];
+        return view('perawat/page/v_cpo', $data);
+        
+    }
+
 
     public function getCpo()
     {
         $noRawat = $this->request->getGet('norawat');
-        $noRawat = "2024/12/06/000121";
+        
+        // $noRawat = "2024/12/06/000121";
         
         $tanggalTerakhir = $this->detail_pemberian_obat
             ->select("detail_pemberian_obat.tgl_perawatan")
