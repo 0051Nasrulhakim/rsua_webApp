@@ -40,6 +40,7 @@ class HandOver extends BaseController
         $offset = ($page - 1) * $perPage;
         $dokter = $this->request->getGet('kd_dokter');
         $tanggal = $this->request->getGet('tanggal') ?? date('Y-m-d');
+        $noRawat = $this->request->getGet('noRawat') ?? '';
 
         $builder = $this->kamarInap
             ->join("dpjp_ranap", "kamar_inap.no_rawat=dpjp_ranap.no_rawat", 'LEFT')
@@ -166,6 +167,11 @@ class HandOver extends BaseController
         if (!empty($dokter)) {
             $data = $data->where("dpjp_ranap.kd_dokter", $dokter);
         }
+        // $noRawat = '2024/12/07/000013';
+        if (!empty($noRawat)) {
+            $data = $data->where("kamar_inap.no_rawat", $noRawat);
+        }
+
         $data = $data->orderBy('kamar_inap.no_rawat', 'DESC')
             ->limit($perPage, $offset)
             ->findAll();

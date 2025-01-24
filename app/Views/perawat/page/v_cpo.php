@@ -1,28 +1,123 @@
 <?= $this->extend('webview/index_perawat') ?>
 <?= $this->section('content') ?>
 
+<style>
+    .judul-webview {
+        font-size: 17pt;
+        font-weight: 700;
+    }
+</style>
+
+<div class="judul-webview" style="text-align: center; margin-top: 2%;">
+    Catatan Pemberian Obat
+</div>
+<div class="detail-pasien" style="padding: 2%;">
+    <div class="norm" style="display: flex;">
+        <div class="text-detail-pasien" style="width: 10%;">
+            No Rm
+        </div>
+        <div class="semiColon" style="width: 2%;">
+            :
+        </div>
+        <div class="conten">
+            <?= $no_rkm_medis ?>
+        </div>
+    </div>
+    <div class="noRawat" style="display: flex;">
+        <div class="text-detail-pasien" style="width: 10%;">
+            Nomor Rawat
+        </div>
+        <div class="semiColon" style="width: 2%;">
+            :
+        </div>
+        <div class="conten">
+            <?= $no_rawat ?>
+        </div>
+    </div>
+    <div class="namaPasien" style="display: flex;">
+        <div class="text-detail-pasien" style="width: 10%;">
+            Nama Pasien
+        </div>
+        <div class="semiColon" style="width: 2%;">
+            :
+        </div>
+        <div class="conten">
+            <?= $nm_pasien ?>
+        </div>
+    </div>
+    <div class="Dpjp" style="display: flex;">
+        <div class="text-detail-pasien" style="width: 10%;">
+            DPJP
+        </div>
+        <div class="semiColon" style="width: 2%;">
+            :
+        </div>
+        <div class="conten">
+            <?= $dokter_dpjp ?>
+        </div>
+    </div>
+    <div class="diagnosaAwal" style="display: flex;">
+        <div class="text-detail-pasien" style="width: 10%;">
+            Diagnosa Awal
+        </div>
+        <div class="semiColon" style="width: 2%;">
+            :
+        </div>
+        <div class="conten">
+            <?= $diagnosa_awal ?>
+        </div>
+    </div>
+    <div class="tglMasuk" style="display: flex;">
+        <div class="text-detail-pasien" style="width: 10%;">
+            Tgl.Masuk
+        </div>
+        <div class="semiColon" style="width: 2%;">
+            :
+        </div>
+        <div class="conten">
+            <?= $tgl_masuk . ' ' . $jam_masuk ?>
+        </div>
+    </div>
+
+</div>
 <div class="cpo" id="cpo" style="padding: 2%;">
     <!-- <div class="section-cpo" id="section-cpo" style="overflow-x: auto;"> -->
-    <input type="text" id="noRawat" placeholder="Cari Obat" value="<?= $norawat?>" readonly hidden>
-     <div class="filter-riwayat" style="display: flex; align-items: center;">
-        <div class="text-custom" style="width: 12%;">
-            Cari Nama Obat
+    <input type="text" id="noRawat" placeholder="Cari Obat" value="<?= $no_rawat ?>" readonly hidden>
+
+    <div class="filter-wview" style="display: flex; width: 100%; ">
+        <div class="filter-riwayat" style="display: flex; align-items: center; width: 30%;  margin-right: 2%;">
+            <div class="text-custom" style="width: 30%;">
+                Cari Nama Obat
+            </div>
+            <div class="input" style="width: 60%; display: flex;">
+                <input class="form-control" type="text" id="searchObatInput" placeholder="Cari Nama Obat" onkeyup="filterData()">
+                <div class="tombol" style="text-align: center; width: 30px; border-radius: 4px; background-color: #eb4034; padding: 7px; color: white;" onclick="clearSearchRiwayat()">
+                    X
+                </div>
+            </div>
         </div>
-        <div class="input" style="width: 30%; display: flex;">
-            <input class="form-control" type="text" id="searchObatInput" placeholder="Cari Nama Obat" onkeyup="filterData()">
-            <div class="tombol" style="text-align: center; width: 30px;border: 1px solid; border-radius: 4px; background-color: #eb4034; padding: 7px; color: white;" onclick="clearSearchRiwayat()">
-                X
+
+        <div class="filter-riwayat" style="display: flex; align-items: center; width: 40%;">
+            <div class="text-custom" style="width: 13%;">
+                Tampilkan
+            </div>
+            <div class="input" style="width: 30%; display: flex;">
+                <select class="form-control form-select" name="" id="">
+                    <option value="3">3 Hari Terakhir</option>
+                    <option value="7">7 Hari Terakhir</option>
+                    <option value="">Semua</option>
+                </select>
             </div>
         </div>
     </div>
 
-    <div class="wrapscroll" style="overflow-x: auto; margin-top: 2%;" >
+    <div class="wrapscroll" style="overflow-x: auto; margin-top: 2%;">
         <div class="headList" style="display: flex; padding: 0;">
-            <div class="namaobat" style="text-align: center; width: 200px !important; padding: 0; white-space: nowrap; flex-shrink: 0; border-bottom: 1px solid; border-left: 1px solid;border-top: 1px solid; display: flex; align-items: center; justify-content: center;">
+            <div class="namaobat" style="text-align: center; width: 360px !important; padding: 0; white-space: nowrap; flex-shrink: 0; border-bottom: 1px solid; border-left: 1px solid;border-top: 1px solid; display: flex; align-items: center; justify-content: center;">
                 NAMA OBAT / ALKES / BHP
             </div>
             <div class="total-tanggal" id="totalTanggal" style="display: flex;">
-                
+
             </div>
 
         </div>
@@ -38,10 +133,10 @@
 </div>
 
 <script>
-   $(document).ready(function() {
-    // your code here
-    cpo()
-   });
+    $(document).ready(function() {
+        // your code here
+        cpo()
+    });
 
     var cachedData = null;
 
@@ -127,14 +222,14 @@
         if (data.daftar_nama_obat.length > 0) {
             data.daftar_nama_obat.forEach(function(item) {
                 bodyCpo += `<div class="list-body-cpo" style="display: flex; padding: 0px !important; white-space: nowrap; flex-shrink: 0;">
-                    <div class="namaobat" style="border-bottom: 1px solid; border-right: 1px solid; width: 200px !important; padding-left: 1%; white-space: nowrap; flex-shrink: 0;">
+                    <div class="namaobat" style="border-bottom: 1px solid; border-right: 1px solid; width: 360px !important; padding-left: 1%; white-space: nowrap; flex-shrink: 0;">
                         ${item.nama_brng}
                     </div>`;
 
                 if (Object.keys(data.list_tanggal).length > 0) {
                     Object.keys(data.list_tanggal).forEach(function(tanggal) {
                         bodyCpo += `
-                            <div class="shift" style="width: 280px !important; display: flex; justify-content: center; padding: 0; text-align: center; min-width: 200px;">
+                            <div class="shift" style="width: 280px !important; display: flex; justify-content: center; padding: 0; text-align: center;">
                         `;
 
                         let listPagi = '<div class="pagi" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:rgb(61, 196, 122); color:white">-</div>';
@@ -219,7 +314,6 @@
         $('#totalTanggal').html(headtotalTanggal);
         $('#bodyCpo').html(bodyCpoNull);
     }
-
 </script>
 
 <?= $this->endSection(); ?>

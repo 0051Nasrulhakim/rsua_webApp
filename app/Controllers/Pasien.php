@@ -436,18 +436,17 @@ class Pasien extends BaseController
         $noRawat = $this->request->getGet('noRawat');
         // $noRawat = "2024/12/07/000013";
         $filter = $this->request->getGet('filter') ?? '';
-        // $filter = 1;
 
         if ($filter != '') {
             $shifts = ['pagi', 'siang', 'malam'];
 
             $result = $this->catatanPerawatan
-                ->select("catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_keperawatan_ranap.uraian SEPARATOR ', ') AS catatan_tergabung")
+                ->select("catatan_keperawatan_ranap.tanggal, catatan_keperawatan_ranap.nip, petugas.nama, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_keperawatan_ranap.uraian SEPARATOR ', ') AS catatan_tergabung")
                 ->join('aro_shift_catatan_perawatan', 'catatan_keperawatan_ranap.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_keperawatan_ranap.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_keperawatan_ranap.jam = aro_shift_catatan_perawatan.jam', 'left')
+                ->join('petugas', 'catatan_keperawatan_ranap.nip = petugas.nip', 'left')
                 ->where('catatan_keperawatan_ranap.no_rawat', $noRawat)
                 ->groupBy('catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
                 ->orderBy('catatan_keperawatan_ranap.tanggal', 'DESC')
-
                 ->orderBy("FIELD(aro_shift_catatan_perawatan.shift, 'pagi', 'siang', 'malam')")
                 ->findAll();
 
@@ -504,7 +503,7 @@ class Pasien extends BaseController
                 ];
             } else {
                 $res = [
-                    'status_code' => 200,
+                    'status_code' => 404,
                     'message' => 'Data tidak ditemukan',
                     'data' => []
                 ];
@@ -513,14 +512,14 @@ class Pasien extends BaseController
             return $this->response->setJSON($res);
         } else {
             $result = $this->catatanPerawatan
-                ->select("catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_keperawatan_ranap.uraian SEPARATOR ', ') AS catatan_tergabung")
+                ->select("catatan_keperawatan_ranap.tanggal, catatan_keperawatan_ranap.nip ,aro_shift_catatan_perawatan.shift, petugas.nama, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_keperawatan_ranap.uraian SEPARATOR ', ') AS catatan_tergabung")
                 ->join('aro_shift_catatan_perawatan', 'catatan_keperawatan_ranap.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_keperawatan_ranap.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_keperawatan_ranap.jam = aro_shift_catatan_perawatan.jam', 'left')
+                ->join('petugas', 'catatan_keperawatan_ranap.nip = petugas.nip', 'left')
                 ->where('catatan_keperawatan_ranap.no_rawat', $noRawat)
                 ->groupBy('catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
                 ->orderBy('catatan_keperawatan_ranap.tanggal', 'DESC')
                 ->orderBy("FIELD(aro_shift_catatan_perawatan.shift, 'pagi', 'siang', 'malam')")
                 ->findAll();
-
 
             $catatan = [];
             $shifts = ['pagi', 'siang', 'malam']; // Shift tetap
@@ -528,40 +527,52 @@ class Pasien extends BaseController
             if ($result) {
                 foreach ($result as $row) {
                     $tanggal = $row['tanggal'];
+                    $nip = $row['nip'];
+                    $nama = $row['nama'];
                     $shift = $row['shift'];
                     $jam = $row['jam'];
                     $catatan_tergabung = $row['catatan_tergabung'];
-
+            
                     if (!isset($catatan[$tanggal])) {
                         $catatan[$tanggal] = [];
                     }
-
+            
                     if (!isset($catatan[$tanggal][$shift])) {
                         $catatan[$tanggal][$shift] = [
+                            'nip' => $nip,
+                            'nama' => $nama,
                             'jam' => $jam,
                             'catatan' => ''
                         ];
                     }
-
+            
                     $catatan[$tanggal][$shift]['catatan'] = $catatan_tergabung;
                 }
-
+            
                 foreach ($catatan as $tanggal => &$shiftData) {
                     foreach ($shifts as $shift) {
                         if (!isset($shiftData[$shift])) {
                             $shiftData[$shift] = [
+                                'nip' => '',
+                                'nama' => '',
                                 'jam' => '',
                                 'catatan' => ''
                             ];
                         }
                     }
-
-
+            
+                    // Format ulang setiap shift menjadi array dengan nama field yang jelas
                     $shiftData = array_map(function ($shift, $data) {
-                        return ['shift' => $shift, 'jam' => $data['jam'], 'catatan' => $data['catatan']];
+                        return [
+                            'shift' => $shift,
+                            'nip' => $data['nip'],
+                            'nama' => $data['nama'],
+                            'jam' => $data['jam'],
+                            'catatan' => $data['catatan']
+                        ];
                     }, array_keys($shiftData), $shiftData);
                 }
-
+            
                 $res = [
                     'status_code' => 200,
                     'message' => 'Data ditemukan',
@@ -569,9 +580,9 @@ class Pasien extends BaseController
                 ];
             } else {
                 $res = [
-                    'status_code' => 200,
-                    'message' => 'Data ditemukan',
-                    'data' => $catatan
+                    'status_code' => 404,
+                    'message' => 'Data tidak ditemukan',
+                    'data' => []
                 ];
             }
 
@@ -627,7 +638,7 @@ class Pasien extends BaseController
     }
 
 
-    
+
 
     public function getGambarRadiologi()
     {

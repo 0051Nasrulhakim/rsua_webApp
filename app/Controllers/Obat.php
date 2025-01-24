@@ -9,6 +9,19 @@ class Obat extends BaseController
 {
     public function __construct()
     {
+        $this->pasien = new \App\Models\Pasien();
+        $this->kamarInap = new \App\Models\KamarInap();
+        $this->pemeriksaan_ranap = new \App\Models\PemeriksaanRanap();
+        $this->pemeriksaan_ralan = new \App\Models\PemeriksaanRalan;
+        $this->reg_periksa = new \App\Models\RegPeriksa();
+        $this->radiologi = new \App\Models\HasilRadiologi();
+        $this->catatanPerawatan = new \App\Models\CatatanPerawatan();
+        $this->riwayatPeriksa = new \App\Models\RiwayatPeriksa;
+        $this->gambar_radiologi = new \App\Models\GambarRadiologi;
+        $this->periksa_lab = new \App\Models\PeriksaLab;
+        $this->template = new \App\Models\TemplateLaboraturium;
+        $this->detail_periksa_lab = new \App\Models\DetailPeriksaLab;
+        $this->shift_perawatan = new \App\Models\AroShiftCatatanPerawatan;
         $this->detail_pemberian_obat = new \App\Models\DetailPemberianObat;
         $this->permintaan_stok_obat_pasien = new \App\Models\PermintanObatPasien;
         $this->detail_permintaan_stok_obat_pasien = new \App\Models\DetailPermintaanStokObatPasien;
@@ -173,9 +186,92 @@ class Obat extends BaseController
     {
 
         $noRawat = $this->request->getGet('norawat');
-        $data = [
-            'norawat' => $noRawat
-        ];
+        $page = $this->request->getVar('page') ?? 1;
+        $perPage = 200;
+        $offset = ($page - 1) * $perPage;
+        $dokter = $this->request->getVar('kd_dokter');
+
+        $builder = $this->kamarInap
+            ->join("dpjp_ranap", "kamar_inap.no_rawat=dpjp_ranap.no_rawat", 'LEFT')
+            ->join("reg_periksa", "kamar_inap.no_rawat=reg_periksa.no_rawat")
+            ->join("dokter", "reg_periksa.kd_dokter=dokter.kd_dokter")
+            ->where("kamar_inap.stts_pulang", "-");
+
+        if (!empty($dokter)) {
+            $builder->where("dpjp_ranap.kd_dokter", $dokter);
+        }
+
+        $totalRecords = $builder->countAllResults(false);
+
+        $data = $this->kamarInap
+            ->select("
+            kamar_inap.no_rawat,
+            reg_periksa.no_rkm_medis,
+            pasien.nm_pasien,
+            CONCAT(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab) AS alamat,
+            reg_periksa.p_jawab, reg_periksa.hubunganpj,
+            penjab.png_jawab,
+            CONCAT(kamar_inap.kd_kamar,' ',bangsal.nm_bangsal) AS kamar,
+            kamar_inap.trf_kamar,
+            kamar_inap.diagnosa_awal,
+            kamar_inap.diagnosa_akhir,
+            kamar_inap.tgl_masuk,
+            kamar_inap.jam_masuk,
+            IF(kamar_inap.tgl_keluar='0000-00-00','',kamar_inap.tgl_keluar) AS tgl_keluar,
+            IF(kamar_inap.jam_keluar='00:00:00','',kamar_inap.jam_keluar) AS jam_keluar,
+            kamar_inap.ttl_biaya,
+            kamar_inap.stts_pulang,
+            kamar_inap.lama,
+            dokter.nm_dokter,
+            kamar_inap.kd_kamar,
+            reg_periksa.kd_pj,
+            CONCAT(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) AS umur, reg_periksa.status_bayar,
+            pasien.agama,
+            aro_catatan_naik_titip_kelas.tanda,
+            dokter_dpjp.nm_dokter AS dokter_dpjp,
+            dokter_dpjp.kd_dokter AS kode_dokter_dpjp,
+            penjab.png_jawab,
+            IF(kamar_inap.tgl_keluar != '0000-00-00', 'Pulang', DATEDIFF(CURDATE(), kamar_inap.tgl_masuk)) AS lama_inap,
+            kamar.kelas,
+            GROUP_CONCAT(DISTINCT IFNULL(diagnosa_pasien.kd_penyakit, '-') SEPARATOR ', ') AS kode_dx,
+            GROUP_CONCAT(DISTINCT IFNULL(penyakit.nm_penyakit, '-') SEPARATOR ', ') AS nama_penyakit,
+            (
+                SELECT COALESCE(catatan_keperawatan_ranap.uraian, '')
+                FROM catatan_keperawatan_ranap
+                WHERE catatan_keperawatan_ranap.no_rawat = kamar_inap.no_rawat
+                ORDER BY catatan_keperawatan_ranap.tanggal DESC, catatan_keperawatan_ranap.jam DESC
+                LIMIT 1
+            ) AS catatan_terakhir
+
+        ")
+            ->join("pasien", "reg_periksa.no_rkm_medis=pasien.no_rkm_medis")
+            ->join("kamar", "kamar_inap.kd_kamar=kamar.kd_kamar")
+            ->join("bangsal", "kamar.kd_bangsal=bangsal.kd_bangsal")
+            ->join("kelurahan", "pasien.kd_kel=kelurahan.kd_kel")
+            ->join("kecamatan", "pasien.kd_kec=kecamatan.kd_kec")
+            ->join("kabupaten", "pasien.kd_kab=kabupaten.kd_kab")
+            ->join("diagnosa_pasien", "kamar_inap.no_rawat=diagnosa_pasien.no_rawat", 'LEFT')
+            ->join("penyakit", "diagnosa_pasien.kd_penyakit=penyakit.kd_penyakit", 'LEFT')
+
+            ->join("penjab", "reg_periksa.kd_pj=penjab.kd_pj")
+            ->join("aro_catatan_naik_titip_kelas", "reg_periksa.no_rawat=aro_catatan_naik_titip_kelas.no_rawat", 'LEFT')
+
+            ->join("dokter AS dokter_dpjp", "dpjp_ranap.kd_dokter=dokter_dpjp.kd_dokter", 'LEFT')
+            ->where("kamar_inap.stts_pulang", "-")
+            ->groupBy("kamar_inap.no_rawat");
+
+        if (!empty($dokter)) {
+            $data = $data->where("dpjp_ranap.kd_dokter", $dokter);
+        }
+        if (!empty($noRawat)) {
+            $data = $data->where("kamar_inap.no_rawat", $noRawat);
+        }
+
+        $data = $data->orderBy('kamar_inap.no_rawat', 'DESC')
+            ->limit($perPage, $offset)
+            ->first();
+        // dd($data);
+
         return view('perawat/page/v_cpo', $data);
         
     }
@@ -191,7 +287,7 @@ class Obat extends BaseController
             ->select("detail_pemberian_obat.tgl_perawatan")
             ->where('detail_pemberian_obat.no_rawat', $noRawat)
             ->groupBy('detail_pemberian_obat.tgl_perawatan')
-            ->orderBy('detail_pemberian_obat.tgl_perawatan', 'DESC')
+            ->orderBy('detail_pemberian_obat.tgl_perawatan', 'ASC')
             ->limit(3)
             ->findAll();
 
@@ -224,7 +320,7 @@ class Obat extends BaseController
             ->where('detail_pemberian_obat.no_rawat', $noRawat)
             ->whereIn('detail_pemberian_obat.tgl_perawatan', $tanggalArray)
             ->groupBy('databarang.nama_brng, detail_pemberian_obat.tgl_perawatan')
-            ->orderBy('detail_pemberian_obat.tgl_perawatan', 'DESC')
+            ->orderBy('detail_pemberian_obat.tgl_perawatan', 'ASC')
             ->orderBy('databarang.nama_brng', 'ASC')
             ->findAll();
         // dd($dataObat);

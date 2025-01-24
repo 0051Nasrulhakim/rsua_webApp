@@ -17,6 +17,7 @@
                     <input type="text" id="inputJam" name="jam" hidden>
                     <input type="text" id="inputTanggal" name="tanggal" hidden>
                     <input type="text" id="inputShift" name="shift" hidden>
+                    <input type="text" id="showAll" name="showAll" hidden>
                     <div class="form-floating" style="margin-top: 1%;">
                         <textarea class="form-control" placeholder="Tambahkan Catatan" id="floatingTextarea2" style="height: 200px" name="catatan"></textarea>
                         <label for="floatingTextarea2">Catatan Perawatan</label>

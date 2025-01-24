@@ -21,17 +21,6 @@
 </head>
 
 <body>
-    <div class="navbar">
-        <div class="left">
-            <div class="logo">
-                HAND OVER ARO RANAP
-            </div>
-        </div>
-        <div class="right">
-            <i class="fa-solid fa-bars fa-lg"></i>
-        </div>
-    </div>
-
 
     <script>
         function logout() {

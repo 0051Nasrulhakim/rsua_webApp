@@ -12,22 +12,25 @@
                 <h1 class="modal-title fs-5" id="modalObatLabel">OBAT</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body-cpo">
+            <div class="modal-body">
 
-                <div class="section-nama" style="display: flex; padding-top: 3%; justify-content: center; font-weight: 700; margin-bottom: 3%" hidden>
-                    <div class="norm" id="contentNormSObat" style=""></div>
-                    <div class="" style="width: 3%; text-align: center;">-</div>
-                    <div class="nama" id="contentNamaPasienSObat"></div>
+                <div class="modal-body-cpo">
+                    
+                    <div class="section-nama" style="display: flex; padding-top: 3%; justify-content: center; font-weight: 700; margin-bottom: 3%" hidden>
+                        <div class="norm" id="contentNormSObat" style=""></div>
+                        <div class="" style="width: 3%; text-align: center;">-</div>
+                        <div class="nama" id="contentNamaPasienSObat"></div>
+                    </div>
+                    
+                    <form id="insertCatatan" method="post">
+                        <input type="text" id="obat_noRm" name="noRm" hidden>
+                        <input type="text" id="obat_noRawat" name="noRawat" hidden>
+                        <input type="text" id="obat_tanggal" name="tanggal" hidden>
+                        <input type="text" id="obat_jam" name="jam" hidden>
+                        <?= $this->include('perawat/utiliti/section_r_obat') ?>
+                    </form>
+                    
                 </div>
-
-                <form id="insertCatatan" method="post">
-                    <input type="text" id="obat_noRm" name="noRm" hidden>
-                    <input type="text" id="obat_noRawat" name="noRawat" hidden>
-                    <input type="text" id="obat_tanggal" name="tanggal" hidden>
-                    <input type="text" id="obat_jam" name="jam" hidden>
-                    <?= $this->include('perawat/utiliti/section_r_obat') ?>
-                </form>
-
             </div>
         </div>
     </div>

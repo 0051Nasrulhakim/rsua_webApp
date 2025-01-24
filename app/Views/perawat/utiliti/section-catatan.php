@@ -307,7 +307,6 @@
         const noRawat = button.getAttribute('data-no-rawat');
         const tanggal = button.getAttribute('data-tanggal');
         const shift = button.getAttribute('data-shift');
-        // console.log(noRawat, tanggal)
 
         $.ajax({
             url: '<?= base_url('pasien/findCatatan') ?>',
