@@ -164,7 +164,8 @@
         }
 
         if (data.daftar_nama_obat.length > 0) {
-            data.daftar_nama_obat.forEach(function(item) {
+            data.daftar_nama_obat.forEach(function(item, index) {
+                const backgroundColor = index % 2 === 0 ? 'rgb(61, 196, 122)' : 'rgb(47, 160, 98)';
                 bodyCpo += `<div class="list-body-cpo" style="display: flex; padding: 0px !important; white-space: nowrap; flex-shrink: 0;">
                     <div class="namaobat" style="border-bottom: 1px solid; border-right: 1px solid; width: 200px !important; padding-left: 1%; white-space: nowrap; flex-shrink: 0;">
                         ${item.nama_brng}
@@ -176,10 +177,10 @@
                             <div class="shift" style="width: 200px !important; display: flex; justify-content: center; padding: 0; text-align: center; min-width: 200px;">
                         `;
 
-                        let listPagi = '<div class="pagi" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:rgb(61, 196, 122); color:white">-</div>';
-                        let listSiang = '<div class="siang" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:rgb(61, 196, 122); color:white">-</div>';
-                        let listSore = '<div class="sore" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:rgb(61, 196, 122); color:white">-</div>';
-                        let listMalam = '<div class="malam" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:rgb(61, 196, 122); color:white">-</div>';
+                        let listPagi = `<div class="pagi" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:${backgroundColor}; color:white">-</div>`;
+                        let listSiang = `<div class="siang" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:${backgroundColor}; color:white">-</div>`;
+                        let listSore = `<div class="sore" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:${backgroundColor}; color:white">-</div>`;
+                        let listMalam = `<div class="malam" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:${backgroundColor}; color:white">-</div>`;
 
                         data.list_tanggal[tanggal].forEach(function(jamPemberian) {
                             if (jamPemberian.kd_obat === item.kode_brng) {

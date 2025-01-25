@@ -123,7 +123,7 @@
                                     <td style="text-align: center;">${item.lama_inap}</td>
                                     <td>
                                         <button class="btn-custom-blue btn-sm" onclick="ShowRiwayat('Riwayat','${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}','${item.diagnosa_awal}','${item.diagnosa_akhir}')">Riwayat</button>
-                                        <button class="btn-custom-yellow btn-sm mt-1" onclick="ShowModalObat('Obat','${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}','${item.diagnosa_awal}','${item.diagnosa_akhir}')">Obat</button>
+                                        <button class="btn-custom-yellow btn-sm mt-1" onclick="ShowModalObat('Obat - ${item.nm_pasien}','${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}','${item.diagnosa_awal}','${item.diagnosa_akhir}')">Obat</button>
                                         <button class="btn-custom-yellow btn-sm mt-1" onclick="showCatatan('Catatan', '${item.no_rkm_medis}', '${item.no_rawat}','${item.nm_pasien}')" hidden>Catatan</button>
                                     </td>
                                 </tr>
@@ -173,6 +173,8 @@
     function ShowModalObat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir) {
         // console.log(no_rawat)
         
+        // document.getElementById("modalObatLabel").text = title
+        $('#modalObatLabel').text(title);
         document.getElementById('cpo').removeAttribute('hidden');
         document.getElementById('riwayat_obat').removeAttribute('hidden');
         $('#obat_noRm').val(no_rkm_medis);

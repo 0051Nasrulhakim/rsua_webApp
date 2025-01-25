@@ -74,7 +74,6 @@ class Obat extends BaseController
 
         $tanggal = $this->request->getGet('tanggal');
         // $tanggal = '2025-01-14';
-        // dd($tanggal, $noRawat);
 
         $data = $this->stok_obat_pasien
             ->select('
@@ -270,7 +269,6 @@ class Obat extends BaseController
         $data = $data->orderBy('kamar_inap.no_rawat', 'DESC')
             ->limit($perPage, $offset)
             ->first();
-        // dd($data);
 
         return view('perawat/page/v_cpo', $data);
         
@@ -280,15 +278,14 @@ class Obat extends BaseController
     public function getCpo()
     {
         $noRawat = $this->request->getGet('norawat');
-        
-        // $noRawat = "2024/12/06/000121";
+        $limit = $this->request->getGet('limit') ?? '3';
         
         $tanggalTerakhir = $this->detail_pemberian_obat
             ->select("detail_pemberian_obat.tgl_perawatan")
             ->where('detail_pemberian_obat.no_rawat', $noRawat)
             ->groupBy('detail_pemberian_obat.tgl_perawatan')
-            ->orderBy('detail_pemberian_obat.tgl_perawatan', 'ASC')
-            ->limit(3)
+            ->orderBy('detail_pemberian_obat.tgl_perawatan', 'DESC')
+            ->limit((int)$limit)
             ->findAll();
 
         if (!$tanggalTerakhir) {

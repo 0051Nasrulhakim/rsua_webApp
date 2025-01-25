@@ -24,7 +24,7 @@
     </div>
     <div class="sectionhandOver" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
         <div class="headHandover" style="display: flex;">
-            <div class="kelas" style="width: 6%; text-align: center; border: 1px solid #d6d6d6;">Kelas</div>
+            <div class="kelas" style="width: 45px; text-align: center; border: 1px solid #d6d6d6;">Kelas</div>
             <div class="nama" style="width: 130px; text-align: center; border: 1px solid #d6d6d6;">Nama</div>
             <div class="kelas" style="width: 130px; text-align: center; border: 1px solid #d6d6d6;">DPJP</div>
             <div class="kelas" style="width: auto; min-width: 130px; text-align: center; border: 1px solid #d6d6d6;">PAGI</div>
@@ -115,7 +115,7 @@
                         var isi_malam = ''
                         bodyTabel += `
                                 <div class="bodyHandover" style="display: flex; min-height: 30px" >
-                                    <div class="kelas" style="width: 6%; text-align: center; border: 1px solid #d6d6d6; padding: 2px">
+                                    <div class="kelas" style="width: 45px; text-align: center; border: 1px solid #d6d6d6; padding: 2px">
                                         ${item.kd_kamar}
                                     </div>
                                     <div class="nama" style="width: 130px; border: 1px solid #d6d6d6; padding: 2px">
@@ -456,7 +456,8 @@
             url: '<?= base_url('pasien/getCatatan')?>',
             type: 'GET',
             data: {
-                noRawat: no_rawat
+                noRawat: no_rawat,
+                newPage: '1'
             },
             success: function(response) {
                 // console.log(response)
@@ -484,8 +485,8 @@
                             allCatatan += `
 
                                 <div class="allListHandOver" style="display: flex;" >
-                                    <div class="kelas" style="width: 303px; text-align: center; border: 1px solid #d6d6d6;">${tanggal}</div>
-                                    <div class="kelas" style="width: auto; min-width: 130px; max-width:130px; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="kelas" style="width: 305px; text-align: center; border: 1px solid #d6d6d6;">${tanggal}</div>
+                                    <div class="kelas" style="width: auto; min-width: 12px; max-width:130px; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
                                             <pre style="text-wrap: wrap">${shiftData.pagi.catatan}`
                             if(shiftData.pagi.catatan != ''){

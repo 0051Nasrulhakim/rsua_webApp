@@ -436,15 +436,23 @@ class Pasien extends BaseController
         $noRawat = $this->request->getGet('noRawat');
         // $noRawat = "2024/12/07/000013";
         $filter = $this->request->getGet('filter') ?? '';
+        $newPage = $this->request->getGet('newPage') ?? '';
+        $today = date('Y-m-d');
 
         if ($filter != '') {
             $shifts = ['pagi', 'siang', 'malam'];
 
-            $result = $this->catatanPerawatan
+            $query = $this->catatanPerawatan
                 ->select("catatan_keperawatan_ranap.tanggal, catatan_keperawatan_ranap.nip, petugas.nama, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_keperawatan_ranap.uraian SEPARATOR ', ') AS catatan_tergabung")
                 ->join('aro_shift_catatan_perawatan', 'catatan_keperawatan_ranap.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_keperawatan_ranap.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_keperawatan_ranap.jam = aro_shift_catatan_perawatan.jam', 'left')
                 ->join('petugas', 'catatan_keperawatan_ranap.nip = petugas.nip', 'left')
-                ->where('catatan_keperawatan_ranap.no_rawat', $noRawat)
+                ->where('catatan_keperawatan_ranap.no_rawat', $noRawat);
+
+                if (!empty($newPage)) {
+                    $query->where('catatan_keperawatan_ranap.tanggal <', $today);
+                }
+
+            $result = $query
                 ->groupBy('catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
                 ->orderBy('catatan_keperawatan_ranap.tanggal', 'DESC')
                 ->orderBy("FIELD(aro_shift_catatan_perawatan.shift, 'pagi', 'siang', 'malam')")
@@ -511,11 +519,16 @@ class Pasien extends BaseController
 
             return $this->response->setJSON($res);
         } else {
-            $result = $this->catatanPerawatan
+            $query = $this->catatanPerawatan
                 ->select("catatan_keperawatan_ranap.tanggal, catatan_keperawatan_ranap.nip ,aro_shift_catatan_perawatan.shift, petugas.nama, aro_shift_catatan_perawatan.jam, GROUP_CONCAT(catatan_keperawatan_ranap.uraian SEPARATOR ', ') AS catatan_tergabung")
                 ->join('aro_shift_catatan_perawatan', 'catatan_keperawatan_ranap.no_rawat = aro_shift_catatan_perawatan.no_rawat AND catatan_keperawatan_ranap.tanggal = aro_shift_catatan_perawatan.tanggal AND catatan_keperawatan_ranap.jam = aro_shift_catatan_perawatan.jam', 'left')
                 ->join('petugas', 'catatan_keperawatan_ranap.nip = petugas.nip', 'left')
-                ->where('catatan_keperawatan_ranap.no_rawat', $noRawat)
+                ->where('catatan_keperawatan_ranap.no_rawat', $noRawat);
+
+                if (!empty($newPage)) {
+                    $query->where('catatan_keperawatan_ranap.tanggal <', $today);
+                }
+            $result = $query
                 ->groupBy('catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.shift, aro_shift_catatan_perawatan.jam')
                 ->orderBy('catatan_keperawatan_ranap.tanggal', 'DESC')
                 ->orderBy("FIELD(aro_shift_catatan_perawatan.shift, 'pagi', 'siang', 'malam')")

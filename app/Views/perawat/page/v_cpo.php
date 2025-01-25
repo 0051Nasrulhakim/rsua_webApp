@@ -102,10 +102,10 @@
                 Tampilkan
             </div>
             <div class="input" style="width: 30%; display: flex;">
-                <select class="form-control form-select" name="" id="">
-                    <option value="3">3 Hari Terakhir</option>
+                <select class="form-control form-select" name="" id="limit" onchange="cpo()">
+                    <option value="3" selected>3 Hari Terakhir</option>
                     <option value="7">7 Hari Terakhir</option>
-                    <option value="">Semua</option>
+                    <option value="100">Semua</option>
                 </select>
             </div>
         </div>
@@ -138,12 +138,18 @@
         cpo()
     });
 
+    function clearSearchRiwayat() {
+        document.getElementById('searchObatInput').value = '';
+        cpo()
+    }
+
     var cachedData = null;
 
     function cpo() {
 
         var no_rawat = document.getElementById("noRawat").value;
         document.getElementById("searchObatInput").value = '';
+        let limit = document.getElementById("limit").value
 
         Swal.fire({
             title: 'Sedang Mengambil data...',
@@ -162,6 +168,7 @@
             method: 'GET',
             data: {
                 norawat: no_rawat,
+                limit: limit
             },
             dataType: 'json',
             success: function(response) {
@@ -220,7 +227,8 @@
         }
 
         if (data.daftar_nama_obat.length > 0) {
-            data.daftar_nama_obat.forEach(function(item) {
+            data.daftar_nama_obat.forEach(function(item, index) {
+                const backgroundColor = index % 2 === 0 ? 'rgb(61, 196, 122)' : 'rgb(47, 160, 98)';
                 bodyCpo += `<div class="list-body-cpo" style="display: flex; padding: 0px !important; white-space: nowrap; flex-shrink: 0;">
                     <div class="namaobat" style="border-bottom: 1px solid; border-right: 1px solid; width: 360px !important; padding-left: 1%; white-space: nowrap; flex-shrink: 0;">
                         ${item.nama_brng}
@@ -228,14 +236,16 @@
 
                 if (Object.keys(data.list_tanggal).length > 0) {
                     Object.keys(data.list_tanggal).forEach(function(tanggal) {
+                        
                         bodyCpo += `
                             <div class="shift" style="width: 280px !important; display: flex; justify-content: center; padding: 0; text-align: center;">
                         `;
+                        console.log(backgroundColor)
 
-                        let listPagi = '<div class="pagi" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:rgb(61, 196, 122); color:white">-</div>';
-                        let listSiang = '<div class="siang" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:rgb(61, 196, 122); color:white">-</div>';
-                        let listSore = '<div class="sore" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:rgb(61, 196, 122); color:white">-</div>';
-                        let listMalam = '<div class="malam" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:rgb(61, 196, 122); color:white">-</div>';
+                        let listPagi = `<div class="pagi" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color: ${backgroundColor}; color:white">-</div>`;
+                        let listSiang = `<div class="siang" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color: ${backgroundColor}; color:white">-</div>`;
+                        let listSore = `<div class="sore" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color: ${backgroundColor}; color:white">-</div>`;
+                        let listMalam = `<div class="malam" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color: ${backgroundColor}; color:white">-</div>`;
 
                         data.list_tanggal[tanggal].forEach(function(jamPemberian) {
                             if (jamPemberian.kd_obat === item.kode_brng) {
