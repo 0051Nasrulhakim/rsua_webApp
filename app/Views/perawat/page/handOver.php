@@ -9,34 +9,34 @@
     </div>
 
     <div class="filter-section-pasien-ranap" style="margin-bottom: 2%; margin-top: 2%; display: flex; width: 100%;">
-        <div class="text-tanggal" style="display: flex; align-items: center; width: 9%;">
+        <div class="text-tanggal" style="display: flex; align-items: center; width: 11%;">
             <label for="filter-doctor">Tanggal</label>
         </div>
         <div class="input">
-            <input type="date" class="form-control form-control-sm" value="<?= date('Y-m-d') ?>" id="tanggalListCatatan" onchange="fetchChangeTanggal()">
+            <input type="date" class="form-control form-control" value="<?= date('Y-m-d') ?>" id="tanggalListCatatan" onchange="fetchChangeTanggal()">
         </div>
     </div>
-    <div class="filter-section-pasien-ranap" style="margin-bottom: 2%; margin-top: 2%;">
-        <label for="filter-doctor">Filter Dokter </label>
-        <select id="filter-doctor">
+    <div class="filter-section-pasien-ranap" style="margin-bottom: 2%; margin-top: 2%; display: flex">
+        <label for="filter-doctor" style="width: 11%; display: flex; align-items: center;">Filter Dokter </label>
+        <select class="form-select" id="filter-doctor" style="width: 30%;">
             <option value="">Semua Dokter</option>
         </select>
     </div>
-    <div class="sectionhandOver" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+    <div class="sectionhandOver" style="overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: 10pt;">
         <div class="headHandover" style="display: flex;">
-            <div class="kelas" style="width: 45px; text-align: center; border: 1px solid #d6d6d6;">Kelas</div>
-            <div class="nama" style="width: 130px; text-align: center; border: 1px solid #d6d6d6;">Nama</div>
-            <div class="kelas" style="width: 130px; text-align: center; border: 1px solid #d6d6d6;">DPJP</div>
-            <div class="kelas" style="width: auto; min-width: 130px; text-align: center; border: 1px solid #d6d6d6;">PAGI</div>
-            <div class="kelas" style="width: auto; min-width: 130px; text-align: center; border: 1px solid #d6d6d6;">SIANG</div>
-            <div class="kelas" style="width: auto; min-width: 130px; text-align: center; border: 1px solid #d6d6d6;">Malam</div>
+            <div class="kelas" style="width: 50px; text-align: center; border: 1px solid #d6d6d6;">Kelas</div>
+            <div class="nama" style="width: 140px; text-align: center; border: 1px solid #d6d6d6;">Nama</div>
+            <div class="kelas" style="width: 200px; text-align: center; border: 1px solid #d6d6d6;">DPJP</div>
+            <div class="kelas" style="width: auto; min-width: 219px; text-align: center; border: 1px solid #d6d6d6;">PAGI</div>
+            <div class="kelas" style="width: auto; min-width: 220px; text-align: center; border: 1px solid #d6d6d6;">SIANG</div>
+            <div class="kelas" style="width: auto; min-width: 219px; text-align: center; border: 1px solid #d6d6d6;">Malam</div>
             <div class="kelas" style="width: 26px; text-align: center; border: 1px solid #d6d6d6; padding: 2px">All</div>
         </div>
-        <div class="listHandOver" id="bodyHandover">
+        <div class="listHandOver" id="bodyHandover" style="font-size: 12pt;">
 
         </div>
 
-        <div class="wrapAllListCatatan" id="allListHandOver">
+        <div class="wrapAllListCatatan" id="allListHandOver" style="font-size: 12pt;">
 
             
         </div>
@@ -115,17 +115,17 @@
                         var isi_malam = ''
                         bodyTabel += `
                                 <div class="bodyHandover" style="display: flex; min-height: 30px" >
-                                    <div class="kelas" style="width: 45px; text-align: center; border: 1px solid #d6d6d6; padding: 2px">
+                                    <div class="kelas" style="width: 50px; text-align: center; border: 1px solid #d6d6d6; padding: 2px">
                                         ${item.kd_kamar}
                                     </div>
-                                    <div class="nama" style="width: 130px; border: 1px solid #d6d6d6; padding: 2px">
+                                    <div class="nama" style="width: 140.5px; border: 1px solid #d6d6d6; padding: 2px">
                                         ${item.nm_pasien}
                                     </div>
-                                    <div class="kelas" style="width: 130px; border: 1px solid #d6d6d6; padding: 2px">
+                                    <div class="kelas" style="width: 201px; border: 1px solid #d6d6d6; padding: 2px">
                                         ${item.dokter_dpjp}
                                     </div>
 
-                                    <div class="kelas" style="width: 130px; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="kelas" style="width: 220px; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
                                 `
                         if (item.catatan.pagi.length > 0) {
@@ -133,7 +133,7 @@
                                 jam_pagi = catatan.jam
                                 isi_pagi = catatan.catatan
                                 if (catatan.catatan !== '') {
-                                    bodyTabel += `<pre style="text-wrap: wrap">${catatan.catatan +' | '+jam_pagi}</pre>`
+                                    bodyTabel += `<pre style="text-wrap: wrap;">${catatan.catatan +' | '+jam_pagi}</pre>`
                                 }
                             })
                         }
@@ -172,7 +172,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="kelas" style="width: 130px; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="kelas" style="width: 220px; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
                                     `
                         if (item.catatan.siang.length > 0) {
@@ -180,7 +180,7 @@
                                 jam_siang = catatan.jam
                                 isi_siang = catatan.catatan
                                 if (catatan.catatan !== '') {
-                                    bodyTabel += `<pre style="text-wrap: wrap">${catatan.catatan +' | '+jam_siang}</pre>`
+                                    bodyTabel += `<pre style="text-wrap: wrap;">${catatan.catatan +' | '+jam_siang}</pre>`
                                 }
                             })
                         }
@@ -218,7 +218,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="kelas" style="width: 130px; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="kelas" style="width: 220px; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
 
 
@@ -228,7 +228,7 @@
                                 jam_malam = catatan.jam
                                 isi_malam = catatan.catatan
                                 if (catatan.catatan !== '') {
-                                    bodyTabel += `<pre style="text-wrap: wrap">${catatan.catatan +' | '+jam_malam}</pre>`
+                                    bodyTabel += `<pre style="text-wrap: wrap;">${catatan.catatan +' | '+jam_malam}</pre>`
                                 }
                             })
                         }
@@ -485,10 +485,10 @@
                             allCatatan += `
 
                                 <div class="allListHandOver" style="display: flex;" >
-                                    <div class="kelas" style="width: 305px; text-align: center; border: 1px solid #d6d6d6;">${tanggal}</div>
-                                    <div class="kelas" style="width: auto; min-width: 12px; max-width:130px; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="kelas" style="width: 390px; text-align: center; border: 1px solid #d6d6d6;">${tanggal}</div>
+                                    <div class="kelas" style="width: auto; min-width: 12px; max-width:220px; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
-                                            <pre style="text-wrap: wrap">${shiftData.pagi.catatan}`
+                                            <pre style="text-wrap: wrap;">${shiftData.pagi.catatan}`
                             if(shiftData.pagi.catatan != ''){
                             allCatatan +=`
                                                 --------------------------
@@ -530,9 +530,9 @@
                                     </div>
                                     `
                             allCatatan +=`
-                                    <div class="kelas" style="width: auto; min-width: 130px; max-width:130px; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="kelas" style="width: auto; min-width: 219px; max-width:130px; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
-                                            <pre style="text-wrap: wrap">${shiftData.siang.catatan}
+                                            <pre style="text-wrap: wrap;">${shiftData.siang.catatan}
                                             `
                             if(shiftData.siang.catatan != ''){
                             allCatatan +=`
@@ -576,9 +576,9 @@
                                     `
                         
                         allCatatan += `
-                                    <div class="kelas" style="width: auto; min-width: 130px; max-width:130px; center; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="kelas" style="width: auto; min-width: 220px; max-width:130px; center; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
-                                            <pre style="text-wrap: wrap">${shiftData.malam.catatan}
+                                            <pre style="text-wrap: wrap;">${shiftData.malam.catatan}
                                             `
                             if(shiftData.malam.catatan != ''){
                             allCatatan +=`

@@ -25,7 +25,7 @@ class AuthFilter implements FilterInterface
 
         // Rate Limiting
         // $ip = $request->getIPAddress();
-        // $throttle = Services::throttler();
+        $throttle = Services::throttler();
         // if ($throttle->check($ip, 400, MINUTE) === false) {
         //     return Services::response()
         //         ->setStatusCode(429)

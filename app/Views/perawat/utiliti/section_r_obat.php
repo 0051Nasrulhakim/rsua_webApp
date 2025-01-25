@@ -112,6 +112,7 @@
                 Swal.close();
                 if (response.status_code == "200") {
                     cachedData = response;
+                    console.log(response)
                     renderData(response);
                 } else {
                     renderEmptyData(response.message);

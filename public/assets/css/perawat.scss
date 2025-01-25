@@ -4,17 +4,17 @@
 }
 
 @mixin font-judul-web {
-    font-size: 18px;
+    font-size: 18pt;
     font-weight: 700;
 }
 
 @mixin font-judul {
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 16pt;
+    font-weight: 700;
 }
 
 @mixin font-text {
-    font-size: 9px;
+    font-size: 10pt;
 }
 
 $hijauTua: #265925;

@@ -58,7 +58,7 @@
 
                         <div class="" style="width: 100%; border: 1px solid; text-align: center; margin-bottom: 1%;">
                             
-                            <div class="keterangan" style="display: flex; font-size: 9px; margin-top: 0.5%;">
+                            <div class="keterangan" style="display: flex; font-size: 12pt; margin-top: 0.5%;">
                                 <div class="judul-lab" style=" width: 20%;">
                                     Kode
                                 </div>
@@ -69,7 +69,7 @@
                                     ${item.kd_jenis_prw}
                                 </div>
                             </div>
-                            <div class="keterangan" style="display: flex; font-size: 9px">
+                            <div class="keterangan" style="display: flex; font-size: 12pt">
                                 <div class="judul-lab" style="width: 20%;">
                                     Nama Pemeriksaan
                                 </div>
@@ -80,7 +80,7 @@
                                     ${item.nm_perawatan}
                                 </div>
                             </div>
-                            <div class="keterangan" style="display: flex; font-size: 9px">
+                            <div class="keterangan" style="display: flex; font-size: 12pt">
                                 <div class="judul-lab" style="width: 20%;">
                                     Dokter PJ
                                 </div>
@@ -91,7 +91,7 @@
                                     ${item.nm_dokter_pj}
                                 </div>
                             </div>
-                            <div class="keterangan" style="display: flex; font-size: 9px">
+                            <div class="keterangan" style="display: flex; font-size: 12pt">
                                 <div class="judul-lab" style="width: 20%;">
                                     Petugas
                                 </div>

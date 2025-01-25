@@ -240,7 +240,6 @@
                         bodyCpo += `
                             <div class="shift" style="width: 280px !important; display: flex; justify-content: center; padding: 0; text-align: center;">
                         `;
-                        console.log(backgroundColor)
 
                         let listPagi = `<div class="pagi" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color: ${backgroundColor}; color:white">-</div>`;
                         let listSiang = `<div class="siang" style="width: 70px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color: ${backgroundColor}; color:white">-</div>`;
@@ -250,6 +249,7 @@
                         data.list_tanggal[tanggal].forEach(function(jamPemberian) {
                             if (jamPemberian.kd_obat === item.kode_brng) {
                                 if (jamPemberian.label_jam_diberikan.pagi.length > 0) {
+                                    console.log(jamPemberian)
                                     listPagi = `<div class="pagi" style="width: 70px !important; padding: 0; border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.pagi.map(p => p.waktu).join('<br>')}</div>`;
                                 }
                                 if (jamPemberian.label_jam_diberikan.siang.length > 0) {

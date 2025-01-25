@@ -5,6 +5,7 @@
     <title>SIMRS-ARO</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="<?= base_url()?>manifest.json">
     <!--===============================================================================================-->
     <link rel="icon" type="image/png" href="<?= base_url() ?>public/login_template/images/icons/faviconaro.ico" />
     <!--===============================================================================================-->
