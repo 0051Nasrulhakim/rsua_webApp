@@ -876,9 +876,9 @@ $hijauTua: #265925;
             padding-left: 2%;
             padding-right: 2%;
             padding-bottom: 2%;
-            border-left: 1px solid;
-            border-right: 1px solid;
-            border-bottom: 1px solid;
+            // border-left: 1px solid;
+            // border-right: 1px solid;
+            // border-bottom: 1px solid;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -960,11 +960,10 @@ $hijauTua: #265925;
 
     .type {
         position: sticky;
-        margin-top: -3.4%;
         /* Tetap di posisi saat menggulir */
-        top: -3%;
-        background-color: #ffffff;
-        z-index: 1050;
+        background-color: white;
+        top: -5%;
+        z-index: 99999;
         text-align: center;
         border-bottom: 1px solid;
 

@@ -1,6 +1,7 @@
 <?= $this->extend('perawat/index_perawat') ?>
 <?= $this->section('content') ?>
 <?= $this->include('perawat/utiliti/handOver/modal_handOver') ?>
+<link rel="stylesheet" href="<?= base_url()?>public/assets/css/handover.css">
 
 <div class="wrapper">
 
@@ -24,13 +25,13 @@
     </div>
     <div class="sectionhandOver" style="overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: 10pt;">
         <div class="headHandover" style="display: flex;">
-            <div class="kelas" style="width: 50px; text-align: center; border: 1px solid #d6d6d6;">Kelas</div>
-            <div class="nama" style="width: 140px; text-align: center; border: 1px solid #d6d6d6;">Nama</div>
-            <div class="kelas" style="width: 200px; text-align: center; border: 1px solid #d6d6d6;">DPJP</div>
-            <div class="kelas" style="width: auto; min-width: 219px; text-align: center; border: 1px solid #d6d6d6;">PAGI</div>
-            <div class="kelas" style="width: auto; min-width: 220px; text-align: center; border: 1px solid #d6d6d6;">SIANG</div>
-            <div class="kelas" style="width: auto; min-width: 219px; text-align: center; border: 1px solid #d6d6d6;">Malam</div>
-            <div class="kelas" style="width: 26px; text-align: center; border: 1px solid #d6d6d6; padding: 2px">All</div>
+            <div class="kelas">Kelas</div>
+            <div class="nama">Nama</div>
+            <div class="dpjp">DPJP</div>
+            <div class="shift">PAGI</div>
+            <div class="shift">SIANG</div>
+            <div class="shift">Malam</div>
+            <div class="all">All</div>
         </div>
         <div class="listHandOver" id="bodyHandover" style="font-size: 12pt;">
 
@@ -115,17 +116,17 @@
                         var isi_malam = ''
                         bodyTabel += `
                                 <div class="bodyHandover" style="display: flex; min-height: 30px" >
-                                    <div class="kelas" style="width: 50px; text-align: center; border: 1px solid #d6d6d6; padding: 2px">
+                                    <div class="kelas">
                                         ${item.kd_kamar}
                                     </div>
-                                    <div class="nama" style="width: 140.5px; border: 1px solid #d6d6d6; padding: 2px">
+                                    <div class="nama" style="text-align: left">
                                         ${item.nm_pasien}
                                     </div>
-                                    <div class="kelas" style="width: 201px; border: 1px solid #d6d6d6; padding: 2px">
+                                    <div class="dpjp" style="text-align: left"  >
                                         ${item.dokter_dpjp}
                                     </div>
 
-                                    <div class="kelas" style="width: 220px; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="shift" style="padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
                                 `
                         if (item.catatan.pagi.length > 0) {
@@ -172,7 +173,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="kelas" style="width: 220px; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="shift" style="padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
                                     `
                         if (item.catatan.siang.length > 0) {
@@ -218,7 +219,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="kelas" style="width: 220px; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="shift" style="padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
 
 
@@ -485,8 +486,8 @@
                             allCatatan += `
 
                                 <div class="allListHandOver" style="display: flex;" >
-                                    <div class="kelas" style="width: 390px; text-align: center; border: 1px solid #d6d6d6;">${tanggal}</div>
-                                    <div class="kelas" style="width: auto; min-width: 12px; max-width:220px; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="Alltanggal" style="">${tanggal}</div>
+                                    <div class="allShift" style="">
                                         <div class="text-catatan">
                                             <pre style="text-wrap: wrap;">${shiftData.pagi.catatan}`
                             if(shiftData.pagi.catatan != ''){
@@ -530,7 +531,7 @@
                                     </div>
                                     `
                             allCatatan +=`
-                                    <div class="kelas" style="width: auto; min-width: 219px; max-width:130px; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="allShift">
                                         <div class="text-catatan">
                                             <pre style="text-wrap: wrap;">${shiftData.siang.catatan}
                                             `
@@ -576,7 +577,7 @@
                                     `
                         
                         allCatatan += `
-                                    <div class="kelas" style="width: auto; min-width: 220px; max-width:130px; center; border: 1px solid #d6d6d6; padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="allShift">
                                         <div class="text-catatan">
                                             <pre style="text-wrap: wrap;">${shiftData.malam.catatan}
                                             `

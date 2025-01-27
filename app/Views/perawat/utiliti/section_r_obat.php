@@ -141,21 +141,21 @@
         if (Object.keys(data.list_tanggal).length > 0) {
             Object.keys(data.list_tanggal).forEach(function(tanggal) {
                 headtotalTanggal += `
-                    <div class="list" style="width: 200px !important; text-align: center; padding: 0; border: 1px solid;">
+                    <div class="list" style="">
                         <div class="tanggal" style="padding: 0; border-bottom: 1px solid;">
                             ${tanggal}
                         </div>
-                        <div class="shift" style="display: flex; width: 100%; justify-content: center; padding: 0;">
-                            <div class="pagi" style="width: 50px !important; padding: 0;">
+                        <div class="shift" style="">
+                            <div class="listShift">
                                 <div class="text-shift text-center">Pagi</div> 
                             </div>
-                            <div class="siang" style="width: 50px !important; padding: 0;">
+                            <div class="listShift" >
                                 <div class="text-shift text-center">Siang</div>
                             </div>
-                            <div class="sore" style="width: 50px !important; padding: 0;">
+                            <div class="listShift">
                                 <div class="text-shift text-center">Sore</div>
                             </div>
-                            <div class="malam" style="width: 50px !important; padding: 0;">
+                            <div class="listShift">
                                 <div class="text-shift text-center">Malam</div>
                             </div>
                         </div>
@@ -168,34 +168,34 @@
             data.daftar_nama_obat.forEach(function(item, index) {
                 const backgroundColor = index % 2 === 0 ? 'rgb(61, 196, 122)' : 'rgb(47, 160, 98)';
                 bodyCpo += `<div class="list-body-cpo" style="display: flex; padding: 0px !important; white-space: nowrap; flex-shrink: 0;">
-                    <div class="namaobat" style="border-bottom: 1px solid; border-right: 1px solid; width: 200px !important; padding-left: 1%; white-space: nowrap; flex-shrink: 0;">
+                    <div class="namaobat" style="border-bottom: 1px solid; border-right: 1px solid; width: 320px !important; padding-left: 1%; white-space: nowrap; flex-shrink: 0;">
                         ${item.nama_brng}
                     </div>`;
 
                 if (Object.keys(data.list_tanggal).length > 0) {
                     Object.keys(data.list_tanggal).forEach(function(tanggal) {
                         bodyCpo += `
-                            <div class="shift" style="width: 200px !important; display: flex; justify-content: center; padding: 0; text-align: center; min-width: 200px;">
+                            <div class="shift listTr" style="">
                         `;
 
-                        let listPagi = `<div class="pagi" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:${backgroundColor}; color:white">-</div>`;
-                        let listSiang = `<div class="siang" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:${backgroundColor}; color:white">-</div>`;
-                        let listSore = `<div class="sore" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:${backgroundColor}; color:white">-</div>`;
-                        let listMalam = `<div class="malam" style="width: 50px !important; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; background-color:${backgroundColor}; color:white">-</div>`;
+                        let listPagi = `<div class="shiftListTr" style="background-color:${backgroundColor}; color:white">-</div>`;
+                        let listSiang = `<div class="shiftListTr" style="background-color:${backgroundColor}; color:white">-</div>`;
+                        let listSore = `<div class="shiftListTr" style="background-color:${backgroundColor}; color:white">-</div>`;
+                        let listMalam = `<div class="shiftListTr" style="background-color:${backgroundColor}; color:white">-</div>`;
 
                         data.list_tanggal[tanggal].forEach(function(jamPemberian) {
                             if (jamPemberian.kd_obat === item.kode_brng) {
                                 if (jamPemberian.label_jam_diberikan.pagi.length > 0) {
-                                    listPagi = `<div class="pagi" style="width: 50px !important; padding: 0; border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.pagi.map(p => p.waktu).join('<br>')}</div>`;
+                                    listPagi = `<div class="shiftListTr" style="border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.pagi.map(p => p.waktu).join('<br>')}</div>`;
                                 }
                                 if (jamPemberian.label_jam_diberikan.siang.length > 0) {
-                                    listSiang = `<div class="siang" style="width: 50px !important; padding: 0; border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.siang.map(s => s.waktu).join('<br>')}</div>`;
+                                    listSiang = `<div class="shiftListTr" style="border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.siang.map(s => s.waktu).join('<br>')}</div>`;
                                 }
                                 if (jamPemberian.label_jam_diberikan.sore.length > 0) {
-                                    listSore = `<div class="sore" style="width: 50px !important; padding: 0; border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.sore.map(so => so.waktu).join('<br>')}</div>`;
+                                    listSore = `<div class="shiftListTr" style="border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.sore.map(so => so.waktu).join('<br>')}</div>`;
                                 }
                                 if (jamPemberian.label_jam_diberikan.malam.length > 0) {
-                                    listMalam = `<div class="malam" style="width: 50px !important; padding: 0; border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.malam.map(m => m.waktu).join('<br>')}</div>`;
+                                    listMalam = `<div class="shiftListTr" style="border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.malam.map(m => m.waktu).join('<br>')}</div>`;
                                 }
                             }
                         });
@@ -230,21 +230,21 @@
             let formattedDate = formatDate(currentDate);
 
             headtotalTanggal += `
-                                <div class="list" style="width: 200px !important; text-align: center; padding: 0; border: 1px solid;">
+                                <div class="list">
                                     <div class="tanggal" style="padding: 0; border-bottom: 1px solid;">
                                         ${formattedDate}
                                     </div>
                                     <div class="shift" style="display: flex; width: 100%; justify-content: center; padding: 0;">
-                                        <div class="pagi" style="width: 50px !important; padding: 0;">
+                                        <div class="listShift">
                                             <div class="text-shift text-center">Pagi</div> 
                                         </div>
-                                        <div class="siang" style="width: 50px !important; padding: 0;">
+                                        <div class="listShift">
                                             <div class="text-shift text-center">Siang</div>
                                         </div>
-                                        <div class="sore" style="width: 50px !important; padding: 0;">
+                                        <div class="listShift">
                                             <div class="text-shift text-center">Sore</div>
                                         </div>
-                                        <div class="malam" style="width: 50px !important; padding: 0;">
+                                        <div class="listShift">
                                             <div class="text-shift text-center">Malam</div>
                                         </div>
                                     </div>

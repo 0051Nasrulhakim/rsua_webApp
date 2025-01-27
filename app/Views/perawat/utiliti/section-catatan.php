@@ -2,9 +2,6 @@
     style=" padding-left: 2%;
             padding-right: 2%;
             padding-bottom: 2%;
-            border-left: 1px solid;
-            border-right: 1px solid;
-            border-bottom: 1px solid;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             ">
     <div class="content" style="padding-top: 3%;">

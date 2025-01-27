@@ -10,9 +10,9 @@
         DAFTAR PASIEN RAWAT INAP
     </div>
 
-    <div class="filter-section-pasien-ranap" style="margin-bottom: 2%; margin-top: 2%;">
-        <label for="filter-doctor">Filter Dokter :</label>
-        <select id="filter-doctor">
+    <div class="filter-section-pasien-ranap" style="margin-bottom: 2%; margin-top: 2%; display: flex;">
+        <label for="filter-doctor" style="width: 10%; align-self: center;">Filter Dokter :</label>
+        <select id="filter-doctor" class="form-select" style="width: 30%;">
             <option value="">Semua Dokter</option>
         </select>
     </div>
@@ -122,7 +122,7 @@
                                     <td class="text-center">${item.png_jawab}</td>
                                     <td style="text-align: center;">${item.lama_inap}</td>
                                     <td>
-                                        <button class="btn-custom-blue btn-sm" onclick="ShowRiwayat('Riwayat','${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}','${item.diagnosa_awal}','${item.diagnosa_akhir}')">Riwayat</button>
+                                        <button class="btn-custom-blue btn-sm" onclick="ShowRiwayat('Riwayat | (${item.no_rkm_medis}) ${item.nm_pasien}, Dx. Awal : ${item.diagnosa_awal}, Dx. Ahir : ${item.diagnosa_akhir}','${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}','${item.diagnosa_awal}','${item.diagnosa_akhir}')">Riwayat</button>
                                         <button class="btn-custom-yellow btn-sm mt-1" onclick="ShowModalObat('Obat - ${item.nm_pasien}','${item.no_rkm_medis}', '${item.no_rawat}', '${item.nm_pasien}','${item.diagnosa_awal}','${item.diagnosa_akhir}')">Obat</button>
                                         <button class="btn-custom-yellow btn-sm mt-1" onclick="showCatatan('Catatan', '${item.no_rkm_medis}', '${item.no_rawat}','${item.nm_pasien}')" hidden>Catatan</button>
                                     </td>

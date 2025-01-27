@@ -13,13 +13,13 @@
             </div>
             <div class="modal-body">
 
-                <div class="section-nama" style="display: flex; padding-top: 3%; justify-content: center; font-weight: 700; margin-bottom: 3%">
+                <div class="section-nama" style="display: flex; padding-top: 3%; justify-content: center; font-weight: 700; margin-bottom: 3%" hidden>
                     <div class="norm" id="contentNorm" style=""></div>
                     <div class="" style="width: 3%; text-align: center;">-</div>
                     <div class="nama" id="contentNamaPasien"></div>
                 </div>
 
-                <div class="diagnosa" style="margin-bottom: 3%;">
+                <div class="diagnosa" style="margin-bottom: 3%;" hidden>
                     <div class="diagnosaAwal" style="display: flex;">
                         <div class="title">
                             Diagnosa Awal
@@ -163,7 +163,6 @@
         lastCatatan();
 
     }
-
 
 
     function BatalkanEditTambah(button, noRawat, tanggal, jam, catatan, shift, isEdit) {
