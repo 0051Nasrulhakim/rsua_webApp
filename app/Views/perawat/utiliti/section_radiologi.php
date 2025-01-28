@@ -10,7 +10,7 @@
 </div>
 
 <!-- Modal for zoomed image 1 -->
-<div id="modal-zoom-radiologi-custom-1" class="modal-custom">
+<div id="modal-zoom-radiologi-custom-1" class="modal-custom" style="z-index: 9999999;">
     <span class="close-custom" onclick="closeModal('modal-zoom-radiologi-custom-1')">&times;</span>
     <img class="modal-content-custom" id="modalImg-custom-1">
 </div>

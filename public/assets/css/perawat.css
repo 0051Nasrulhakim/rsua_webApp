@@ -7,6 +7,14 @@
   background-color: #265925 !important;
 }
 
+.tgl-btn {
+  margin-top: 1%;
+  padding: 1%;
+  color: white;
+  border-radius: 3px;
+  background-color: #265925;
+}
+
 .swal-popup-top-right {
   position: fixed;
   top: 10px;

@@ -1,4 +1,171 @@
-@media (max-width: 1340px) and (min-width: 800px) {
+@media (min-width: 1000px) and (max-width: 1200px){
+    .sectionhandOver{
+        .kelas{
+            width: 70px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .nama{
+            padding-left: 2px;
+            width: 230px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .dpjp{
+            padding-left: 2px;
+            width: 250px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .shift{
+            width: auto; min-width: 214px; text-align: center; border: 1px solid #d6d6d6;
+        }
+        .all{
+            width: 26px; text-align: center; border: 1px solid #d6d6d6; padding: 2px
+        }
+    }
+
+    .allListHandOver{
+        .Alltanggal{
+            width: 420px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .allShift{
+            width: auto; 
+            min-width: 12px; 
+            max-width:214px; 
+            border: 1px solid #d6d6d6; 
+            padding: 3px; 
+            border: 1px solid #d6d6d6; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+        }
+    }
+
+    // cpo
+    .cpo-modal{
+        .total-tanggal{
+            .list{
+                width: 264px !important; 
+                text-align: center; 
+                padding: 0; 
+                border: 1px solid;
+            }
+            .shift{
+                display: flex; 
+                width: 100%; 
+                justify-content: center; 
+                padding: 0;
+                .listShift{
+                    width: 66px !important; 
+                    padding: 0;
+                    border-right: 1px solid;
+                }
+            }
+        }
+        .listTr{
+            width: 264px !important; 
+            display: flex; 
+            justify-content: center; 
+            padding: 0; text-align: center; 
+            min-width: 264px; 
+            font-size: 12pt !important;
+            .shiftListTr{
+                width: 66px !important; 
+                padding: 0; 
+                border-right: 1px solid white; 
+                border-bottom: 1px solid white; 
+            }
+        }
+    }
+
+}
+@media (min-width: 1201px) and (max-width: 1297px){
+    .sectionhandOver{
+        .kelas{
+            width: 70px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .nama{
+            padding-left: 2px;
+            width: 230px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .dpjp{
+            padding-left: 2px;
+            width: 250px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .shift{
+            width: auto; min-width: 214px; text-align: center; border: 1px solid #d6d6d6;
+        }
+        .all{
+            width: 26px; text-align: center; border: 1px solid #d6d6d6; padding: 2px
+        }
+    }
+    .allListHandOver{
+        .Alltanggal{
+            width: 500px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .allShift{
+            width: auto; 
+            min-width: 12px; 
+            max-width:214px; 
+            border: 1px solid #d6d6d6; 
+            padding: 3px; 
+            border: 1px solid #d6d6d6; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+        }
+    }
+
+    // cpo
+    .cpo-modal{
+        .total-tanggal{
+            .list{
+                width: 264px !important; 
+                text-align: center; 
+                padding: 0; 
+                border: 1px solid;
+            }
+            .shift{
+                display: flex; 
+                width: 100%; 
+                justify-content: center; 
+                padding: 0;
+                .listShift{
+                    width: 66px !important; 
+                    padding: 0;
+                    border-right: 1px solid;
+                }
+            }
+        }
+        .listTr{
+            width: 264px !important; 
+            display: flex; 
+            justify-content: center; 
+            padding: 0; text-align: center; 
+            min-width: 264px; 
+            font-size: 12pt !important;
+            .shiftListTr{
+                width: 66px !important; 
+                padding: 0; 
+                border-right: 1px solid white; 
+                border-bottom: 1px solid white; 
+            }
+        }
+    }
+}
+
+@media (min-width: 1298px) and (max-width: 1434px){
     .sectionhandOver{
         .kelas{
             width: 70px; 
@@ -58,18 +225,29 @@
                 justify-content: center; 
                 padding: 0;
                 .listShift{
-                    width: 80px !important; 
+                    width: 66px !important; 
                     padding: 0;
-                    border: 1px solid red;
+                    border-right: 1px solid;
                 }
             }
         }
-        .body{
-
+        .listTr{
+            width: 264px !important; 
+            display: flex; 
+            justify-content: center; 
+            padding: 0; text-align: center; 
+            min-width: 264px; 
+            font-size: 12pt !important;
+            .shiftListTr{
+                width: 66px !important; 
+                padding: 0; 
+                border-right: 1px solid white; 
+                border-bottom: 1px solid white; 
+            }
         }
     }
 }
-@media screen and (min-width: 1341px) {
+@media screen and (min-width: 1435px) and (max-width: 1999px) {
     .sectionhandOver{
         .kelas{
             width: 72px; 
@@ -96,7 +274,7 @@
     }
     .allListHandOver{
         .Alltanggal{
-            width: 550px; 
+            width: 551.5px; 
             text-align: center; 
             border: 1px solid #d6d6d6;
         }
@@ -128,9 +306,108 @@
                 justify-content: center; 
                 padding: 0;
                 .listShift{
-                    width: 80px !important; 
+                    width: 100px !important; 
                     padding: 0;
-                    border: 1px solid red;
+                    border-right: 1px solid;
+                }
+            }
+        }
+        .listTr{
+            width: 400px !important; 
+            display: flex; 
+            justify-content: center; 
+            padding: 0; text-align: center; 
+            min-width: 400px; 
+            font-size: 12pt !important;
+            .shiftListTr{
+                width: 100px !important; 
+                padding: 0; 
+                border-right: 1px solid white; 
+                border-bottom: 1px solid white; 
+            }
+        }
+        .body{
+
+        }
+    }
+}
+@media screen and (min-width: 2000px){
+    .sectionhandOver{
+        
+        .kelas{
+            font-size: 16pt;
+            width: 72px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .nama{
+            font-size: 16pt;
+            width: 250px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .dpjp{
+            font-size: 16pt;
+            width: 250px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .shift{
+            font-size: 16pt;
+            width: auto; 
+            min-width: 400px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .all{
+            font-size: 16pt;
+            width: 40px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6; 
+            padding: 2px;
+            display:flex; 
+            align-items:center; 
+            justify-content:center
+        }
+        
+    }
+    .allListHandOver{
+        .Alltanggal{
+            width: 572px; 
+            text-align: center; 
+            border: 1px solid #d6d6d6;
+        }
+        .allShift{
+            width: auto; 
+            min-width: 400px; 
+            max-width:400px; 
+            border: 1px solid #d6d6d6; 
+            padding: 3px; 
+            border: 1px solid #d6d6d6; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+        }
+    }
+
+    // cpo
+    .cpo-modal{
+        .total-tanggal{
+            .list{
+                width: 400px !important; 
+                text-align: center; 
+                padding: 0; 
+                border: 1px solid;
+            }
+            .shift{
+                display: flex; 
+                width: 100%; 
+                justify-content: center; 
+                padding: 0;
+                .listShift{
+                    width: 100px !important; 
+                    padding: 0;
+                    border-right: 1px solid;
                 }
             }
         }

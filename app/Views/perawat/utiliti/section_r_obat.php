@@ -88,6 +88,7 @@
 
         var no_rawat = document.getElementById("obat_noRawat").value;
         document.getElementById("searchObatInput").value = '';
+        let limit = document.getElementById("limit").value
 
         Swal.fire({
             title: 'Sedang Mengambil data...',
@@ -106,6 +107,7 @@
             method: 'GET',
             data: {
                 norawat: no_rawat,
+                limit: limit
             },
             dataType: 'json',
             success: function(response) {

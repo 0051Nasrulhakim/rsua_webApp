@@ -270,7 +270,7 @@
                             `
                             if(isHiddenOpen != 'true'){
                                 bodyTabel +=`
-                                    <div class="kelas" style="width: 26px; text-align: center; border: 1px solid #d6d6d6; padding: 2px; display:flex; align-items:center; justify-content:center"
+                                    <div class="all" style=""
                                         onclick="actionBtnOpen('${item.no_rawat}')"
                                         id="btnOpenFetchlistCatatan"
 
@@ -280,7 +280,7 @@
                                     `
                             }else{
                                 bodyTabel +=`
-                                    <div class="kelas" style="width: 26px; text-align: center; border: 1px solid #d6d6d6; padding: 2px; display:flex; align-items:center; justify-content:center"
+                                    <div class="all" style=""
                                         onclick="fecthDataHandOver('', false)"
                                         id="btnCloseFectListCatatan"
                                     >
@@ -492,7 +492,7 @@
                                             <pre style="text-wrap: wrap;">${shiftData.pagi.catatan}`
                             if(shiftData.pagi.catatan != ''){
                             allCatatan +=`
-                                                --------------------------
+--------------------------
                                                 ${shiftData.pagi.nama}<br>${tanggal} | ${shiftData.pagi.jam}
                             `}
                             allCatatan +=`
@@ -537,7 +537,7 @@
                                             `
                             if(shiftData.siang.catatan != ''){
                             allCatatan +=`
-                                                --------------------------
+--------------------------
                                                 ${shiftData.siang.nama}<br>${tanggal} | ${shiftData.siang.jam}
                             `}
                             allCatatan +=`
@@ -583,7 +583,7 @@
                                             `
                             if(shiftData.malam.catatan != ''){
                             allCatatan +=`
-                                                --------------------------
+--------------------------
                                                 ${shiftData.malam.nama}<br>${tanggal} | ${shiftData.malam.jam}
                             `}
                             allCatatan +=`

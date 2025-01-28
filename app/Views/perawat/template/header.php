@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div class="section-breadvum" style="display: flex; justify-content: space-between; margin-left: 2%; margin-right: 5%;">
+    <div class="section-breadvum" style="display: flex; justify-content: space-between; margin-left: 2%; margin-right: 5%; margin-top: 0.5%;">
 
         <div class="menu" style="display: flex; align-items: flex-end; width: 50%;">
             <div class="ranap" style="padding-left: 1%; padding-right: 1%; border-top-right-radius: 8px; background-color: rgb(245, 242, 89); border: 1px solid;" >
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="userLogin" style="font-weight: 700; width: 40%; display: flex; justify-content: flex-end; text-align: right; align-items: center; font-size: 12px;">
+        <div class="userLogin" style="font-weight: 700; width: 40%; display: flex; justify-content: flex-end; text-align: right; align-items: center; font-size: 12px; margin-bottom: 0.5%;">
             <?= session()->get('nama') ?>
             <div onclick="logout()" class="logo" style="margin-left: 5%; padding-left: 3%; padding-right: 3%; background-color:rgb(255, 0, 0); border-radius: 5px;">
                 <i class="fa-solid fa-right-from-bracket"></i>

@@ -276,7 +276,7 @@
                                 <div style="display: flex;">
                                     <div style="width: 10%;"></div>
                                     <div style="width: 2%;"></div>
-                                    <div class="tgl-btn" 
+                                    <div class="tgl-btn" style="" 
                                         onclick="zoomImage('http://192.168.2.91/webapps/radiologi/${response[i].lokasi_gambar}', 'modal-zoom-radiologi-custom-1')">
                                         Tampilkan Gambar
                                     </div>

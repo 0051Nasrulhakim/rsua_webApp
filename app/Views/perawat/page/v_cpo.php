@@ -11,71 +11,97 @@
 <div class="judul-webview" style="text-align: center; margin-top: 2%;">
     Catatan Pemberian Obat
 </div>
-<div class="detail-pasien" style="padding: 2%;">
-    <div class="norm" style="display: flex;">
-        <div class="text-detail-pasien" style="width: 10%;">
-            No Rm
+<div class="detail-pasien" style="padding: 2%; display: flex;">
+    <div class="left" style="width: 40%;">
+        <div class="norm" style="display: flex;">
+            <div class="text-detail-pasien" style="width: 15%;">
+                No Rm
+            </div>
+            <div class="semiColon" style="width: 2%;">
+                :
+            </div>
+            <div class="conten">
+                <?= $no_rkm_medis ?>
+            </div>
         </div>
-        <div class="semiColon" style="width: 2%;">
-            :
+        <div class="noRawat" style="display: flex;">
+            <div class="text-detail-pasien" style="width: 15%;">
+                Nomor Rawat
+            </div>
+            <div class="semiColon" style="width: 2%;">
+                :
+            </div>
+            <div class="conten">
+                <?= $no_rawat ?>
+            </div>
         </div>
-        <div class="conten">
-            <?= $no_rkm_medis ?>
+        <div class="namaPasien" style="display: flex;">
+            <div class="text-detail-pasien" style="width: 15%;">
+                Nama Pasien
+            </div>
+            <div class="semiColon" style="width: 2%;">
+                :
+            </div>
+            <div class="conten">
+                <?= $nm_pasien ?>
+            </div>
         </div>
-    </div>
-    <div class="noRawat" style="display: flex;">
-        <div class="text-detail-pasien" style="width: 10%;">
-            Nomor Rawat
-        </div>
-        <div class="semiColon" style="width: 2%;">
-            :
-        </div>
-        <div class="conten">
-            <?= $no_rawat ?>
-        </div>
-    </div>
-    <div class="namaPasien" style="display: flex;">
-        <div class="text-detail-pasien" style="width: 10%;">
-            Nama Pasien
-        </div>
-        <div class="semiColon" style="width: 2%;">
-            :
-        </div>
-        <div class="conten">
-            <?= $nm_pasien ?>
-        </div>
-    </div>
-    <div class="Dpjp" style="display: flex;">
-        <div class="text-detail-pasien" style="width: 10%;">
-            DPJP
-        </div>
-        <div class="semiColon" style="width: 2%;">
-            :
-        </div>
-        <div class="conten">
-            <?= $dokter_dpjp ?>
-        </div>
-    </div>
-    <div class="diagnosaAwal" style="display: flex;">
-        <div class="text-detail-pasien" style="width: 10%;">
-            Diagnosa Awal
-        </div>
-        <div class="semiColon" style="width: 2%;">
-            :
-        </div>
-        <div class="conten">
-            <?= $diagnosa_awal ?>
+        <div class="Dpjp" style="display: flex;">
+            <div class="text-detail-pasien" style="width: 15%;">
+                DPJP
+            </div>
+            <div class="semiColon" style="width: 2%;">
+                :
+            </div>
+            <div class="conten">
+                <?= $dokter_dpjp ?>
+            </div>
         </div>
     </div>
-    <div class="tglMasuk" style="display: flex;">
-        <div class="text-detail-pasien" style="width: 10%;">
-            Tgl.Masuk
+    <div class="right" style="width: 40%;">
+        <div class="diagnosaAwal" style="display: flex;">
+            <div class="text-detail-pasien" style="width: 15%;">
+                Diagnosa Awal
+            </div>
+            <div class="semiColon" style="width: 2%;">
+                :
+            </div>
+            <div class="conten">
+                <?= $diagnosa_awal ?>
+            </div>
         </div>
-        <div class="semiColon" style="width: 2%;">
-            :
+        <div class="diagnosaAwal" style="display: flex;">
+            <div class="text-detail-pasien" style="width: 15%;">
+                Diagnosa Akhir
+            </div>
+            <div class="semiColon" style="width: 2%;">
+                :
+            </div>
+            <div class="conten">
+                <?= $diagnosa_awal ?>
+            </div>
         </div>
-        <div class="conten">
-            <?= $tgl_masuk . ' ' . $jam_masuk ?>
+        <div class="diagnosaAwal" style="display: flex;">
+            <div class="text-detail-pasien" style="width: 15%;">
+
+            </div>
+            <div class="semiColon" style="width: 2%;">
+
+            </div>
+            <div class="conten">
+                (Sementara)
+            </div>
+        </div>
+        <div class="tglMasuk" style="display: flex;">
+            <div class="text-detail-pasien" style="width: 15%;">
+                Tgl.Masuk
+            </div>
+            <div class="semiColon" style="width: 2%;">
+                :
+            </div>
+            <div class="conten">
+                <?= $tgl_masuk . ' ' . $jam_masuk ?>
+            </div>
         </div>
     </div>
 
@@ -98,7 +124,7 @@
         </div>
 
         <div class="filter-riwayat" style="display: flex; align-items: center; width: 40%;">
-            <div class="text-custom" style="width: 13%;">
+            <div class="text-custom" style="width: 14%;">
                 Tampilkan
             </div>
             <div class="input" style="width: 30%; display: flex;">
@@ -130,7 +156,7 @@
 </div>
 
 
-</div>
+
 
 <script>
     $(document).ready(function() {
@@ -151,17 +177,17 @@
         document.getElementById("searchObatInput").value = '';
         let limit = document.getElementById("limit").value
 
-        Swal.fire({
-            title: 'Sedang Mengambil data...',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            },
-            customClass: {
-                title: 'swal-title-small',
-                content: 'swal-text-small'
-            }
-        });
+        // Swal.fire({
+        //     title: 'Sedang Mengambil data...',
+        //     allowOutsideClick: false,
+        //     didOpen: () => {
+        //         Swal.showLoading();
+        //     },
+        //     customClass: {
+        //         title: 'swal-title-small',
+        //         content: 'swal-text-small'
+        //     }
+        // });
 
         $.ajax({
             url: '<?= base_url('obat/getCpo') ?>',
@@ -172,7 +198,7 @@
             },
             dataType: 'json',
             success: function(response) {
-                Swal.close();
+                // Swal.close();
                 if (response.status_code == "200") {
                     cachedData = response;
                     renderData(response);
@@ -236,7 +262,7 @@
 
                 if (Object.keys(data.list_tanggal).length > 0) {
                     Object.keys(data.list_tanggal).forEach(function(tanggal) {
-                        
+
                         bodyCpo += `
                             <div class="shift" style="width: 280px !important; display: flex; justify-content: center; padding: 0; text-align: center;">
                         `;
