@@ -31,7 +31,7 @@
 
     <div class="wrapscroll" style="overflow-x: auto; ">
         <div class="headList" style="display: flex; padding: 0;">
-            <div class="namaobat" style="text-align: center; width: 320px !important; padding: 0; white-space: nowrap; flex-shrink: 0; border-bottom: 1px solid; border-left: 1px solid;border-top: 1px solid; display: flex; align-items: center; justify-content: center;">
+            <div class="namaobat" style="text-align: center; width: 370px !important; padding: 0; white-space: nowrap; flex-shrink: 0; border-bottom: 1px solid; border-left: 1px solid;border-top: 1px solid; display: flex; align-items: center; justify-content: center;">
                 NAMA OBAT / ALKES / BHP
             </div>
             <div class="total-tanggal" id="totalTanggal" style="display: flex;">

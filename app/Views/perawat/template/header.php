@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HAND OVER - ARO RANAP</title>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="<?= base_url('assets/css/perawat.css') ?>"> -->
     <link rel="stylesheet" href="<?= base_url('public/assets/css/perawat.css') ?>">
@@ -28,19 +30,19 @@
             </div>
         </div>
         <div class="right">
-            <i class="fa-solid fa-bars fa-lg"></i>
+            <!-- <i class="fa-solid fa-bars fa-lg"></i> -->
         </div>
     </div>
 
     <div class="section-breadvum" style="display: flex; justify-content: space-between; margin-left: 2%; margin-right: 5%; margin-top: 0.5%;">
 
         <div class="menu" style="display: flex; align-items: flex-end; width: 50%;">
-            <div class="ranap" style="padding-left: 1%; padding-right: 1%; border-top-right-radius: 8px; background-color: rgb(245, 242, 89); border: 1px solid;" >
+            <div class="ranap active" style="padding-left: 1%; padding-right: 1%; border-top-right-radius: 8px; background-color: rgb(245, 242, 89); border: 1px solid black;" onclick="menuRanap()" id="ranap">
                 <a href="<?= base_url('pasien')?>" style="text-decoration: none; color: black; font-weight: 600;">
                     Pasien Ranap
                 </a> 
             </div>
-            <div class="handOver" style="padding-left: 1%; padding-right: 1%; border-top-right-radius: 8px; background-color: rgb(245, 242, 89); border: 1px solid;">
+            <div class="handOver" style="padding-left: 1%; padding-right: 1%; border-top-right-radius: 8px; background-color: rgb(245, 242, 89); border: 1px solid black;" onclick="menuHandOver()" id="handover">
                 <a href="<?= base_url('HandOver')?>" style="text-decoration: none; color: black; font-weight: 600;">
                     Hand Over
                 </a>
@@ -57,6 +59,14 @@
 
 
     <script>
+        
+
+        function menuRanap()
+        {
+            document.getElementById('handover').classList.remove('active');
+            document.getElementById('ranap').classList.add('active');
+        }
+
         function logout() {
             Swal.fire({
                 title: 'Apakah Anda Yakin?',

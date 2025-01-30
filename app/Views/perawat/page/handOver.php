@@ -1,15 +1,15 @@
 <?= $this->extend('perawat/index_perawat') ?>
 <?= $this->section('content') ?>
 <?= $this->include('perawat/utiliti/handOver/modal_handOver') ?>
-<link rel="stylesheet" href="<?= base_url()?>public/assets/css/handover.css">
+<link rel="stylesheet" href="<?= base_url() ?>public/assets/css/handover.css">
+
 
 <div class="wrapper">
 
     <div class="judul">
         Hand Over Ranap
     </div>
-
-    <div class="filter-section-pasien-ranap" style="margin-bottom: 2%; margin-top: 2%; display: flex; width: 100%;">
+    <div class="filter-section-pasien-ranap" style="margin-bottom: 2%; margin-top: 2%; display: flex; width: 100%;" hidden>
         <div class="text-tanggal" style="display: flex; align-items: center; width: 11%;">
             <label for="filter-doctor">Tanggal</label>
         </div>
@@ -22,6 +22,7 @@
         <select class="form-select" id="filter-doctor" style="width: 30%;">
             <option value="">Semua Dokter</option>
         </select>
+
     </div>
     <div class="sectionhandOver" style="overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: 10pt;">
         <div class="headHandover" style="display: flex;">
@@ -37,9 +38,9 @@
 
         </div>
 
-        <div class="wrapAllListCatatan" id="allListHandOver" style="font-size: 12pt;">
+        <div class="wrapAllListCatatan" id="allListHandOver" style="font-size: 12pt !important;">
 
-            
+
         </div>
 
     </div>
@@ -48,8 +49,9 @@
 
 
 <script>
+    
     $(document).ready(function() {
-        
+
         fecthDataHandOver()
 
         $.ajax({
@@ -77,10 +79,14 @@
         });
     });
     let selectedDoctor = '';
-    
 
+    function menuHandOver() {
+        document.getElementById('ranap').classList.remove('active');
+        document.getElementById('handover').classList.add('active');
+    }
+    
     function fecthDataHandOver(no_rawat, isHiddenOpen = 'false') {
-        
+        menuHandOver();
         let tanggal = document.getElementById('tanggalListCatatan').value;
         Swal.fire({
             title: 'Sedang Mengambil data...',
@@ -104,6 +110,7 @@
             },
             dataType: 'json',
             success: function(response) {
+                console.log(response)
                 Swal.close();
                 let bodyTabel = '';
                 if (response.data.length > 0) {
@@ -122,8 +129,39 @@
                                     <div class="nama" style="text-align: left">
                                         ${item.nm_pasien}
                                     </div>
-                                    <div class="dpjp" style="text-align: left"  >
+                                    <div class="dpjp" style="text-align: left">
                                         ${item.dokter_dpjp}
+                                        <div class"section-addshift" style="display:flex; margin-bottom: 1%">
+                                `
+                        if (item.todayPagi == "") {
+                            bodyTabel += `  
+                                            <div class="tombol" style="padding: 1%; width: 30%; background-color:rgb(96, 136, 74);  color:white; text-align:center; margin-right:2%"
+                                                onclick="addCatatan('${item.no_rawat}', 'pagi')"
+                                            >
+                                                Pagi
+                                            </div>`
+                        }
+                        if (item.todaySiang == "") {
+                            bodyTabel += `
+                                            <div class="tombol" style="padding: 1%; width:30%; background-color:rgb(96, 136, 74);  color:white; text-align:center; margin-right:2%"
+                                                onclick="addCatatan('${item.no_rawat}', 'siang')"
+                                            >
+                                                Siang
+                                            </div>
+                                    `
+                        }
+                        if (item.todayMalam == "") {
+                            bodyTabel += `
+                                            <div class="tombol" style="padding: 1%; width:30%; background-color:rgb(96, 136, 74);  color:white; text-align:center; margin-right:2%"
+                                                onclick="addCatatan('${item.no_rawat}', 'malam')"
+                                            >
+                                                Malam
+                                            </div>
+                                    `
+                        }
+                        bodyTabel += `       
+                                            
+                                        </div>
                                     </div>
 
                                     <div class="shift" style="padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
@@ -133,8 +171,18 @@
                             item.catatan.pagi.forEach(function(catatan) {
                                 jam_pagi = catatan.jam
                                 isi_pagi = catatan.catatan
+                                tanggal_catatan_pagi = catatan.tanggal
                                 if (catatan.catatan !== '') {
-                                    bodyTabel += `<pre style="text-wrap: wrap;">${catatan.catatan +' | '+jam_pagi}</pre>`
+                                    bodyTabel += `
+                                    <div clas="catatan">
+                                        <pre style="text-wrap: wrap;">${catatan.catatan}</pre>
+                                    </div>
+                                    <div class"namaPetugas" style="font-weight: 700;">
+                                        <span class="badge text-bg-warning">${catatan.nama_petugas}</span>
+                                    </div>
+                                    <div>
+                                        <span class="badge text-bg-secondary"> ${catatan.tanggal} |  ${catatan.jam} </span>
+                                    </div>`
                                 }
                             })
                         }
@@ -143,12 +191,12 @@
                                         </div>
                                         <div class="keterangan" style="margin-top: 1%;">
                                 `
-                        if (item.catatan.pagi != '') {
+                        if (item.catatan.pagi != '' && tanggal_catatan_pagi == tanggal) {
 
                             bodyTabel += `
                                                     <div class="flex" style="display: flex; justify-content: space-between;">
                                                         <div class="tombol" style="padding: 5%; width: 48%; background-color:rgb(58, 78, 190); color:white; text-align:center"
-                                                            onclick="editCatatan('${item.no_rawat}', '${jam_pagi}', 'pagi')"
+                                                            onclick="editCatatan('${item.no_rawat}', '${jam_pagi}', 'pagi', '${tanggal_catatan_pagi}')"
                                                         >
                                                             <i class="fa-solid fa-pen-to-square"></i>    
                                                         </div>
@@ -159,29 +207,31 @@
                                                         </div>
                                                     </div>
                                                 `
-                        } else {
-                            bodyTabel += `
-                                                    <div class="tombol" style="width: 30%; padding: 5%; background-color:rgb(96, 136, 74); color:white; text-align:center; margin-left:auto; margin-right:auto;"
-                                                        onclick="addCatatan('${item.no_rawat}', 'pagi')"
-                                                        >
-                                                        <i class="fa-solid fa-plus"></i>
-                                                    </div>
-                                                `
                         }
 
                         bodyTabel += `
                                         </div>
                                     </div>
 
-                                    <div class="shift" style="padding: 3px; border: 1px solid #d6d6d6; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div class="shift" style="padding: 3px; border: 1px solidrgb(0, 0, 0); display: flex; flex-direction: column; justify-content: space-between;">
                                         <div class="text-catatan">
                                     `
                         if (item.catatan.siang.length > 0) {
                             item.catatan.siang.forEach(function(catatan) {
                                 jam_siang = catatan.jam
                                 isi_siang = catatan.catatan
+                                tanggal_catatan_siang = catatan.tanggal
                                 if (catatan.catatan !== '') {
-                                    bodyTabel += `<pre style="text-wrap: wrap;">${catatan.catatan +' | '+jam_siang}</pre>`
+                                    bodyTabel += `
+                                    <div clas="catatan">
+                                        <pre style="text-wrap: wrap;">${catatan.catatan}</pre>
+                                    </div>
+                                    <div class"namaPetugas" style="font-weight: 700;">
+                                        <span class="badge text-bg-warning"> ${catatan.nama_petugas}</span>
+                                    </div>
+                                    <div>
+                                        <span class="badge text-bg-secondary">${catatan.tanggal} | ${catatan.jam} </span>
+                                    </div>`
                                 }
                             })
                         }
@@ -190,11 +240,11 @@
                                         </div>
                                         <div class="keterangan" style="margin-top: 1%;">
                                     `
-                        if (item.catatan.siang != '') {
+                        if (item.catatan.siang != '' && tanggal_catatan_siang == tanggal) {
                             bodyTabel += `
                                                                 <div class="flex" style="display: flex; justify-content: space-between;">
                                                                     <div class="tombol" style="padding: 5%; width: 48%; background-color:rgb(58, 78, 190); color:white; text-align:center"
-                                                                        onclick="editCatatan('${item.no_rawat}', '${jam_siang}', 'siang')"
+                                                                        onclick="editCatatan('${item.no_rawat}', '${jam_siang}', 'siang', '${tanggal_catatan_siang}')"
                                                                     >
                                                                         <i class="fa-solid fa-pen-to-square"></i>    
                                                                     </div>
@@ -205,14 +255,6 @@
                                                                     </div>
                                                                 </div>
                                                             `
-                        } else {
-                            bodyTabel += `
-                                                    <div class="tombol" style="width: 30%; padding: 5%; background-color:rgb(96, 136, 74); color:white; text-align:center; margin-left:auto; margin-right:auto;"
-                                                    onclick="addCatatan('${item.no_rawat}',  'siang')"
-                                                    >
-                                                        <i class="fa-solid fa-plus"></i>
-                                                    </div>
-                                                `
                         }
                         bodyTabel +=
                             `
@@ -228,8 +270,18 @@
                             item.catatan.malam.forEach(function(catatan) {
                                 jam_malam = catatan.jam
                                 isi_malam = catatan.catatan
+                                tanggal_catatan_malam = catatan.tanggal
                                 if (catatan.catatan !== '') {
-                                    bodyTabel += `<pre style="text-wrap: wrap;">${catatan.catatan +' | '+jam_malam}</pre>`
+                                    bodyTabel += `
+                                    <div clas="catatan">
+                                        <pre style="text-wrap: wrap;">${catatan.catatan}</pre>
+                                    </div>
+                                    <div class"namaPetugas" style="font-weight: 700;">
+                                        <span class="badge text-bg-warning">${catatan.nama_petugas}</span>
+                                    </div>
+                                    <div>
+                                        <span class="badge text-bg-secondary">${catatan.tanggal} |  ${catatan.jam} </span>
+                                    </div>`
                                 }
                             })
                         }
@@ -238,13 +290,12 @@
                                         </div>
                                         <div class="keterangan" style="margin-top: 1%;">
                                     `
-                        if (item.catatan.malam != '') {
+                        if (item.catatan.malam != '' && tanggal_catatan_malam == tanggal) {
                             bodyTabel += `
                                                             <div class="flex" style="display: flex; justify-content: space-between;">
                                                                 <div class="tombol" style="padding: 5%; width: 48%; background-color:rgb(58, 78, 190); color:white; text-align:center"
-                                                                    onclick="editCatatan('${item.no_rawat}', '${jam_malam}', 'malam')"
-                                                                >
-                                                                    <i class="fa-solid fa-pen-to-square"></i>    
+                                                                    onclick="editCatatan('${item.no_rawat}', '${jam_malam}', 'malam', '${tanggal_catatan_malam}')"
+                                                                ><i class="fa-solid fa-pen-to-square"></i>    
                                                                 </div>
                                                                 <div class="tombol" style="padding: 5%; width:48%; background-color:rgb(185, 70, 70); color:white; text-align:center"
                                                                     onclick="hapusCatatan('${item.no_rawat}', '${jam_malam}')"
@@ -253,14 +304,6 @@
                                                                 </div>
                                                             </div>
                                                         `
-                        } else {
-                            bodyTabel += `
-                                            <div class="tombol" style="width: 30%; padding: 5%; background-color:rgb(96, 136, 74); color:white; text-align:center; margin-left:auto; margin-right:auto;"
-                                            onclick="addCatatan('${item.no_rawat}', 'malam')"
-                                            >
-                                                <i class="fa-solid fa-plus"></i>
-                                            </div>
-                                        `
                         }
                         bodyTabel +=
                             `
@@ -268,8 +311,8 @@
                                     </div>
 
                             `
-                            if(isHiddenOpen != 'true'){
-                                bodyTabel +=`
+                        if (isHiddenOpen != 'true') {
+                            bodyTabel += `
                                     <div class="all" style=""
                                         onclick="actionBtnOpen('${item.no_rawat}')"
                                         id="btnOpenFetchlistCatatan"
@@ -278,8 +321,8 @@
                                         <i class="fa-regular fa-folder-open"></i>
                                     </div>
                                     `
-                            }else{
-                                bodyTabel +=`
+                        } else {
+                            bodyTabel += `
                                     <div class="all" style=""
                                         onclick="fecthDataHandOver('', false)"
                                         id="btnCloseFectListCatatan"
@@ -287,8 +330,8 @@
                                         <i class="fa-solid fa-xmark"></i>
                                     </div>
                                 `
-                            }
-                        bodyTabel+=`
+                        }
+                        bodyTabel += `
                                 </div>
                                 `
                     })
@@ -299,16 +342,16 @@
             }
         });
     }
-    
+
 
     $('#filter-doctor').on('change', function() {
         selectedDoctor = $(this).val();
         fecthDataHandOver()
     });
 
-    function editCatatan(no_rawat, jam, shift) {
+    function editCatatan(no_rawat, jam, shift, tanggal) {
 
-        let tanggal = document.getElementById('tanggalListCatatan').value;
+        // let tanggal = document.getElementById('tanggalListCatatan').value;
         $('#handOverModalLabel').text('Update Hand Over');
         $('#inputNoRawat').val(no_rawat);
         $('#inputJam').val(jam);
@@ -321,7 +364,7 @@
     }
 
     function getCatatan(no_rawat, jam, shift, tanggal, showAll = 'false') {
-
+        console.log(no_rawat, jam, shift, tanggal, showAll)
         $.ajax({
             url: '<?= base_url('HandOver/detailCatatan') ?>',
             type: 'POST',
@@ -331,6 +374,7 @@
                 jam: jam
             },
             success: function(response) {
+                console.log(response)
                 $('#floatingTextarea2').val(response.data.uraian);
                 $('#showAll').val(showAll);
                 $('#handOverModal').modal('show');
@@ -344,7 +388,11 @@
 
     function addCatatan(no_rawat, shift) {
         const now = new Date();
-        const jam = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const jam = now.toLocaleTimeString('id-ID', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
 
         let tanggal = document.getElementById('tanggalListCatatan').value;
         $('#handOverModalLabel').text('Insert Hand Over');
@@ -367,9 +415,9 @@
             type: 'POST',
             data: $('#formHandover').serialize(),
             success: function(response) {
-                if(showAll == 'true'){
+                if (showAll == 'true') {
                     fecthDataHandOver(noRawat, 'true');
-                }else{
+                } else {
                     fecthDataHandOver();
                 }
                 $('#handOverModal').modal('hide');
@@ -379,16 +427,16 @@
 
     function submitCatatan() {
         let showAll = $('#showAll').val();
-        
+
         let noRawat = $('#inputNoRawat').val();
         $.ajax({
             url: '<?= base_url('pasien/updateCatatan') ?>',
             type: 'POST',
             data: $('#formHandover').serialize(),
             success: function(response) {
-                if(showAll == 'true'){
+                if (showAll == 'true') {
                     fecthDataHandOver(noRawat, 'true');
-                }else{
+                } else {
                     fecthDataHandOver();
                 }
                 $('#handOverModal').modal('hide');
@@ -442,31 +490,28 @@
         });
     }
 
-    function actionBtnOpen(no_rawat)
-    {
+    function actionBtnOpen(no_rawat) {
         let isHiddenOpen = 'true'
         fecthDataHandOver(no_rawat, isHiddenOpen)
-        
+
     }
 
 
-    function fetchAllListCatatan(no_rawat)
-    {
-        
+    function fetchAllListCatatan(no_rawat) {
+
         $.ajax({
-            url: '<?= base_url('pasien/getCatatan')?>',
+            url: '<?= base_url('pasien/getCatatan') ?>',
             type: 'GET',
             data: {
                 noRawat: no_rawat,
                 newPage: '1'
             },
             success: function(response) {
-                // console.log(response)
 
                 let allCatatan = ''
                 let shifts = ['pagi', 'siang', 'malam'];
 
-                if(response.status_code == '200'){
+                if (response.status_code == '200') {
 
                     if (Object.keys(response.data).length > 0) {
 
@@ -476,7 +521,7 @@
                             let shiftData = {};
 
                             items.forEach(function(item) {
-                            shiftData[item.shift] = {
+                                shiftData[item.shift] = {
                                     catatan: item.catatan,
                                     jam: item.jam,
                                     nama: item.nama
@@ -487,146 +532,81 @@
 
                                 <div class="allListHandOver" style="display: flex;" >
                                     <div class="Alltanggal" style="">${tanggal}</div>
-                                    <div class="allShift" style="">
-                                        <div class="text-catatan">
-                                            <pre style="text-wrap: wrap;">${shiftData.pagi.catatan}`
-                            if(shiftData.pagi.catatan != ''){
-                            allCatatan +=`
---------------------------
-                                                ${shiftData.pagi.nama}<br>${tanggal} | ${shiftData.pagi.jam}
-                            `}
-                            allCatatan +=`
-                                            </pre>
-                                        </div>
-                                    `
-                                    if(shiftData.pagi.catatan != ''){
-                                            allCatatan += `            
-                                            <div class="keterangan" style="margin-top: 1%;">
-                                                <div class="flex" style="display: flex; justify-content: space-between;">
-                                                    <div class="tombol" style="padding: 5%; width: 48%; background-color:rgb(58, 78, 190); color:white; text-align:center"
-                                                        onclick="updateOldList('${tanggal}', '${shiftData.pagi.jam}', '${no_rawat}', 'pagi')"
-                                                    >
-                                                        <i class="fa-solid fa-pen-to-square"></i>    
-                                                    </div>
-                                                    <div class="tombol" style="padding: 5%; width:48%; background-color:rgb(185, 70, 70); color:white; text-align:center"
-                                                        onclick="deleteOldList('${tanggal}', '${shiftData.pagi.jam}' , '${no_rawat}', 'pagi')"
-                                                    >
-                                                        <i class="fa-solid fa-trash-can fa-lg"></i>    
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            `
-                                    }else{
-                                    allCatatan += 
-                                        `
-                                            <div class="tombol" style="width: 30%; padding: 5%; background-color:rgb(96, 136, 74); color:white; text-align:center; margin-left:auto; margin-right:auto;"
-                                            onclick="addOldList('${tanggal}', '${no_rawat}', 'pagi')"
-                                            >
-                                                <i class="fa-solid fa-plus"></i>
-                                        </div>
-                                    `
-                                    }
-
-                            allCatatan +=`
-                                    </div>
-                                    `
-                            allCatatan +=`
                                     <div class="allShift">
-                                        <div class="text-catatan">
-                                            <pre style="text-wrap: wrap;">${shiftData.siang.catatan}
-                                            `
-                            if(shiftData.siang.catatan != ''){
-                            allCatatan +=`
---------------------------
-                                                ${shiftData.siang.nama}<br>${tanggal} | ${shiftData.siang.jam}
-                            `}
-                            allCatatan +=`
+                                        <div class="text-catatan" style="text-align:center;">
+                                            <pre style="text-wrap: wrap;">${shiftData.pagi.catatan}
                                             </pre>
+                                        `
+                            if (shiftData.pagi.catatan != '') {
+                                allCatatan += `
+                                        <div class="namaPetugas" style="font-weight:700">
+                                            ${shiftData.pagi.nama}
+                                        </div>
+                                        <div class="">
+                                            <span class="badge text-bg-warning">${tanggal}</span> | <span class="badge text-bg-secondary">${shiftData.pagi.jam}</span>
                                         </div>
                             `
-                                        if(shiftData.siang.catatan != ''){
-                                            allCatatan += `            
-                                            <div class="keterangan" style="margin-top: 1%;">
-                                                <div class="flex" style="display: flex; justify-content: space-between;">
-                                                    <div class="tombol" style="padding: 5%; width: 48%; background-color:rgb(58, 78, 190); color:white; text-align:center"
-                                                        onclick="updateOldList('${tanggal}', '${shiftData.siang.jam}', '${no_rawat}', 'siang')"
-                                                    >
-                                                        <i class="fa-solid fa-pen-to-square"></i>    
-                                                    </div>
-                                                    <div class="tombol" style="padding: 5%; width:48%; background-color:rgb(185, 70, 70); color:white; text-align:center"
-                                                        onclick="deleteOldList('${tanggal}', '${shiftData.siang.jam}' , '${no_rawat}', 'siang')"
-                                                    >
-                                                        <i class="fa-solid fa-trash-can fa-lg"></i>    
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            `
-                                        }else{
-                                        allCatatan += 
-                                            `
-                                                <div class="tombol" style="width: 30%; padding: 5%; background-color:rgb(96, 136, 74); color:white; text-align:center; margin-left:auto; margin-right:auto;"
-                                                onclick="addOldList('${tanggal}', '${no_rawat}', 'siang')"
-                                                >
-                                                    <i class="fa-solid fa-plus"></i>
-                                            </div>
-                                        `
-                                        }
-                        
-                            allCatatan +=`
+                            }
+                            allCatatan += `
+                                        </div>
+                                    `
+
+                            allCatatan += `
                                     </div>
                                     `
-                        
-                        allCatatan += `
+                            allCatatan += `
                                     <div class="allShift">
-                                        <div class="text-catatan">
-                                            <pre style="text-wrap: wrap;">${shiftData.malam.catatan}
-                                            `
-                            if(shiftData.malam.catatan != ''){
-                            allCatatan +=`
---------------------------
-                                                ${shiftData.malam.nama}<br>${tanggal} | ${shiftData.malam.jam}
-                            `}
-                            allCatatan +=`
+                                        <div class="text-catatan" style="text-align:center;">
+                                            <pre style="text-wrap: wrap;">${shiftData.siang.catatan}
                                             </pre>
-                                        </div>
                                         `
-                                    if(shiftData.malam.catatan != ''){
-                                        allCatatan += `            
-                                        <div class="keterangan" style="margin-top: 1%;">
-                                            <div class="flex" style="display: flex; justify-content: space-between;">
-                                                <div class="tombol" style="padding: 5%; width: 48%; background-color:rgb(58, 78, 190); color:white; text-align:center"
-                                                        onclick="updateOldList('${tanggal}', '${shiftData.malam.jam}', '${no_rawat}', 'malam')"
-                                                    >
-                                                        <i class="fa-solid fa-pen-to-square"></i>    
-                                                    </div>
-                                                    <div class="tombol" style="padding: 5%; width:48%; background-color:rgb(185, 70, 70); color:white; text-align:center"
-                                                        onclick="deleteOldList('${tanggal}', '${shiftData.malam.jam}' , '${no_rawat}', 'malam')"
-                                                    >
-                                                        <i class="fa-solid fa-trash-can fa-lg"></i>    
-                                                    </div>
-                                            </div>
+                            if (shiftData.siang.catatan != '') {
+                                allCatatan += `
+                                        <div class="namaPetugas" style="font-weight:700">
+                                            ${shiftData.siang.nama}
                                         </div>
-                                        `
-                                    }else{
-                                    allCatatan += 
-                                        `
-                                            <div class="tombol" style="width: 30%; padding: 5%; background-color:rgb(96, 136, 74); color:white; text-align:center; margin-left:auto; margin-right:auto;"
-                                            onclick="addOldList('${tanggal}', '${no_rawat}', 'malam')"
-                                            >
-                                                <i class="fa-solid fa-plus"></i>
+                                        <div class="">
+                                            <span class="badge text-bg-warning">${tanggal}</span> | <span class="badge text-bg-secondary">${shiftData.siang.jam}</span>
                                         </div>
+                            `
+                            }
+                            allCatatan += `
+                                        </div>
+                            `
+
+                            allCatatan += `
+                                    </div>
                                     `
-                                    }
-                        allCatatan += `
+
+                            allCatatan += `
+                                    <div class="allShift">
+                                        <div class="text-catatan" style="text-align:center;">
+                                            <pre style="text-wrap: wrap;">${shiftData.malam.catatan}
+                                            </pre>
+                                            `
+                            if (shiftData.malam.catatan != '') {
+                                allCatatan += `
+                                        <div class="namaPetugas" style="font-weight:700">
+                                            ${shiftData.malam.nama}
+                                        </div>
+                                        <div class="">
+                                            <span class="badge text-bg-warning">${tanggal}</span> | <span class="badge text-bg-secondary">${shiftData.malam.jam}</span>
+                                        </div>
+                            `
+                            }
+                            allCatatan += `
+                                        </div>
+                                        `
+                            allCatatan += `
                                     </div>
                                 </div>
                             `
-                            
+
                         }
 
                     }
 
-                    
+
                 }
 
                 $('#allListHandOver').html(allCatatan);
@@ -634,8 +614,7 @@
         });
     }
 
-    function addOldList(tanggal, no_rawat, shift)
-    {
+    function addOldList(tanggal, no_rawat, shift) {
         let showAll = 'true'
         $('#handOverModalLabel').text('Insert Hand Over');
         $('#inputNoRawat').val(no_rawat);
@@ -647,8 +626,8 @@
         $('#handOverModal').modal('show');
 
     }
-    function updateOldList(tanggal, jam, no_rawat, shift)
-    {
+
+    function updateOldList(tanggal, jam, no_rawat, shift) {
         // console.log(tanggal,jam, no_rawat, shift)
         let showAll = 'true'
         $('#handOverModalLabel').text('Update Hand Over');
@@ -661,8 +640,7 @@
         getCatatan(no_rawat, jam, shift, tanggal, showAll)
     }
 
-    function deleteOldList(tanggal, jam, no_rawat, shift)
-    {
+    function deleteOldList(tanggal, jam, no_rawat, shift) {
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: 'Data yang dihapus tidak dapat dipulihkan!',
@@ -705,7 +683,6 @@
             }
         });
     }
-    
 </script>
 
 <?= $this->endSection(); ?>

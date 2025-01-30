@@ -9,7 +9,7 @@
     <div class="judul">
         DAFTAR PASIEN RAWAT INAP
     </div>
-
+   
     <div class="filter-section-pasien-ranap" style="margin-bottom: 2%; margin-top: 2%; display: flex;">
         <label for="filter-doctor" style="width: 10%; align-self: center;">Filter Dokter :</label>
         <select id="filter-doctor" class="form-select" style="width: 30%;">
@@ -175,6 +175,7 @@
         
         // document.getElementById("modalObatLabel").text = title
         $('#modalObatLabel').text(title);
+        $('#noRawat').val(no_rawat);
         document.getElementById('cpo').removeAttribute('hidden');
         document.getElementById('riwayat_obat').removeAttribute('hidden');
         $('#obat_noRm').val(no_rkm_medis);

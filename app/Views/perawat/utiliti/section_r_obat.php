@@ -31,6 +31,8 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             ">
     <div class="content" style="padding-top: 3%;">
+
+        <input type="text" id="noRawat" hidden>
         <div class="submenu" style="display: flex; margin-bottom: 2%;">
             <button
                 class="btn-custom-edit"
@@ -46,7 +48,6 @@
             </button>
 
         </div>
-
         <div class="table">
             <?= $this->include('perawat/utiliti/obat/daftar-obat-masuk') ?>
             <?= $this->include('perawat/utiliti/obat/stok-obat-pasien-v2') ?>
@@ -81,6 +82,7 @@
     }
 
     var cachedData = null;
+
     function cpo() {
         document.getElementById('stok-obat-pasien-v2').setAttribute('hidden', 'true');
         document.getElementById('daftar-obat-masuk').setAttribute('hidden', 'true');
@@ -151,7 +153,7 @@
                             <div class="listShift">
                                 <div class="text-shift text-center">Pagi</div> 
                             </div>
-                            <div class="listShift" >
+                            <div class="listShift">
                                 <div class="text-shift text-center">Siang</div>
                             </div>
                             <div class="listShift">
@@ -170,34 +172,65 @@
             data.daftar_nama_obat.forEach(function(item, index) {
                 const backgroundColor = index % 2 === 0 ? 'rgb(61, 196, 122)' : 'rgb(47, 160, 98)';
                 bodyCpo += `<div class="list-body-cpo" style="display: flex; padding: 0px !important; white-space: nowrap; flex-shrink: 0;">
-                    <div class="namaobat" style="border-bottom: 1px solid; border-right: 1px solid; width: 320px !important; padding-left: 1%; white-space: nowrap; flex-shrink: 0;">
-                        ${item.nama_brng}
-                    </div>`;
+                                <div class="stopObat" 
+                                    style="padding: 0.5%;border: 1px solid black; width: 50px !important; text-align: center; white-space: nowrap; flex-shrink: 0; background-color: rgb(161, 46, 46); color: white;"
+                                    onClick="setStop('${item.kode_brng}', '')"
+                                >
+                                    Stop
+                                </div>
+                                <div class="namaobat" 
+                                    style="border-bottom: 1px solid; border-right: 1px solid; width: 320px !important; padding-left: 1%; white-space: nowrap; flex-shrink: 0; display:flex; align-items: center;"
+                                                                    
+                                >
+                                    ${item.nama_brng}
+                                </div>
+
+                    
+                `;
 
                 if (Object.keys(data.list_tanggal).length > 0) {
                     Object.keys(data.list_tanggal).forEach(function(tanggal) {
+                        
                         bodyCpo += `
                             <div class="shift listTr" style="">
                         `;
+                        
+                        let listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                        let listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                        let listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                        let listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                        if(data.stopObat.length > 0){
+                            data.stopObat.forEach(function(stopObat){
+                                
 
-                        let listPagi = `<div class="shiftListTr" style="background-color:${backgroundColor}; color:white">-</div>`;
-                        let listSiang = `<div class="shiftListTr" style="background-color:${backgroundColor}; color:white">-</div>`;
-                        let listSore = `<div class="shiftListTr" style="background-color:${backgroundColor}; color:white">-</div>`;
-                        let listMalam = `<div class="shiftListTr" style="background-color:${backgroundColor}; color:white">-</div>`;
+                                if(tanggal >= stopObat.tanggal && stopObat.kode_brng == item.kode_brng && stopObat.endStop == null){
+                                    listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(0, 0, 0); color:black"></div>`;
+                                }
+                                if(tanggal >= stopObat.tanggal && stopObat.kode_brng == item.kode_brng && stopObat.endStop == null){
+                                    listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(0, 0, 0); color:black"></div>`;
+                                }
+                                if(tanggal >= stopObat.tanggal && stopObat.kode_brng == item.kode_brng && stopObat.endStop == null){
+                                    listSore = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(0, 0, 0); color:black"></div>`;
+                                }
+                                if(tanggal >= stopObat.tanggal && stopObat.kode_brng == item.kode_brng && stopObat.endStop == null){
+                                    listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(0, 0, 0); color:black"></div>`;
+                                }
+                            })
+                        }
 
                         data.list_tanggal[tanggal].forEach(function(jamPemberian) {
                             if (jamPemberian.kd_obat === item.kode_brng) {
                                 if (jamPemberian.label_jam_diberikan.pagi.length > 0) {
-                                    listPagi = `<div class="shiftListTr" style="border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.pagi.map(p => p.waktu).join('<br>')}</div>`;
+                                    listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.pagi.map(p => p.waktu).join('<br>')}</div>`;
                                 }
                                 if (jamPemberian.label_jam_diberikan.siang.length > 0) {
-                                    listSiang = `<div class="shiftListTr" style="border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.siang.map(s => s.waktu).join('<br>')}</div>`;
+                                    listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.siang.map(s => s.waktu).join('<br>')}</div>`;
                                 }
                                 if (jamPemberian.label_jam_diberikan.sore.length > 0) {
-                                    listSore = `<div class="shiftListTr" style="border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.sore.map(so => so.waktu).join('<br>')}</div>`;
+                                    listSore = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.sore.map(so => so.waktu).join('<br>')}</div>`;
                                 }
                                 if (jamPemberian.label_jam_diberikan.malam.length > 0) {
-                                    listMalam = `<div class="shiftListTr" style="border-right: 1px solid rgb(61, 196, 122); border-bottom: 1px solid rgb(61, 196, 122); background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.malam.map(m => m.waktu).join('<br>')}</div>`;
+                                    listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.malam.map(m => m.waktu).join('<br>')}</div>`;
                                 }
                             }
                         });
@@ -211,6 +244,38 @@
 
         $('#totalTanggal').html(headtotalTanggal);
         $('#bodyCpo').html(bodyCpo);
+    }
+
+    function setStop(kd_barang) {
+        let noRawat = document.getElementById('noRawat').value
+        let now = new Date();
+        let tanggal = now.toISOString().split('T')[0];
+        let jam = now.toTimeString().split(' ')[0];
+        let shift = ''
+        if (jam >= "07:00:00" && jam < "12:00:00") {
+            shift = "pagi";
+        } else if (jam >= "12:00:00" && jam < "16:00:00") {
+            shift = "siang";
+        } else if (jam >= "16:00:00" && jam < "20:00:00") {
+            shift = "sore";
+        } else if ((jam >= "20:00:00" && jam < "24:00:00") || (jam >= "00:00:00" && jam < "07:00:00")) {
+            shift = "malam";
+        }
+
+        $.ajax({
+            url: '<?= base_url('obat/setStopObat')?>',
+            type: 'POST',
+            data: {
+                no_rawat: noRawat,
+                kode_brng: kd_barang,
+                tanggal: tanggal,
+                jam: jam,
+                shift: shift
+            },
+            success: function(response) {
+                console.log('ok cuy')
+            }
+        });
     }
 
     function renderEmptyData(message) {

@@ -59,7 +59,6 @@
   .cpo-modal .total-tanggal .shift .listShift {
     width: 66px !important;
     padding: 0;
-    border-right: 1px solid;
   }
   .cpo-modal .listTr {
     width: 264px !important;
@@ -73,8 +72,7 @@
   .cpo-modal .listTr .shiftListTr {
     width: 66px !important;
     padding: 0;
-    border-right: 1px solid white;
-    border-bottom: 1px solid white;
+    border: 1px solid;
   }
 }
 @media (min-width: 1201px) and (max-width: 1297px) {
@@ -138,7 +136,6 @@
   .cpo-modal .total-tanggal .shift .listShift {
     width: 66px !important;
     padding: 0;
-    border-right: 1px solid;
   }
   .cpo-modal .listTr {
     width: 264px !important;
@@ -152,8 +149,7 @@
   .cpo-modal .listTr .shiftListTr {
     width: 66px !important;
     padding: 0;
-    border-right: 1px solid white;
-    border-bottom: 1px solid white;
+    border: 1px solid;
   }
 }
 @media (min-width: 1298px) and (max-width: 1434px) {
@@ -170,13 +166,13 @@
   }
   .sectionhandOver .dpjp {
     padding-left: 2px;
-    width: 250px;
+    width: 300px;
     text-align: center;
     border: 1px solid #d6d6d6;
   }
   .sectionhandOver .shift {
-    width: auto;
-    min-width: 214px;
+    width: 220px;
+    min-width: 220px;
     text-align: center;
     border: 1px solid #d6d6d6;
   }
@@ -187,14 +183,14 @@
     padding: 2px;
   }
   .allListHandOver .Alltanggal {
-    width: 550px;
+    width: 600px;
     text-align: center;
     border: 1px solid #d6d6d6;
   }
   .allListHandOver .allShift {
     width: auto;
     min-width: 12px;
-    max-width: 214px;
+    max-width: 220px;
     border: 1px solid #d6d6d6;
     padding: 3px;
     border: 1px solid #d6d6d6;
@@ -203,7 +199,7 @@
     justify-content: space-between;
   }
   .cpo-modal .total-tanggal .list {
-    width: 264px !important;
+    width: 280px !important;
     text-align: center;
     padding: 0;
     border: 1px solid;
@@ -215,24 +211,25 @@
     padding: 0;
   }
   .cpo-modal .total-tanggal .shift .listShift {
-    width: 66px !important;
+    width: 70px !important;
     padding: 0;
-    border-right: 1px solid;
   }
   .cpo-modal .listTr {
-    width: 264px !important;
+    width: 280px !important;
     display: flex;
     justify-content: center;
     padding: 0;
     text-align: center;
-    min-width: 264px;
+    min-width: 280px;
     font-size: 12pt !important;
   }
   .cpo-modal .listTr .shiftListTr {
-    width: 66px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70px !important;
     padding: 0;
-    border-right: 1px solid white;
-    border-bottom: 1px solid white;
+    border: 1px solid;
   }
 }
 @media screen and (min-width: 1435px) and (max-width: 1999px) {
@@ -294,7 +291,6 @@
   .cpo-modal .total-tanggal .shift .listShift {
     width: 100px !important;
     padding: 0;
-    border-right: 1px solid;
   }
   .cpo-modal .listTr {
     width: 400px !important;
@@ -306,13 +302,27 @@
     font-size: 12pt !important;
   }
   .cpo-modal .listTr .shiftListTr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100px !important;
     padding: 0;
-    border-right: 1px solid white;
-    border-bottom: 1px solid white;
+    border: 1px solid;
   }
 }
 @media screen and (min-width: 2000px) {
+  .menu .ranap {
+    font-size: 16pt;
+  }
+  .menu .handOver {
+    font-size: 16pt;
+  }
+  .userLogin {
+    font-size: 12pt !important;
+  }
+  .filter-section-pasien-ranap {
+    font-size: 16pt !important;
+  }
   .sectionhandOver .kelas {
     font-size: 16pt;
     width: 72px;
@@ -327,13 +337,13 @@
   }
   .sectionhandOver .dpjp {
     font-size: 16pt;
-    width: 250px;
+    width: 320px;
     text-align: center;
     border: 1px solid #d6d6d6;
   }
   .sectionhandOver .shift {
     font-size: 16pt;
-    width: auto;
+    width: 400px;
     min-width: 400px;
     text-align: center;
     border: 1px solid #d6d6d6;
@@ -349,11 +359,12 @@
     justify-content: center;
   }
   .allListHandOver .Alltanggal {
-    width: 572px;
+    width: 639px;
     text-align: center;
     border: 1px solid #d6d6d6;
   }
   .allListHandOver .allShift {
+    font-size: 14pt;
     width: auto;
     min-width: 400px;
     max-width: 400px;
@@ -379,7 +390,6 @@
   .cpo-modal .total-tanggal .shift .listShift {
     width: 100px !important;
     padding: 0;
-    border-right: 1px solid;
   }
   .cpo-modal .listTr {
     width: 400px !important;
@@ -391,9 +401,11 @@
     font-size: 12pt !important;
   }
   .cpo-modal .listTr .shiftListTr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100px !important;
     padding: 0;
-    border-right: 1px solid white;
-    border-bottom: 1px solid white;
+    border: 1px solid;
   }
 }/*# sourceMappingURL=handover.css.map */

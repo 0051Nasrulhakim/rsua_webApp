@@ -27,6 +27,7 @@ class Obat extends BaseController
         $this->detail_permintaan_stok_obat_pasien = new \App\Models\DetailPermintaanStokObatPasien;
         $this->stok_obat_pasien = new \App\Models\StokObatPasien;
         $this->aro_riwayat_pemberian_obat = new \App\Models\AroRiwayatPemberianObat;
+        $this->aro_stop_obat_pasien = new \App\Models\AroStopObat;
         $this->session = \Config\Services::session();
         $this->TrackerSql = new \App\Models\TrackerSql;
         helper(['tracker']);
@@ -320,7 +321,7 @@ class Obat extends BaseController
             ->orderBy('detail_pemberian_obat.tgl_perawatan', 'ASC')
             ->orderBy('databarang.nama_brng', 'ASC')
             ->findAll();
-        // dd($dataObat);
+
         $tanggalGrouped = [];
         foreach ($dataObat as $item) {
             $tgl = $item['tgl_perawatan'];
@@ -338,7 +339,6 @@ class Obat extends BaseController
             ];
 
             foreach ($labelJamMap as $jam => $waktu) {
-                // dd($jam);
                 if (strtotime($jam) >= strtotime("07:00:00") && strtotime($jam) < strtotime("12:00:00")) {
                     $jamByCategory['pagi'][] = ['jam_pemberian' => $jam, 'waktu' => $waktu];
                 } elseif (strtotime($jam) >= strtotime("12:00:00") && strtotime($jam) < strtotime("16:00:00")) {
@@ -373,11 +373,16 @@ class Obat extends BaseController
             ->whereIn('detail_pemberian_obat.tgl_perawatan', $tanggalArray)
             ->findAll();
 
+        $stopObat = $this->aro_stop_obat_pasien
+                    ->where('no_rawat', $noRawat)
+                    ->findAll();
+
         $data = [
             'status_code' => 200,
             'list_obat' => $dataObat,
             'list_tanggal' => $tanggalGrouped,
-            'daftar_nama_obat' => $listObat
+            'daftar_nama_obat' => $listObat,
+            'stopObat' => $stopObat,
         ];
 
         return $this->response->setJSON($data);
@@ -466,5 +471,26 @@ class Obat extends BaseController
             ];
             return $this->response->setJSON($data);
         }
+    }
+
+    public function setStopObat()
+    {
+        $kode_brng  = $this->request->getPost('kode_brng');
+        $no_rawat  = $this->request->getPost('no_rawat');
+        $tanggal    = $this->request->getPost('tanggal');
+        $jam        = $this->request->getPost('jam');
+        $shift      = $this->request->getPost('shift');
+
+        $data = [
+            'no_rawat'=> $no_rawat,
+            'kode_brng'=> $kode_brng,
+            'tanggal'=> $tanggal,
+            'jam'=> $jam,
+            'kode_brng'=> $kode_brng,
+            'shift'=> $shift,
+        ];
+
+        $this->aro_stop_obat_pasien->insert($data);
+
     }
 }

@@ -3,6 +3,13 @@
   margin: 0;
 }
 
+.section-breadvum .menu .active {
+  background-color: #265925 !important;
+}
+.section-breadvum .menu .active a {
+  color: white !important;
+}
+
 .section-menu .active {
   background-color: #265925 !important;
 }

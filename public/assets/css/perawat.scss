@@ -18,6 +18,16 @@
 }
 
 $hijauTua: #265925;
+.section-breadvum{
+    .menu{
+        .active{
+            background-color: $hijauTua !important;
+            a{
+                color: white !important;
+            }
+        }
+    }
+}
 
 .section-menu{
     .active{

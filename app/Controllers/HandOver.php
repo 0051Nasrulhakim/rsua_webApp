@@ -86,14 +86,44 @@ class HandOver extends BaseController
                 kamar.kelas,
                 GROUP_CONCAT(DISTINCT IFNULL(diagnosa_pasien.kd_penyakit, '-') SEPARATOR ', ') AS kode_dx,
                 GROUP_CONCAT(DISTINCT IFNULL(penyakit.nm_penyakit, '-') SEPARATOR ', ') AS nama_penyakit,
-                
+                (
+                    SELECT IFNULL(GROUP_CONCAT(
+                        CONCAT(aro_shift_catatan_perawatan.jam) ORDER BY aro_shift_catatan_perawatan.jam DESC SEPARATOR '\n\n'
+                    ), '')
+                    FROM aro_shift_catatan_perawatan
+                    WHERE aro_shift_catatan_perawatan.no_rawat = kamar_inap.no_rawat
+                    AND aro_shift_catatan_perawatan.tanggal = CURDATE()
+                    AND aro_shift_catatan_perawatan.shift = 'pagi'
+                ) AS todayPagi,
+
+                (
+                    SELECT IFNULL(GROUP_CONCAT(
+                        CONCAT(aro_shift_catatan_perawatan.jam) ORDER BY aro_shift_catatan_perawatan.jam DESC SEPARATOR '\n\n'
+                    ), '')
+                    FROM aro_shift_catatan_perawatan
+                    WHERE aro_shift_catatan_perawatan.no_rawat = kamar_inap.no_rawat
+                    AND aro_shift_catatan_perawatan.tanggal = CURDATE()
+                    AND aro_shift_catatan_perawatan.shift = 'siang'
+                ) AS todaySiang,
+
+                (
+                    SELECT IFNULL(GROUP_CONCAT(
+                        CONCAT(aro_shift_catatan_perawatan.jam) ORDER BY aro_shift_catatan_perawatan.jam DESC SEPARATOR '\n\n'
+                    ), '')
+                    FROM aro_shift_catatan_perawatan
+                    WHERE aro_shift_catatan_perawatan.no_rawat = kamar_inap.no_rawat
+                    AND aro_shift_catatan_perawatan.tanggal = CURDATE()
+                    AND aro_shift_catatan_perawatan.shift = 'malam'
+                ) AS todayMalam,
+
                 CONCAT(
                     'Pagi: ', IFNULL(
                         (SELECT GROUP_CONCAT(CONCAT(
                             catatan_keperawatan_ranap.jam, ' ',
-                            catatan_keperawatan_ranap.uraian, ' ', '\n\n\n-------------------------- \n',
-                            petugas.nama, '\n', catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.jam
-                        ) ORDER BY catatan_keperawatan_ranap.jam DESC)
+                            catatan_keperawatan_ranap.uraian, ' ',
+                            '\n\n--------------------------\n',
+                            petugas.nama, ' | ', catatan_keperawatan_ranap.tanggal, ' ', aro_shift_catatan_perawatan.jam
+                        ) ORDER BY catatan_keperawatan_ranap.tanggal DESC LIMIT 1)
                         FROM catatan_keperawatan_ranap
                         JOIN aro_shift_catatan_perawatan
                             ON catatan_keperawatan_ranap.no_rawat = aro_shift_catatan_perawatan.no_rawat
@@ -103,8 +133,7 @@ class HandOver extends BaseController
                             ON catatan_keperawatan_ranap.nip = petugas.nip  -- Asumsikan tabel petugas punya kolom nip
                         WHERE catatan_keperawatan_ranap.no_rawat = kamar_inap.no_rawat
                         AND aro_shift_catatan_perawatan.no_rawat = kamar_inap.no_rawat
-                        AND catatan_keperawatan_ranap.tanggal = '$tanggal'
-                        AND aro_shift_catatan_perawatan.tanggal = '$tanggal'
+                        
                         AND aro_shift_catatan_perawatan.shift = 'pagi'
                     ), ''),
 
@@ -112,9 +141,9 @@ class HandOver extends BaseController
                         (SELECT GROUP_CONCAT(CONCAT(
                             catatan_keperawatan_ranap.jam, ' ',
                             catatan_keperawatan_ranap.uraian, ' ',
-                            catatan_keperawatan_ranap.uraian, ' ', '\n\n\n-------------------------- \n',
-                            petugas.nama, '\n', catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.jam
-                        ) ORDER BY catatan_keperawatan_ranap.jam DESC)
+                            '\n\n--------------------------\n',
+                            petugas.nama, ' | ', catatan_keperawatan_ranap.tanggal, ' ', aro_shift_catatan_perawatan.jam
+                        ) ORDER BY catatan_keperawatan_ranap.tanggal DESC LIMIT 1)
                         FROM catatan_keperawatan_ranap
                         JOIN aro_shift_catatan_perawatan
                             ON catatan_keperawatan_ranap.no_rawat = aro_shift_catatan_perawatan.no_rawat
@@ -124,8 +153,7 @@ class HandOver extends BaseController
                             ON catatan_keperawatan_ranap.nip = petugas.nip
                         WHERE catatan_keperawatan_ranap.no_rawat = kamar_inap.no_rawat
                         AND aro_shift_catatan_perawatan.no_rawat = kamar_inap.no_rawat
-                        AND catatan_keperawatan_ranap.tanggal = '$tanggal'
-                        AND aro_shift_catatan_perawatan.tanggal = '$tanggal'
+                        
                         AND aro_shift_catatan_perawatan.shift = 'siang'
                     ), ''),
 
@@ -133,9 +161,9 @@ class HandOver extends BaseController
                         (SELECT GROUP_CONCAT(CONCAT(
                             catatan_keperawatan_ranap.jam, ' ',
                             catatan_keperawatan_ranap.uraian, ' ',
-                            catatan_keperawatan_ranap.uraian, ' ', '\n\n\n-------------------------- \n',
-                            petugas.nama, '\n', catatan_keperawatan_ranap.tanggal, aro_shift_catatan_perawatan.jam
-                        ) ORDER BY catatan_keperawatan_ranap.jam DESC)
+                            '\n\n--------------------------\n',
+                            petugas.nama, ' | ', catatan_keperawatan_ranap.tanggal, ' ', aro_shift_catatan_perawatan.jam
+                        ) ORDER BY catatan_keperawatan_ranap.tanggal DESC LIMIT 1)
                         FROM catatan_keperawatan_ranap
                         JOIN aro_shift_catatan_perawatan
                             ON catatan_keperawatan_ranap.no_rawat = aro_shift_catatan_perawatan.no_rawat
@@ -145,8 +173,7 @@ class HandOver extends BaseController
                             ON catatan_keperawatan_ranap.nip = petugas.nip
                         WHERE catatan_keperawatan_ranap.no_rawat = kamar_inap.no_rawat
                         AND aro_shift_catatan_perawatan.no_rawat = kamar_inap.no_rawat
-                        AND catatan_keperawatan_ranap.tanggal = '$tanggal'
-                        AND aro_shift_catatan_perawatan.tanggal = '$tanggal'
+                        
                         AND aro_shift_catatan_perawatan.shift = 'malam'
                     ), '')
                 ) AS catatan
@@ -176,20 +203,38 @@ class HandOver extends BaseController
             ->limit($perPage, $offset)
             ->findAll();
 
+        // function prosesCatatan($catatan) {
+        //     if (empty($catatan)) {
+        //         return [];
+        //     }
+
+        //     preg_match_all('/(\d{2}:\d{2}:\d{2})\s*(.*?)\s*(?=(\d{2}:\d{2}:\d{2}|$))/s', $catatan, $hasil);
+
+        //     return array_map(function ($jam, $uraian) {
+        //         return [
+        //             'jam' => $jam,
+        //             'catatan' => trim($uraian)
+        //         ];
+        //     }, $hasil[1], $hasil[2]);
+        // }
         function prosesCatatan($catatan) {
             if (empty($catatan)) {
                 return [];
             }
-
-            preg_match_all('/(\d{2}:\d{2}:\d{2})\s*(.*?)\s*(?=(\d{2}:\d{2}:\d{2}|$))/s', $catatan, $hasil);
-
-            return array_map(function ($jam, $uraian) {
+        
+            preg_match_all('/(\d{2}:\d{2}:\d{2})\s*(.*?)\s*--------------------------\s*(.*?)\s*\|\s*(\d{4}-\d{2}-\d{2})\s*(\d{2}:\d{2}:\d{2})/s', $catatan, $hasil);
+        
+            return array_map(function ($jam, $uraian, $nama, $tanggal, $shift_jam) {
                 return [
                     'jam' => $jam,
-                    'catatan' => trim($uraian)
+                    'catatan' => trim($uraian),
+                    'nama_petugas' => trim($nama),
+                    'tanggal' => $tanggal,
+                    'shift_jam' => $shift_jam
                 ];
-            }, $hasil[1], $hasil[2]);
+            }, $hasil[1], $hasil[2], $hasil[3], $hasil[4], $hasil[5]);
         }
+        
 
         foreach ($data as &$item) {
             preg_match('/Pagi: (.*?)(?=, Siang:|$)/s', $item['catatan'], $catatanPagi);
