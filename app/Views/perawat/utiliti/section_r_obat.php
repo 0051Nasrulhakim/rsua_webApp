@@ -183,14 +183,12 @@
                                                                     
                                 >
                                     ${item.nama_brng}
-                                </div>
-
-                    
+                                </div>  
                 `;
 
                 if (Object.keys(data.list_tanggal).length > 0) {
                     Object.keys(data.list_tanggal).forEach(function(tanggal) {
-                        
+                        console.log('tanggal', tanggal)
                         bodyCpo += `
                             <div class="shift listTr" style="">
                         `;
@@ -199,23 +197,77 @@
                         let listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
                         let listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
                         let listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                        if(data.stopObat.length > 0){
-                            data.stopObat.forEach(function(stopObat){
-                                
 
-                                if(tanggal >= stopObat.tanggal && stopObat.kode_brng == item.kode_brng && stopObat.endStop == null){
-                                    listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(0, 0, 0); color:black"></div>`;
-                                }
-                                if(tanggal >= stopObat.tanggal && stopObat.kode_brng == item.kode_brng && stopObat.endStop == null){
-                                    listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(0, 0, 0); color:black"></div>`;
-                                }
-                                if(tanggal >= stopObat.tanggal && stopObat.kode_brng == item.kode_brng && stopObat.endStop == null){
-                                    listSore = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(0, 0, 0); color:black"></div>`;
-                                }
-                                if(tanggal >= stopObat.tanggal && stopObat.kode_brng == item.kode_brng && stopObat.endStop == null){
-                                    listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(0, 0, 0); color:black"></div>`;
-                                }
-                            })
+                        let parsedEndStop = {};
+                        let endStop = {};
+
+                        if (data.stopObat.length > 0) {
+
+                            data.stopObat.forEach(function(stopObat) {
+                                endStop[stopObat.kode_brng] = stopObat.endStop;
+                                
+                                
+                                Object.keys(endStop).forEach(function(kodeBrng) {
+                                    if(endStop[kodeBrng] != null){
+                                        parsedEndStop[kodeBrng] = JSON.parse(endStop[kodeBrng]);
+                                    }else{
+                                        parsedEndStop[kodeBrng] = null;
+                                    }
+                                })
+
+                            //     if (
+                            //         tanggal >= stopObat.tanggal &&
+                            //         stopObat.kode_brng === item.kode_brng &&
+                            //         (stopObat.end === null || (parsedEndStop && parsedEndStop.end && parsedEndStop.end >= tanggal))
+                            //     ) {
+                            //         let bgColor = "black";
+                            //         let textColor = "white";
+
+                            //         if (tanggal === stopObat.tanggal) {
+                            //             switch (stopObat.shift) {
+                            //                 case 'pagi':
+                            //                     listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                 case 'siang': 
+                            //                     listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                 case 'sore': 
+                            //                     listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                 case 'malam': 
+                            //                     listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     break;
+                            //             }
+                            //         } 
+                            //         else if (tanggal >= parsedEndStop.end) {
+
+                            //             switch (parsedEndStop.shift) {
+                            //                 case 'pagi':
+                            //                     listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                            //                     listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                            //                     listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                            //                     break;
+                            //                 case 'siang':
+                            //                     listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                            //                     listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                            //                     break;
+                            //                 case 'sore':
+                            //                     listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                            //                     break;
+                            //                 case 'malam':
+                            //                     listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                            //                     break;
+                            //             }
+                            //         }
+                            //     }
+                            });
+                            console.log('parse end stop :',  parsedEndStop)
                         }
 
                         data.list_tanggal[tanggal].forEach(function(jamPemberian) {
@@ -233,6 +285,7 @@
                                     listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:rgb(255, 255, 255); color:black">${jamPemberian.label_jam_diberikan.malam.map(m => m.waktu).join('<br>')}</div>`;
                                 }
                             }
+
                         });
 
                         bodyCpo += listPagi + listSiang + listSore + listMalam + `</div>`;
