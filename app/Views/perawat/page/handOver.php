@@ -339,6 +339,11 @@
 
                 $('#bodyHandover').html(bodyTabel);
                 fetchAllListCatatan(no_rawat)
+            },
+            error: function(error) {
+                stokObatNew(tanggalfilter);
+                alert('Terjadi kesalahan Silahkan Ulangi.');
+                inputObject = []
             }
         });
     }
@@ -351,7 +356,6 @@
 
     function editCatatan(no_rawat, jam, shift, tanggal) {
 
-        // let tanggal = document.getElementById('tanggalListCatatan').value;
         $('#handOverModalLabel').text('Update Hand Over');
         $('#inputNoRawat').val(no_rawat);
         $('#inputJam').val(jam);
@@ -378,6 +382,11 @@
                 $('#floatingTextarea2').val(response.data.uraian);
                 $('#showAll').val(showAll);
                 $('#handOverModal').modal('show');
+            },
+            error: function(error) {
+                stokObatNew(tanggalfilter);
+                alert('Terjadi kesalahan Silahkan Ulangi.');
+                inputObject = []
             }
         });
     }
@@ -421,6 +430,11 @@
                     fecthDataHandOver();
                 }
                 $('#handOverModal').modal('hide');
+            },
+            error: function(error) {
+                stokObatNew(tanggalfilter);
+                alert('Terjadi kesalahan Silahkan Ulangi.');
+                inputObject = []
             }
         });
     }
@@ -440,6 +454,11 @@
                     fecthDataHandOver();
                 }
                 $('#handOverModal').modal('hide');
+            },
+            error: function(error) {
+                stokObatNew(tanggalfilter);
+                alert('Terjadi kesalahan Silahkan Ulangi.');
+                inputObject = []
             }
         });
     }

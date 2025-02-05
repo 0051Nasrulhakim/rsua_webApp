@@ -71,53 +71,106 @@ class Obat extends BaseController
     public function getStokObatPasien()
     {
         $noRawat = $this->request->getGet('norawat');
-        // $noRawat = '2024/12/06/000124';
-
-        $tanggal = $this->request->getGet('tanggal');
-        // $tanggal = '2025-01-14';
-
+        $noRawat = "2024/12/07/000013";
         $data = $this->stok_obat_pasien
-            ->select('
-                    stok_obat_pasien.*, 
-                    databarang.*,
-                    jenis.nama as jenis,
-                    (stok_obat_pasien.jumlah - IFNULL(subquery.total_pemberian, 0)) AS sisa_stok,
-                    IFNULL(subquery.last_insert_time, "-") AS last_insert_time,
-                    subquery.jam_pemberian,
-                    GROUP_CONCAT(DISTINCT aro_riwayat_pemberian_obat.label_jam_pemberian ORDER BY aro_riwayat_pemberian_obat.label_jam_pemberian SEPARATOR ",") AS label_jam_diberikan,
-                    (
-                        SELECT kamar.kelas 
-                        FROM kamar 
-                        INNER JOIN kamar_inap ON kamar.kd_kamar = kamar_inap.kd_kamar 
-                        WHERE kamar_inap.no_rawat = stok_obat_pasien.no_rawat 
-                        AND kamar_inap.stts_pulang = "-"
-                    ) AS kelas_kamar
-                ')
-            ->join('databarang', 'databarang.kode_brng = stok_obat_pasien.kode_brng')
-            ->join('jenis', 'databarang.kdjns = jenis.kdjns')
-            ->join(
-                '(SELECT kode_brng, no_rawat, tgl_perawatan, 
-                        SUM(jml) AS total_pemberian, 
-                        MAX(CONCAT(tgl_perawatan, " ", jam)) AS last_insert_time, 
-                        GROUP_CONCAT(DISTINCT jam ORDER BY jam SEPARATOR ",") AS jam_pemberian 
-                        FROM detail_pemberian_obat 
-                        GROUP BY kode_brng, no_rawat, tgl_perawatan) AS subquery',
-                'subquery.kode_brng = stok_obat_pasien.kode_brng AND 
-                    subquery.no_rawat = stok_obat_pasien.no_rawat AND 
-                    subquery.tgl_perawatan = stok_obat_pasien.tanggal',
-                'LEFT'
-            )
-            ->join(
-                'aro_riwayat_pemberian_obat',
-                'aro_riwayat_pemberian_obat.kode_barang = stok_obat_pasien.kode_brng AND
-                    aro_riwayat_pemberian_obat.no_rawat = stok_obat_pasien.no_rawat AND 
-                    aro_riwayat_pemberian_obat.tanggal = stok_obat_pasien.tanggal',
-                'LEFT'
-            )
-            ->where('stok_obat_pasien.no_rawat', $noRawat)
-            ->where('stok_obat_pasien.tanggal', $tanggal)
-            ->groupBy('stok_obat_pasien.kode_brng')
-            ->findAll();
+                ->select('
+                        stok_obat_pasien.*,
+                        jenis.nama as jenis,
+                        databarang.nama_brng,
+                        databarang.h_beli,
+                        sum(stok_obat_pasien.jumlah) as jumlah_stok,
+                        (
+                            SELECT kamar.kelas 
+                            FROM kamar 
+                            INNER JOIN kamar_inap ON kamar.kd_kamar = kamar_inap.kd_kamar 
+                            WHERE kamar_inap.no_rawat = stok_obat_pasien.no_rawat 
+                            AND kamar_inap.stts_pulang = "-"
+                        ) AS kelas_kamar,
+                        MAX(CASE WHEN jam00 = "true" THEN "true" ELSE "false" END) AS jam00,
+                        MAX(CASE WHEN jam01 = "true" THEN "true" ELSE "false" END) AS jam01,
+                        MAX(CASE WHEN jam02 = "true" THEN "true" ELSE "false" END) AS jam02,
+                        MAX(CASE WHEN jam03 = "true" THEN "true" ELSE "false" END) AS jam03,
+                        MAX(CASE WHEN jam04 = "true" THEN "true" ELSE "false" END) AS jam04,
+                        MAX(CASE WHEN jam05 = "true" THEN "true" ELSE "false" END) AS jam05,
+                        MAX(CASE WHEN jam06 = "true" THEN "true" ELSE "false" END) AS jam06,
+                        MAX(CASE WHEN jam07 = "true" THEN "true" ELSE "false" END) AS jam07,
+                        MAX(CASE WHEN jam08 = "true" THEN "true" ELSE "false" END) AS jam08,
+                        MAX(CASE WHEN jam09 = "true" THEN "true" ELSE "false" END) AS jam09,
+                        MAX(CASE WHEN jam10 = "true" THEN "true" ELSE "false" END) AS jam10,
+                        MAX(CASE WHEN jam11 = "true" THEN "true" ELSE "false" END) AS jam11,
+                        MAX(CASE WHEN jam12 = "true" THEN "true" ELSE "false" END) AS jam12,
+                        MAX(CASE WHEN jam13 = "true" THEN "true" ELSE "false" END) AS jam13,
+                        MAX(CASE WHEN jam14 = "true" THEN "true" ELSE "false" END) AS jam14,
+                        MAX(CASE WHEN jam15 = "true" THEN "true" ELSE "false" END) AS jam15,
+                        MAX(CASE WHEN jam16 = "true" THEN "true" ELSE "false" END) AS jam16,
+                        MAX(CASE WHEN jam17 = "true" THEN "true" ELSE "false" END) AS jam17,
+                        MAX(CASE WHEN jam18 = "true" THEN "true" ELSE "false" END) AS jam18,
+                        MAX(CASE WHEN jam19 = "true" THEN "true" ELSE "false" END) AS jam19,
+                        MAX(CASE WHEN jam20 = "true" THEN "true" ELSE "false" END) AS jam20,
+                        MAX(CASE WHEN jam21 = "true" THEN "true" ELSE "false" END) AS jam21,
+                        MAX(CASE WHEN jam22 = "true" THEN "true" ELSE "false" END) AS jam22,
+                        MAX(CASE WHEN jam23 = "true" THEN "true" ELSE "false" END) AS jam23,
+                        CASE 
+                            WHEN (
+                                SELECT kamar.kelas 
+                                FROM kamar 
+                                INNER JOIN kamar_inap ON kamar.kd_kamar = kamar_inap.kd_kamar 
+                                WHERE kamar_inap.no_rawat = stok_obat_pasien.no_rawat 
+                                AND kamar_inap.stts_pulang = "-"
+                                LIMIT 1
+                            ) = "Kelas 1" THEN databarang.kelas1
+                            WHEN (
+                                SELECT kamar.kelas 
+                                FROM kamar 
+                                INNER JOIN kamar_inap ON kamar.kd_kamar = kamar_inap.kd_kamar 
+                                WHERE kamar_inap.no_rawat = stok_obat_pasien.no_rawat 
+                                AND kamar_inap.stts_pulang = "-"
+                                LIMIT 1
+                            ) = "Kelas 2" THEN databarang.kelas2
+                            WHEN (
+                                SELECT kamar.kelas 
+                                FROM kamar 
+                                INNER JOIN kamar_inap ON kamar.kd_kamar = kamar_inap.kd_kamar 
+                                WHERE kamar_inap.no_rawat = stok_obat_pasien.no_rawat 
+                                AND kamar_inap.stts_pulang = "-"
+                                LIMIT 1
+                            ) = "Kelas 3" THEN databarang.kelas3
+                            WHEN (
+                                SELECT kamar.kelas 
+                                FROM kamar 
+                                INNER JOIN kamar_inap ON kamar.kd_kamar = kamar_inap.kd_kamar 
+                                WHERE kamar_inap.no_rawat = stok_obat_pasien.no_rawat 
+                                AND kamar_inap.stts_pulang = "-"
+                                LIMIT 1
+                            ) = "Kelas Utama" THEN databarang.utama
+                            WHEN (
+                                SELECT kamar.kelas 
+                                FROM kamar 
+                                INNER JOIN kamar_inap ON kamar.kd_kamar = kamar_inap.kd_kamar 
+                                WHERE kamar_inap.no_rawat = stok_obat_pasien.no_rawat 
+                                AND kamar_inap.stts_pulang = "-"
+                                LIMIT 1
+                            ) = "Kelas VIP" THEN databarang.vip
+                            WHEN (
+                                SELECT kamar.kelas 
+                                FROM kamar 
+                                INNER JOIN kamar_inap ON kamar.kd_kamar = kamar_inap.kd_kamar 
+                                WHERE kamar_inap.no_rawat = stok_obat_pasien.no_rawat 
+                                AND kamar_inap.stts_pulang = "-"
+                                LIMIT 1
+                            ) = "Kelas VVIP" THEN databarang.vvip
+                            ELSE NULL 
+                        END AS harga
+                    
+                    ')
+                ->join('databarang', 'databarang.kode_brng = stok_obat_pasien.kode_brng')
+                ->join('jenis', 'databarang.kdjns = jenis.kdjns')
+
+                ->where('stok_obat_pasien.no_rawat', $noRawat)
+                ->groupBy('stok_obat_pasien.kode_brng')
+                
+                ->findAll();
+
         foreach ($data as &$item) {
             $item['jam_pemberian'] = isset($item['jam_pemberian']) ? array_map('trim', explode(',', $item['jam_pemberian'])) : [];
             $item['label_jam_diberikan'] = isset($item['label_jam_diberikan']) ? array_map('trim', explode(',', $item['label_jam_diberikan'])) : [];
@@ -135,51 +188,46 @@ class Obat extends BaseController
                 $item['jadwal_pemberian'] = $jamTrue;
             }
 
-            if (isset($item['jadwal_pemberian'])) {
-                $item['jadwal_pemberian'] = array_map(function ($jam) use ($item) {
-                    return [
-                        'jadwal' => $jam,
-                        'status' => in_array($jam, $item['label_jam_diberikan']) ? 'diberikan' : 'belum diberikan'
-                    ];
-                }, $item['jadwal_pemberian']);
-            } else {
-                $item['jadwal_pemberian'] = [];
-            }
-
-            $kelasMapping = [
-                'Kelas 1' => 'kelas1',
-                'Kelas 2' => 'kelas2',
-                'Kelas 3' => 'kelas3',
-                'Utama/BPJS' => 'utama',
-                'VIP' => 'vip',
-                'VVIP' => 'vvip',
-                'Beli Luar' => 'beliluar',
-                'Karyawan' => 'karyawan',
-            ];
-            $item['harga_obat'] = $item[$kelasMapping[$item['kelas_kamar']] ?? 'jualbebas'];
-
-            $columnsToUnset = [
-                'ralan',
-                'kelas1',
-                'kelas2',
-                'kelas3',
-                'utama',
-                'vip',
-                'vvip',
-                'beliluar',
-                'jualbebas',
-                'karyawan',
-                'stokminimal',
-                'kdjns',
-                'isi',
-                'kapasitas'
-            ];
-            foreach ($columnsToUnset as $col) {
-                unset($item[$col]);
-            }
         }
 
-        return $this->response->setJSON($data);
+        $pemberian_terakhir = $this->aro_riwayat_pemberian_obat
+                            ->select('
+                                max(tanggal) as tanggal, max(jam) as jam, kode_barang
+                            ')
+                            ->groupBy('kode_barang')
+                            ->where('no_rawat', $noRawat)
+                            ->findAll();
+
+        $sisa_obat = $this->detail_pemberian_obat
+                    ->select('kode_brng, SUM(jml) as jumlah')
+                    ->where('no_rawat', $noRawat)
+                    ->groupBy('kode_brng')
+                    ->findAll();
+
+        $tanggalSekarang = date('Y-m-d');
+        $pemberianHariIni = $this->aro_riwayat_pemberian_obat
+                            ->select("jam, label_jam_pemberian, kode_barang")
+                            ->where('no_rawat', $noRawat)
+                            ->where('tanggal', $tanggalSekarang)
+                            ->findAll();
+
+        $listObatDistop = $this->aro_stop_obat_pasien
+                          ->select("tanggal, jam, kode_brng, shift, endStop")
+                          ->where('tanggal <=', $tanggalSekarang)
+                          ->where('endStop', null)
+                          ->where('no_rawat', $noRawat)
+                          ->findAll();  
+
+        // dd($listObatDistop);
+        $res = [
+            'listObatDistop' => $listObatDistop,
+            'listStokObat' => $data,
+            'pemberian_terakhir' => $pemberian_terakhir,
+            'sisa_obat' => $sisa_obat,
+            'pemberianHariIni' => $pemberianHariIni
+        ];
+
+        return $this->response->setJSON($res);
     }
 
     function viewGetCpo()
@@ -272,15 +320,15 @@ class Obat extends BaseController
             ->first();
 
         return view('perawat/page/v_cpo', $data);
-        
     }
 
 
     public function getCpo()
     {
         $noRawat = $this->request->getGet('norawat');
-        $limit = $this->request->getGet('limit') ?? '3';
-        
+        $limit = $this->request->getGet('limit') ?? '200';
+        // $noRawat = "2024/12/07/000013";
+
         $tanggalTerakhir = $this->detail_pemberian_obat
             ->select("detail_pemberian_obat.tgl_perawatan")
             ->where('detail_pemberian_obat.no_rawat', $noRawat)
@@ -321,7 +369,7 @@ class Obat extends BaseController
             ->orderBy('detail_pemberian_obat.tgl_perawatan', 'ASC')
             ->orderBy('databarang.nama_brng', 'ASC')
             ->findAll();
-
+        // dd($dataObat);
         $tanggalGrouped = [];
         foreach ($dataObat as $item) {
             $tgl = $item['tgl_perawatan'];
@@ -330,6 +378,7 @@ class Obat extends BaseController
             $jamPemberianArray = explode(', ', $item['jam_pemberian']);
 
             $labelJamMap = array_combine($labelJamDiberikanArray, $jamPemberianArray);
+            
 
             $jamByCategory = [
                 'pagi' => [],
@@ -363,7 +412,6 @@ class Obat extends BaseController
         }
 
         $tanggalArray = array_keys($tanggalGrouped);
-
         $listObat = $this->detail_pemberian_obat
             ->select('databarang.nama_brng, detail_pemberian_obat.kode_brng')
             ->where('detail_pemberian_obat.no_rawat', $noRawat)
@@ -372,17 +420,36 @@ class Obat extends BaseController
             ->groupBy('databarang.nama_brng')
             ->whereIn('detail_pemberian_obat.tgl_perawatan', $tanggalArray)
             ->findAll();
+        // dd($listObat);
 
         $stopObat = $this->aro_stop_obat_pasien
-                    ->where('no_rawat', $noRawat)
-                    ->findAll();
+            ->where('no_rawat', $noRawat)
+            ->findAll();
 
+        $cekButton = $this->aro_stop_obat_pasien->query("
+            SELECT * FROM aro_stop_obat_pasien AS main
+            WHERE main.no_rawat = '$noRawat'
+            AND main.tanggal = (
+                SELECT MAX(tanggal)
+                FROM aro_stop_obat_pasien
+                WHERE no_rawat = '$noRawat' AND kode_brng = main.kode_brng
+            )
+            AND main.jam = (
+                SELECT MAX(jam)
+                FROM aro_stop_obat_pasien
+                WHERE no_rawat = '$noRawat' AND kode_brng = main.kode_brng AND tanggal = main.tanggal
+            )
+            ORDER BY main.tanggal DESC, main.jam DESC
+        ")->getResult();
+
+        
         $data = [
             'status_code' => 200,
             'list_obat' => $dataObat,
             'list_tanggal' => $tanggalGrouped,
             'daftar_nama_obat' => $listObat,
             'stopObat' => $stopObat,
+            'cekButton' => $cekButton,
         ];
 
         return $this->response->setJSON($data);
@@ -405,7 +472,6 @@ class Obat extends BaseController
     public function simpanPemberianObat()
     {
         $data = json_decode($this->request->getBody(), true);
-        // $data = json_decode($this->request->getBody(), true);
 
         if ($data === null) {
             return $this->response->setJSON(['message' => 'Data JSON tidak valid'], 400);
@@ -482,15 +548,17 @@ class Obat extends BaseController
         $shift      = $this->request->getPost('shift');
 
         $data = [
-            'no_rawat'=> $no_rawat,
-            'kode_brng'=> $kode_brng,
-            'tanggal'=> $tanggal,
-            'jam'=> $jam,
-            'kode_brng'=> $kode_brng,
-            'shift'=> $shift,
+            'no_rawat' => $no_rawat,
+            'kode_brng' => $kode_brng,
+            'tanggal' => $tanggal,
+            'jam' => $jam,
+            'kode_brng' => $kode_brng,
+            'shift' => $shift,
         ];
 
         $this->aro_stop_obat_pasien->insert($data);
-
+        $lastQuery = getLastQuery();
+        $logsql = $this->session->get('ip_address') . '| ' . $lastQuery;
+        $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
     }
 }

@@ -49,5 +49,6 @@
         $('#bodyCpo').html("");
         document.getElementById('searchInput-stok').value = '';
         // cpo()
+        document.getElementById("limit").value = '3'
     })
 </script>

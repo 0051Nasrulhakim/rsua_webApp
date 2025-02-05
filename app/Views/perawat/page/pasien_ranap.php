@@ -170,6 +170,10 @@
         });
     });
 
+    function notRilis()
+    {
+        alert("Fitur dalam proses pengembangan & belum bisa dipakai.")
+    }
     function ShowModalObat(title, no_rkm_medis, no_rawat, nama_pasien, diagnosa_awal, diagnosa_akhir) {
         // console.log(no_rawat)
         

@@ -116,11 +116,15 @@
                 Swal.close();
                 if (response.status_code == "200") {
                     cachedData = response;
-                    console.log(response)
                     renderData(response);
                 } else {
                     renderEmptyData(response.message);
                 }
+            },
+            error: function(error) {
+                stokObatNew(tanggalfilter);
+                alert('Terjadi kesalahan Silahkan Ulangi.');
+                inputObject = []
             }
         });
     }
@@ -139,6 +143,7 @@
     }
 
     function renderData(data) {
+        // console.log(data)
         let headtotalTanggal = '';
         let bodyCpo = '';
 
@@ -171,28 +176,51 @@
         if (data.daftar_nama_obat.length > 0) {
             data.daftar_nama_obat.forEach(function(item, index) {
                 const backgroundColor = index % 2 === 0 ? 'rgb(61, 196, 122)' : 'rgb(47, 160, 98)';
-                bodyCpo += `<div class="list-body-cpo" style="display: flex; padding: 0px !important; white-space: nowrap; flex-shrink: 0;">
-                                <div class="stopObat" 
-                                    style="padding: 0.5%;border: 1px solid black; width: 50px !important; text-align: center; white-space: nowrap; flex-shrink: 0; background-color: rgb(161, 46, 46); color: white;"
-                                    onClick="setStop('${item.kode_brng}', '')"
-                                >
-                                    Stop
-                                </div>
-                                <div class="namaobat" 
+
+                bodyCpo += `<div class="list-body-cpo" style="display: flex; padding: 0px !important; white-space: nowrap; flex-shrink: 0;">`
+
+                let stopTombolDitambahkan = false;
+
+                data.cekButton.forEach(function(looptombolStop) {
+
+                    if (item.kode_brng == looptombolStop.kode_brng) {
+
+                        if (looptombolStop.endStop == null) {
+                            bodyCpo += `<div class="stopObat" 
+                                                style="padding: 0.5%;border: 1px solid black; width: 50px !important; text-align: center; white-space: nowrap; flex-shrink: 0; background-color: rgb(46, 105, 161); color: white;"
+                                                onClick="">
+                                                Lanjut
+                                            </div>`;
+                        } else {
+                            bodyCpo += `<div class="stopObat" 
+                                                style="padding: 0.5%;border: 1px solid black; width: 50px !important; text-align: center; white-space: nowrap; flex-shrink: 0; background-color: rgb(161, 46, 46); color: white;"
+                                                onClick="setStop('${item.kode_brng}', '')">
+                                                Stop
+                                            </div>`;
+                        }
+                        stopTombolDitambahkan = true;
+                    }
+                });
+
+                if (!stopTombolDitambahkan) {
+                    bodyCpo += `<div class="stopObat" 
+                                        style="padding: 0.5%;border: 1px solid black; width: 50px !important; text-align: center; white-space: nowrap; flex-shrink: 0; background-color: rgb(161, 46, 46); color: white;"
+                                        onClick="setStop('${item.kode_brng}', '')">
+                                        Stop
+                                    </div>`;
+                }
+                bodyCpo += `<div class="namaobat" 
                                     style="border-bottom: 1px solid; border-right: 1px solid; width: 320px !important; padding-left: 1%; white-space: nowrap; flex-shrink: 0; display:flex; align-items: center;"
                                                                     
                                 >
                                     ${item.nama_brng}
-                                </div>  
-                `;
+                                </div>`;
 
                 if (Object.keys(data.list_tanggal).length > 0) {
                     Object.keys(data.list_tanggal).forEach(function(tanggal) {
-                        console.log('tanggal', tanggal)
                         bodyCpo += `
                             <div class="shift listTr" style="">
                         `;
-                        
                         let listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
                         let listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
                         let listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
@@ -202,72 +230,121 @@
                         let endStop = {};
 
                         if (data.stopObat.length > 0) {
-
+                            let tanggal = '';
                             data.stopObat.forEach(function(stopObat) {
-                                endStop[stopObat.kode_brng] = stopObat.endStop;
-                                
-                                
-                                Object.keys(endStop).forEach(function(kodeBrng) {
-                                    if(endStop[kodeBrng] != null){
-                                        parsedEndStop[kodeBrng] = JSON.parse(endStop[kodeBrng]);
-                                    }else{
-                                        parsedEndStop[kodeBrng] = null;
+
+                                if (!endStop[stopObat.kode_brng]) {
+                                    endStop[stopObat.kode_brng] = [];
+                                }
+                                tanggal = stopObat.tanggal
+                                endStop[stopObat.kode_brng].push({
+                                    startStopShift: stopObat.shift,
+                                    startStopTanggal: tanggal,
+                                    endStop: stopObat.endStop,
+                                    keyBarang: stopObat.kode_brng
+                                });
+
+                            });
+
+                            Object.keys(endStop).forEach(function(kodeBrng) {
+                                parsedEndStop[kodeBrng] = endStop[kodeBrng].map(item => ({
+                                    endStop: item.endStop ? JSON.parse(item.endStop) : null,
+                                    startStopShift: item.startStopShift || null,
+                                    startStopTanggal: item.startStopTanggal || null,
+                                    keyBarang: item.keyBarang
+                                }));
+                            });
+                        }
+
+
+
+                        if (Object.keys(parsedEndStop).length === 0) {
+                            listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                            listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                            listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                            listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                        } else {
+                            Object.keys(parsedEndStop).forEach(function(keyBarang) {
+                                parsedEndStop[keyBarang].forEach(function(loop) {
+                                    let bgColor = "black";
+                                    let textColor = "white";
+                                    if (tanggal >= loop.startStopTanggal && (loop.endStop == null || loop.endStop.end >= tanggal)) {
+                                        if (loop.keyBarang == item.kode_brng) {
+                                            if (tanggal == loop.startStopTanggal) {
+
+                                                switch (loop.startStopShift) {
+                                                    case 'pagi':
+                                                        listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        break;
+                                                    case 'siang':
+                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        break;
+                                                    case 'sore':
+                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        break;
+                                                    case 'malam':
+                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                        listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        break;
+                                                }
+                                            } else if (tanggal > loop.startStopTanggal) {
+                                                if (loop.endStop != null) {
+                                                    if (tanggal == loop.endStop.end) {
+                                                        switch (loop.endStop.shift) {
+                                                            case 'pagi':
+                                                                listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                                listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                                listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                                break;
+                                                            case 'siang':
+                                                                listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                                listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                                break;
+                                                            case 'sore':
+                                                                listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                                break;
+                                                            case 'malam':
+                                                                listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                break;
+                                                        }
+                                                    } else {
+                                                        listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    }
+
+                                                } else {
+                                                    listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                }
+                                            }
+                                        }
                                     }
                                 })
-
-                            //     if (
-                            //         tanggal >= stopObat.tanggal &&
-                            //         stopObat.kode_brng === item.kode_brng &&
-                            //         (stopObat.end === null || (parsedEndStop && parsedEndStop.end && parsedEndStop.end >= tanggal))
-                            //     ) {
-                            //         let bgColor = "black";
-                            //         let textColor = "white";
-
-                            //         if (tanggal === stopObat.tanggal) {
-                            //             switch (stopObat.shift) {
-                            //                 case 'pagi':
-                            //                     listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                 case 'siang': 
-                            //                     listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                 case 'sore': 
-                            //                     listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                 case 'malam': 
-                            //                     listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     break;
-                            //             }
-                            //         } 
-                            //         else if (tanggal >= parsedEndStop.end) {
-
-                            //             switch (parsedEndStop.shift) {
-                            //                 case 'pagi':
-                            //                     listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                            //                     listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                            //                     listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                            //                     break;
-                            //                 case 'siang':
-                            //                     listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                            //                     listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                            //                     break;
-                            //                 case 'sore':
-                            //                     listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                            //                     break;
-                            //                 case 'malam':
-                            //                     listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                            //                     break;
-                            //             }
-                            //         }
-                            //     }
-                            });
-                            console.log('parse end stop :',  parsedEndStop)
+                            })
                         }
 
                         data.list_tanggal[tanggal].forEach(function(jamPemberian) {
@@ -316,7 +393,7 @@
         }
 
         $.ajax({
-            url: '<?= base_url('obat/setStopObat')?>',
+            url: '<?= base_url('obat/setStopObat') ?>',
             type: 'POST',
             data: {
                 no_rawat: noRawat,
@@ -327,6 +404,12 @@
             },
             success: function(response) {
                 console.log('ok cuy')
+                cpo()
+            },
+            error: function(error) {
+                stokObatNew(tanggalfilter);
+                alert('Terjadi kesalahan saat menyimpan data.');
+                inputObject = []
             }
         });
     }
@@ -337,7 +420,7 @@
 
         function formatDate(date) {
             let day = String(date.getDate()).padStart(2, '0');
-            let month = String(date.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
+            let month = String(date.getMonth() + 1).padStart(2, '0');
             let year = date.getFullYear();
             return `${year}-${month}-${day}`;
         }
@@ -372,9 +455,12 @@
                             `;
         }
         bodyCpoNull += `
-                            <div style="text-align: center; padding: 10px; font-size: 14px; color: black; width: 599px; border-right: 1px solid; border-bottom : 1px solid;">
+                        <div >
+                            <div style="text-align: center; padding: 10px; font-size: 14px; color: black; width: 370px; border-right: 1px solid; border-bottom: 1px solid;">
                                 Tidak ada riwayat pemberian obat
                             </div>
+                        </div>
+
                         `;
 
         $('#totalTanggal').html(headtotalTanggal);
@@ -427,11 +513,17 @@
                 stokObatData = response;
 
                 displayStokObat(stokObatData);
+            },
+            error: function(error) {
+                stokObatNew(tanggalfilter);
+                alert('Terjadi kesalahan Coba Ulangi lagi.');
+                inputObject = []
             }
         });
     }
 
     function displayStokObat(data) {
+        console.log('list obat', data);
         let rows = '';
         let rowsInject = '';
         const stockIn = `
@@ -449,62 +541,191 @@
                             background-color: rgb(0, 0, 0) !important;
                             color: white !important;
                         `;
+        const stocStop = `
+                            border-bottom: 1px solid;
+                            display: flex !important;
+                            align-items:center;
+                            width: 100% !important;
+                            background-color: rgb(168, 0, 0) !important;
+                            color: white !important;
+                        `;
 
-        if (data.length > 0) {
-            data.forEach(function(item) {
+        if (data.listStokObat.length > 0) {
+            data.listStokObat.forEach(function(item) {
                 let rowStyle = stockIn;
+                let sisaStok = ''
 
-                if (item.sisa_stok == 0) {
-                    rowStyle = stockOut;
+                if (data.sisa_obat && Array.isArray(data.sisa_obat) && data.sisa_obat.length > 0) {
+                    let sisa = data.sisa_obat.find(so => so.kode_brng === item.kode_brng);
+
+                    if (sisa) {
+                        let sisa_stok = Math.max(item.jumlah_stok - sisa.jumlah, 0); // Menghindari nilai negatif
+                        if (sisa_stok === 0) {
+                            rowStyle = stockOut; 
+                            sisaStok = sisa_stok;
+                        }
+                        sisaStok = sisa_stok
+                    } else {
+                        sisaStok = item.jumlah_stok
+                    }
+                } else {
+                    sisaStok = item.jumlah_stok
                 }
+
                 if (item.jenis != "Injeksi") {
                     rows += `
                         <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
                             <div class="namaBarang" style="width: 25%;">${item.nama_brng}</div>
-                            <div class="jml" style="width: 5%; text-align: center;">${item.jumlah}</div>
-                            <div class="sisa" style="width: 5%; text-align: center;">${item.sisa_stok}</div>
-                            <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
-                            <div class="aturanPakai" style="width: 50%; text-align: center; display:flex;">
+                            <div class="jml" style="width: 5%; text-align: center;">${item.jumlah_stok}</div>`
+
+                    rows += `<div class="sisa" style="width: 5%; text-align: center;">${sisaStok}</div>`;
+                    
+
+
+                    let pemberianTerakhirDitambahkan = false;
+
+                    if (data.pemberian_terakhir != undefined) {
+                        if (data.pemberian_terakhir.length > 0) {
+                            data.pemberian_terakhir.forEach(function(lastPemberian) {
+                                if (lastPemberian.kode_barang == item.kode_brng) {
+                                    rows += `<div class="aturanPakai" 
+                                                style="width: 20%; text-align: center;">
+                                                ${lastPemberian.tanggal} ${lastPemberian.jam}
+                                            </div>`;
+                                    pemberianTerakhirDitambahkan = true;
+                                }
+                            });
+                        }
+                    }
+
+                    if (!pemberianTerakhirDitambahkan) {
+                        rows += `<div class="aturanPakai" 
+                                    style="width: 20%; text-align: center;">
+                                    -
+                                </div>`;
+                    }
+
+
+                    rows += `<div class="aturanPakai" style="width: 50%; text-align: center; display:flex;">
                         `;
 
-                    if (item.jadwal_pemberian.length > 0) {
-                        var jadwalPemberian = item.jadwal_pemberian;
-                        jadwalPemberian.forEach(function(indexPemberian) {
-                            if (indexPemberian.status != 'diberikan') {
-                                rows += `<div style="padding: 3%; color:white; margin-right: 3%; border-radius: 3px; background-color: rgb(13, 119, 4);"
-                                            onclick="savePemberianObat('${item.kode_brng}', '${item.no_rawat}', '${item.tanggal}', '${indexPemberian.jadwal}', 
-                                                    '${item.kd_bangsal}', '${item.no_batch}', '${item.no_faktur}', '${item.h_beli}', '${item.harga_obat}')"
-                                            >${indexPemberian.jadwal}
-                                        </div>`;
-                            }
-                        });
+                    if (item.jadwal_pemberian != undefined) {
+                        if (item.jadwal_pemberian.length > 0) {
+                            var jadwalPemberian = item.jadwal_pemberian;
+                            jadwalPemberian.forEach(function(indexPemberian) {
+                                if (sisaStok !== 0) {
+                                    if (data.pemberianHariIni && Array.isArray(data.pemberianHariIni)) {
+                                        let sudahDiberikan = false;
+
+                                        data.pemberianHariIni.forEach(function (pemberianHariIni) {
+                                            if (item.kode_brng === pemberianHariIni.kode_barang && pemberianHariIni.label_jam_pemberian === indexPemberian) {
+                                                sudahDiberikan = true; // Tandai bahwa obat sudah diberikan pada jam ini
+                                            }
+                                        });
+
+                                        // Hanya tambahkan tombol jika obat belum diberikan pada jam ini
+                                        if (!sudahDiberikan) {
+                                            rows += `<div style="padding: 3%; color:white; margin-right: 3%; border-radius: 3px; background-color: rgb(13, 119, 4);"
+                                                onclick="savePemberianObat('${item.kode_brng}', '${item.no_rawat}', '${item.tanggal}', '${indexPemberian}', 
+                                                '${item.kd_bangsal}', '${item.no_batch}', '${item.no_faktur}', '${item.h_beli}', '${item.harga}')">
+                                                ${indexPemberian}
+                                            </div>`;
+                                        }
+                                    }
+                                }
+                            });
+                        }
                     }
+
                     rows += `</div></div>`;
 
                 } else {
+
+                    if (data.sisa_obat && Array.isArray(data.sisa_obat) && data.sisa_obat.length > 0) {
+                        let sisa = data.sisa_obat.find(so => so.kode_brng === item.kode_brng);
+
+                        // Jika ditemukan sisa stok
+                        if (sisa) {
+                            let sisa_stok = Math.max(item.jumlah_stok - sisa.jumlah, 0); // Menghindari nilai negatif
+                            if (sisa_stok === 0) {
+                                rowStyle = stockOut; 
+                                sisaStok = sisa_stok;
+                            }
+                            sisaStok = sisa_stok
+                        } else {
+                            sisaStok = item.jumlah_stok
+                        }
+                    } else {
+                        sisaStok = item.jumlah_stok
+                    }
                     rowsInject += `
                         <div class="head-list-stok-obat" id="head-list-stok-obat" style="${rowStyle}">
                             <div class="namaBarang" style="width: 25%;">${item.nama_brng}</div>
-                            <div class="jml" style="width: 5%; text-align: center;">${item.jumlah}</div>
-                            <div class="sisa" style="width: 5%; text-align: center;">${item.sisa_stok}</div>
-                            <div class="aturanPakai" style="width: 20%; text-align: center;">${item.last_insert_time}</div>
-                            <div class="aturanPakai" style="width: 50%; text-align: center; display:flex;">
-                    `;
+                            <div class="jml" style="width: 5%; text-align: center;">${item.jumlah_stok}</div>
+                            <div class="sisa" style="width: 5%; text-align: center;">${sisaStok}</div>`
 
-                    if (item.jadwal_pemberian.length > 0) {
-                        var jadwalPemberian = item.jadwal_pemberian;
-                        jadwalPemberian.forEach(function(indexPemberian) {
-                            if (indexPemberian.status != 'diberikan') {
-                                rowsInject += `
-                                                <div style="padding: 3%; color: white; margin-right: 3%; border-radius: 3px; background-color: rgb(13, 119, 4);"
-                                                    onclick="savePemberianObat('${item.kode_brng}', '${item.no_rawat}', '${item.tanggal}', '${indexPemberian.jadwal}', 
-                                                            '${item.kd_bangsal}', '${item.no_batch}', '${item.no_faktur}', '${item.h_beli}', '${item.harga_obat}')">
-                                                    ${indexPemberian.jadwal}
-                                                </div>
-                                            `;
+                    let pemberianTerakhirDitambahkan = false;
+
+                    if (data.pemberian_terakhir != undefined) {
+
+                        if (data.pemberian_terakhir.length > 0) {
+                            data.pemberian_terakhir.forEach(function(lastPemberian) {
+                                if (lastPemberian.kode_barang == item.kode_brng) {
+                                    rowsInject += `<div class="aturanPakai" style="width: 20%; text-align: center;">
+                                                        ${lastPemberian.tanggal} ${lastPemberian.jam}
+                                                    </div>`;
+                                    pemberianTerakhirDitambahkan = true;
+                                }
+                            });
+                        }
+
+                    }
+
+                    if (!pemberianTerakhirDitambahkan) {
+                        rowsInject += `<div class="aturanPakai" 
+                                            style="width: 20%; text-align: center;">
+                                            -
+                                        </div>`;
+                    }
+
+
+                    rowsInject += `<div class="aturanPakai" style="width: 50%; text-align: center; display:flex;">
+                        `;
+
+                    if (Array.isArray(item.jadwal_pemberian) && item.jadwal_pemberian.length > 0) {
+
+                        // Cek apakah obat masuk dalam listObatDistop
+                        let obatDistop = Array.isArray(data.listObatDistop) &&
+                            data.listObatDistop.some(prosesStop => prosesStop.kode_brng === item.kode_brng);
+
+                        if (obatDistop) {
+                            rowsInject += `<div style="padding: 3%; width:100%; color:white; margin-right: 3%; border-radius: 3px; background-color: rgb(105, 31, 31);">
+                                                OBAT DI STOP
+                                            </div>`;
+                            return; // Hentikan proses agar "OBAT DI STOP" hanya muncul sekali
+                        }
+
+                        item.jadwal_pemberian.forEach(function (indexPemberian) {
+                            if (sisaStok !== 0) {
+                                // Cek apakah obat sudah diberikan hari ini
+                                let sudahDiberikan = Array.isArray(data.pemberianHariIni) &&
+                                    data.pemberianHariIni.some(pemberianHariIni =>
+                                        item.kode_brng === pemberianHariIni.kode_barang &&
+                                        pemberianHariIni.label_jam_pemberian === indexPemberian
+                                    );
+
+                                // Jika obat belum diberikan, tampilkan tombol
+                                if (!sudahDiberikan) {
+                                    rowsInject += `<div style="padding: 3%; color:white; margin-right: 3%; border-radius: 3px; background-color: rgb(13, 119, 4);"
+                                                        onclick="savePemberianObat('${item.kode_brng}', '${item.no_rawat}', '${item.tanggal}', '${indexPemberian}', 
+                                                        '${item.kd_bangsal}', '${item.no_batch}', '${item.no_faktur}', '${item.h_beli}', '${item.harga}')">
+                                                        ${indexPemberian}
+                                                    </div>`;
+                                }
                             }
                         });
                     }
+
                     rowsInject += `</div></div>`;
                 }
             });
@@ -518,19 +739,35 @@
     }
 
     function searchObat() {
-        var input = document.getElementById("searchInput-stok").value.toLowerCase();
-        var filteredData = stokObatData.filter(function(item) {
-            return item.nama_brng.toLowerCase().includes(input);
-        });
+        var input = document.getElementById("searchInput-stok").value.trim().toLowerCase();
 
+        // Cek apakah stokObatData tersedia
+        if (!stokObatData || !stokObatData.listStokObat || stokObatData.listStokObat.length === 0) {
+            $('#list-stok-obat').html('<div style="width: 100%; text-align: center;">Data stok obat tidak tersedia</div>');
+            return;
+        }
+
+        // Filter data berdasarkan nama obat
+        var filteredData = stokObatData.listStokObat.filter(item =>
+            item.nama_brng.toLowerCase().includes(input)
+        );
+
+        console.log('Filtered Data:', filteredData);
+
+        // Jika tidak ada hasil pencarian
         if (filteredData.length === 0) {
             $('#list-stok-obat').html('<div style="width: 100%; text-align: center;">Tidak ada stok obat dengan nama tersebut</div>');
-            $('#list-stok-obat-injeksi').html('<div style="width: 100%; text-align: center;">Tidak ada stok obat dengan nama tersebut</div>');
         } else {
-            // Tampilkan hasil pencarian
-            displayStokObat(filteredData);
+            // Pastikan semua data yang dibutuhkan oleh displayStokObat() tetap dikirim
+            displayStokObat({
+                listStokObat: filteredData,
+                sisa_obat: stokObatData.sisa_obat || [],
+                pemberian_terakhir: stokObatData.pemberian_terakhir || [],
+                pemberianHariIni: stokObatData.pemberianHariIni || []
+            });
         }
     }
+
 
 
     function savePemberianObat(kode_brng, no_rawat, tanggal, label_jadwal, kd_bangsal, no_batch, no_faktur, h_beli, harga_obat) {
@@ -545,7 +782,8 @@
             no_rawat: no_rawat,
             jam: jamDevice,
             jumlah: jml,
-            tanggal: tanggal,
+            // tanggal: tanggal,
+            tanggal: tanggalfilter,
             periode: label_jadwal,
             kd_bangsal: kd_bangsal,
             no_batch: no_batch,
@@ -573,7 +811,7 @@
                             willClose: () => {
                                 stokObatNew(tanggalfilter);
                                 inputObject = []
-                                jumlah = 1;
+                                // jumlah = 1;
                             }
                         });
                     } else {
@@ -583,7 +821,7 @@
                 },
                 error: function(error) {
                     stokObatNew(tanggalfilter);
-                    alert('Terjadi kesalahan saat menyimpan data.');
+                    alert('Terjadi kesalahan saat menyimpan data. silahkan ulangi lagi');
                     inputObject = []
                 }
             });
@@ -654,4 +892,5 @@
             }
         }
     }
+
 </script>
