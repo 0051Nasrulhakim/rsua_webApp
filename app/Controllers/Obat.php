@@ -71,7 +71,7 @@ class Obat extends BaseController
     public function getStokObatPasien()
     {
         $noRawat = $this->request->getGet('norawat');
-        $noRawat = "2024/12/07/000013";
+        // $noRawat = "2024/12/07/000013";
         $data = $this->stok_obat_pasien
                 ->select('
                         stok_obat_pasien.*,
@@ -557,6 +557,33 @@ class Obat extends BaseController
         ];
 
         $this->aro_stop_obat_pasien->insert($data);
+        $lastQuery = getLastQuery();
+        $logsql = $this->session->get('ip_address') . '| ' . $lastQuery;
+        $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));
+    }
+    
+    public function lanjutkanObat()
+    {
+        $kode_brng  = $this->request->getPost('kode_brng');
+        $no_rawat  = $this->request->getPost('no_rawat');
+        $tanggal    = $this->request->getPost('tanggal');
+        $old_tanggal    = $this->request->getPost('old_tanggal');
+        $old_jam    = $this->request->getPost('old_jam');
+        $old_shift    = $this->request->getPost('old_shift');
+        $jam        = $this->request->getPost('jam');
+        $shift      = $this->request->getPost('shift');
+
+        $payload = '{"end" : "'.$tanggal.'","shift" : "'.$shift.'"}';
+
+        $updateResult = $this->aro_stop_obat_pasien
+                ->where('no_rawat', $no_rawat)
+                ->where('tanggal', $old_tanggal)
+                ->where('jam', $old_jam)
+                ->where('shift', $old_shift)
+                ->where('kode_brng', $kode_brng)
+                ->set(['endStop' => $payload])
+                ->update();
+
         $lastQuery = getLastQuery();
         $logsql = $this->session->get('ip_address') . '| ' . $lastQuery;
         $this->TrackerSql->insertTracker($logsql, $this->session->get('nip'));

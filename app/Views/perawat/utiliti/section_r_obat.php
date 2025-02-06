@@ -122,7 +122,6 @@
                 }
             },
             error: function(error) {
-                stokObatNew(tanggalfilter);
                 alert('Terjadi kesalahan Silahkan Ulangi.');
                 inputObject = []
             }
@@ -182,13 +181,13 @@
                 let stopTombolDitambahkan = false;
 
                 data.cekButton.forEach(function(looptombolStop) {
-
+                    // console.log("loop :",looptombolStop)
                     if (item.kode_brng == looptombolStop.kode_brng) {
 
                         if (looptombolStop.endStop == null) {
                             bodyCpo += `<div class="stopObat" 
                                                 style="padding: 0.5%;border: 1px solid black; width: 50px !important; text-align: center; white-space: nowrap; flex-shrink: 0; background-color: rgb(46, 105, 161); color: white;"
-                                                onClick="">
+                                                onClick="setLanjutkan('${item.kode_brng}', '${looptombolStop.tanggal}', '${looptombolStop.jam}', '${looptombolStop.shift}')">
                                                 Lanjut
                                             </div>`;
                         } else {
@@ -211,7 +210,7 @@
                 }
                 bodyCpo += `<div class="namaobat" 
                                     style="border-bottom: 1px solid; border-right: 1px solid; width: 320px !important; padding-left: 1%; white-space: nowrap; flex-shrink: 0; display:flex; align-items: center;"
-                                                                    
+                                                                
                                 >
                                     ${item.nama_brng}
                                 </div>`;
@@ -271,74 +270,142 @@
                                     if (tanggal >= loop.startStopTanggal && (loop.endStop == null || loop.endStop.end >= tanggal)) {
                                         if (loop.keyBarang == item.kode_brng) {
                                             if (tanggal == loop.startStopTanggal) {
+                                                if(loop.endStop != null && loop.endStop.end == loop.startStopTanggal){ 
+                                                    console.log(loop)
+                                                    if(loop.startStopShift == 'pagi' && loop.endStop.shift == 'pagi'){
+                                                        listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                    }
+                                                    if(loop.startStopShift == 'pagi' && loop.endStop.shift == 'siang'){
+                                                        listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                    }
+                                                    if(loop.startStopShift == 'pagi' && loop.endStop.shift == 'sore'){
+                                                        listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                    }
+                                                    if(loop.startStopShift == 'pagi' && loop.endStop.shift == 'malam'){
+                                                        listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    }
+                                                    // siang
+                                                    if(loop.startStopShift == 'siang' && loop.endStop.shift == 'siang'){
+                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                    }
+                                                    if(loop.startStopShift == 'siang' && loop.endStop.shift == 'sore'){
+                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                    }
+                                                    if(loop.startStopShift == 'siang' && loop.endStop.shift == 'malam'){
+                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    }
+                                                    //sore
+                                                    if(loop.startStopShift == 'sore' && loop.endStop.shift == 'sore'){
+                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                    }
+                                                    if(loop.startStopShift == 'sore' && loop.endStop.shift == 'malam'){
+                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    }
+                                                    // malam
+                                                    if(loop.startStopShift == 'malam' && loop.endStop.shift == 'malam'){
+                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    }
 
-                                                switch (loop.startStopShift) {
-                                                    case 'pagi':
-                                                        listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        break;
-                                                    case 'siang':
-                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                                                        listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        break;
-                                                    case 'sore':
-                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                                                        listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                                                        listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        break;
-                                                    case 'malam':
-                                                        listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                                                        listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                                                        listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
-                                                        listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        break;
+                                                }else{
+                                                    switch (loop.startStopShift) {
+                                                        case 'pagi':
+                                                            listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                            listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                            listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                            listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                            break;
+                                                        case 'siang':
+                                                            listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                            listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                            listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                            listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                            break;
+                                                        case 'sore':
+                                                            listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                            listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                            listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                            listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                            break;
+                                                        case 'malam':
+                                                            listPagi = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                            listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                            listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
+                                                            listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                            break;
+                                                    }
                                                 }
+                                                
                                             } else if (tanggal > loop.startStopTanggal) {
                                                 if (loop.endStop != null) {
                                                     if (tanggal == loop.endStop.end) {
                                                         switch (loop.endStop.shift) {
                                                             case 'pagi':
-                                                                listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
                                                                 listSiang = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
                                                                 listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
                                                                 listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
                                                                 break;
                                                             case 'siang':
-                                                                listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                                listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
                                                                 listSore = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
                                                                 listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
                                                                 break;
                                                             case 'sore':
-                                                                listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                                listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                                listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
                                                                 listMalam = `<div class="shiftListTr" style="border: 1px solid black; background-color:${backgroundColor}; color:white">-</div>`;
                                                                 break;
                                                             case 'malam':
-                                                                listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                                listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                                listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                                listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                                listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
                                                                 break;
                                                         }
                                                     } else {
-                                                        listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                        listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                        listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
                                                     }
 
                                                 } else {
-                                                    listPagi = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                    listSiang = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                    listSore = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
-                                                    listMalam = `<div class="shiftListTr" style="border:1px solid; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    listPagi = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    listSiang = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    listSore = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
+                                                    listMalam = `<div class="shiftListTr" style="border:1px solid black; background-color:${bgColor}; color:${textColor}"></div>`;
                                                 }
                                             }
                                         }
@@ -407,7 +474,46 @@
                 cpo()
             },
             error: function(error) {
-                stokObatNew(tanggalfilter);
+                alert('Terjadi kesalahan saat menyimpan data.');
+                inputObject = []
+            }
+        });
+    }
+
+    function setLanjutkan(kd_barang, old_tanggal, old_jam, old_shift){
+        let noRawat = document.getElementById('noRawat').value
+        let now = new Date();
+        let tanggal = now.toISOString().split('T')[0];
+        let jam = now.toTimeString().split(' ')[0];
+        let shift = ''
+        if (jam >= "07:00:00" && jam < "12:00:00") {
+            shift = "pagi";
+        } else if (jam >= "12:00:00" && jam < "16:00:00") {
+            shift = "siang";
+        } else if (jam >= "16:00:00" && jam < "20:00:00") {
+            shift = "sore";
+        } else if ((jam >= "20:00:00" && jam < "24:00:00") || (jam >= "00:00:00" && jam < "07:00:00")) {
+            shift = "malam";
+        }
+
+        $.ajax({
+            url: '<?= base_url('obat/lanjutkanObat') ?>',
+            type: 'POST',
+            data: {
+                no_rawat: noRawat,
+                kode_brng: kd_barang,
+                tanggal: tanggal,
+                jam: jam,
+                shift: shift,
+                old_tanggal: old_tanggal,
+                old_jam: old_jam,
+                old_shift: old_shift
+            },
+            success: function(response) {
+                console.log('ok cuy')
+                cpo()
+            },
+            error: function(error) {
                 alert('Terjadi kesalahan saat menyimpan data.');
                 inputObject = []
             }
@@ -515,7 +621,6 @@
                 displayStokObat(stokObatData);
             },
             error: function(error) {
-                stokObatNew(tanggalfilter);
                 alert('Terjadi kesalahan Coba Ulangi lagi.');
                 inputObject = []
             }
@@ -559,7 +664,7 @@
                     let sisa = data.sisa_obat.find(so => so.kode_brng === item.kode_brng);
 
                     if (sisa) {
-                        let sisa_stok = Math.max(item.jumlah_stok - sisa.jumlah, 0); // Menghindari nilai negatif
+                        let sisa_stok = Math.max(item.jumlah_stok - sisa.jumlah, 0); 
                         if (sisa_stok === 0) {
                             rowStyle = stockOut; 
                             sisaStok = sisa_stok;

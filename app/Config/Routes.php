@@ -34,6 +34,7 @@ $routes->group('obat', ['filter' => 'auth'], function($routes) {
     $routes->match(['get', 'post'], 'getWaktuByJam', 'Obat::getWaktuByJam');
     $routes->match(['get', 'post'], 'getWaktuByJam/(:any)', 'Obat::getWaktuByJam/$1');
     $routes->match(['get', 'post'], 'setStopObat', 'Obat::setStopObat');
+    $routes->match(['get', 'post'], 'lanjutkanObat', 'Obat::lanjutkanObat');
     
 });
 
