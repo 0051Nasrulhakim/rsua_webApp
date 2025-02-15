@@ -129,9 +129,13 @@
                                     <div class="nama" style="text-align: left">
                                         ${item.nm_pasien}
                                     </div>
-                                    <div class="dpjp" style="text-align: left">
-                                        ${item.dokter_dpjp}
-                                        <div class"section-addshift" style="display:flex; margin-bottom: 1%">
+                                    <div class="dpjp" style="text-align: left"> `
+                                    if (item.dokter_dpjp && item.dokter_dpjp !== 'null') {
+                                        bodyTabel += item.dokter_dpjp
+                                    } else {
+                                        console.log("Tidak ada dokter DPJP");
+                                    }
+                        bodyTabel +=  `<div class"section-addshift" style="display:flex; margin-bottom: 1%">
                                 `
                         if (item.todayPagi == "") {
                             bodyTabel += `  
